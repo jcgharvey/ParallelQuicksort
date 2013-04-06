@@ -27,10 +27,11 @@ public class Main {
 
 		List<Integer> toSort = new ArrayList<Integer>();
 		Random rand = new Random();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 1000000; i++) {
 			toSort.add(rand.nextInt(1000));
 		}
 
+		long start = System.currentTimeMillis();
 		List<List<Integer>> processorLists = new ArrayList<List<Integer>>();
 		List<Sorter> sorterList = new ArrayList<Sorter>();
 		int index = toSort.size() / PROCESSORS;
@@ -89,11 +90,9 @@ public class Main {
 
 		for (int i = 0; i < PROCESSORS; i++) {
 			List<Integer> l = new ArrayList<Integer>();
-
-			for (int j = 0; j < sectionList.size(); i++) {
+			for (int j = 0; j < PROCESSORS; j++) {
 				l.addAll(sectionList.get(j).get(i));
 			}
-
 			Sorter s = new Sorter(l);
 			threads.execute(s);
 			sorterList.add(s);
@@ -105,12 +104,14 @@ public class Main {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		threads = Executors.newFixedThreadPool(PROCESSORS);
-
-		for (Sorter s : sorterList) {
-			printList(s.getSorted());
-			// System.out.println("\n=====================================================");
-		}
+		long end = System.currentTimeMillis();
+		
+		System.out.println("time (ms): " + (end-start));
+		
+//		for (Sorter s : sorterList) {
+//			printList(s.getSorted());
+//			// System.out.println("\n=====================================================");
+//		}
 	}
 
 	private static List<Integer> readfile(String filename) {

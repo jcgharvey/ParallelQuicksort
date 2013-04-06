@@ -33,18 +33,18 @@ public class Main {
 
 		long start = System.currentTimeMillis();
 		List<List<Integer>> processorLists = new ArrayList<List<Integer>>();
-		List<Sorter> sorterList = new ArrayList<Sorter>();
+		List<RunnableQuickSort> sorterList = new ArrayList<RunnableQuickSort>();
 		int index = toSort.size() / PROCESSORS;
 		// threads.execute(new Sorter(l));
 		for (int i = 1; i < PROCESSORS + 1; i++) {
 			List<Integer> l = new ArrayList<Integer>(toSort.subList(index
 					* (i - 1), index * i));
 			processorLists.add(l);
-			Sorter s = new Sorter(l);
+			RunnableQuickSort s = new RunnableQuickSort(l);
 			sorterList.add(s);
 		}
 
-		for (Sorter s : sorterList) {
+		for (RunnableQuickSort s : sorterList) {
 			threads.execute(s);
 		}
 
@@ -55,34 +55,25 @@ public class Main {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		threads = Executors.newFixedThreadPool(1);
+		threads = Executors.newFixedThreadPool(PROCESSORS);
 
 		List<Integer> samples = new ArrayList<Integer>();
 
-		for (Sorter s : sorterList) {
+		for (RunnableQuickSort s : sorterList) {
 			System.out.println(s);
 			samples.addAll(s.getSamples(PROCESSORS));
 		}
 
-		Sorter seqQS = new Sorter(samples);
-		threads.execute(seqQS);
+		SequentialQuickSort seqQS = new SequentialQuickSort(samples);
+		seqQS.SortList();		
 		
-		threads.shutdown();
-		try {
-			threads.awaitTermination(60000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		threads = Executors.newFixedThreadPool(PROCESSORS);
-
 		List<Integer> points = seqQS.getSamples(PROCESSORS);
 		points.remove(0);
 
 		// This is my favourite line
 		List<List<List<Integer>>> sectionList = new ArrayList<List<List<Integer>>>();
 
-		for (Sorter s : sorterList) {
+		for (RunnableQuickSort s : sorterList) {
 			sectionList.add(s.getSections(points));
 		}
 
@@ -91,10 +82,11 @@ public class Main {
 
 		for (int i = 0; i < PROCESSORS; i++) {
 			List<Integer> l = new ArrayList<Integer>();
+			// heh i++ lulz
 			for (int j = 0; j < PROCESSORS; j++) {
 				l.addAll(sectionList.get(j).get(i));
 			}
-			Sorter s = new Sorter(l);
+			RunnableQuickSort s = new RunnableQuickSort(l);
 			threads.execute(s);
 			sorterList.add(s);
 		}

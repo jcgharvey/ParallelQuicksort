@@ -1,18 +1,11 @@
 package Quicksort;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import javax.transaction.xa.Xid;
 
 public class Main {
 	private static final int NUM_NUMBERS = 1000;
@@ -36,7 +29,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		ExecutorService threads = Executors.newFixedThreadPool(PROCESSORS);
-		List<Integer> unsortedNumbers = generateRandomNumbers(NUM_NUMBERS, MAX_NUMBER);
+		List<Integer> unsortedNumbers = generateRandomNumbers(NUM_NUMBERS,
+				MAX_NUMBER);
 
 		long start = System.currentTimeMillis();
 
@@ -118,21 +112,6 @@ public class Main {
 			System.out
 					.println("\n=====================================================");
 		}
-	}
-
-	private static List<Integer> readfile(String filename) {
-		List<Integer> list = new ArrayList<Integer>();
-		Path path = Paths.get(filename);
-		try {
-			for (String line : Files.readAllLines(path, StandardCharsets.UTF_8)) {
-				for (String number : line.split(",")) {
-					list.add(Integer.parseInt(number));
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return list;
 	}
 
 	private static void printList(List<Integer> list) {

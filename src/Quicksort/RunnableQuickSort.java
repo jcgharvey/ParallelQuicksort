@@ -11,7 +11,7 @@ public class RunnableQuickSort extends SequentialQuickSort implements Runnable {
 
 	@Override
 	public void run() {
-		super.SortList();
+		super.sortList();
 	}
 
 	public List<List<Integer>> getSections(List<Integer> points) {
@@ -35,7 +35,6 @@ public class RunnableQuickSort extends SequentialQuickSort implements Runnable {
 			}
 		}
 
-		System.out.println("SS:" + sections.size());
 		return sections;
 	}
 }

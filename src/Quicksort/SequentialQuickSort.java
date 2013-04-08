@@ -16,22 +16,25 @@ public class SequentialQuickSort {
 	/**
 	 * Stateful SortList
 	 */
-	public void SortList(){
-		sortedList = SortList(unsortedList);
+	public void sortList() {
+		sortedList = sortList(unsortedList);
 	}
-	
+
 	/**
 	 * Stateless SortList
+	 * 
 	 * @param list
 	 * @return
 	 */
-	public List<Integer> SortList(List<Integer> list) {
+	public List<Integer> sortList(List<Integer> list) {
 		if (list.size() <= 1) {
 			return list;
 		}
-		int pivot = list.remove(0);
+
+		int pivot = extractPivot(list);
 		List<Integer> less = new ArrayList<Integer>();
 		List<Integer> greater = new ArrayList<Integer>();
+
 		for (int i : list) {
 			if (i <= pivot) {
 				less.add(i);
@@ -39,26 +42,30 @@ public class SequentialQuickSort {
 				greater.add(i);
 			}
 		}
+
 		// concatenate the lists
 		List<Integer> result = new ArrayList<Integer>();
-		result.addAll(SortList(less));
+		result.addAll(sortList(less));
 		result.add(pivot);
-		result.addAll(SortList(greater));
+		result.addAll(sortList(greater));
 		return result;
 	}
-	
+
+	private int extractPivot(List<Integer> list) {
+		return list.remove(0);
+	}
 
 	public List<Integer> getSorted() {
 		return sortedList;
 	}
-	
+
 	public List<Integer> getSamples(int processors) {
 		List<Integer> samples = new ArrayList<Integer>();
+
 		for (int i = 0; i < processors; i++) {
-			System.out.println("SL:" + sortedList.size());
 			samples.add(sortedList.get(i * sortedList.size() / (processors)));
 		}
-		System.out.println("SA:" + samples.size());
+
 		return samples;
 	}
 }

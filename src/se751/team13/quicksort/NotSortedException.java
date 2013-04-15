@@ -1,4 +1,4 @@
-package Quicksort;
+package se751.team13.quicksort;
 
 public class NotSortedException extends RuntimeException {
 

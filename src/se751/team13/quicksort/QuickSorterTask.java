@@ -1,4 +1,4 @@
-package Quicksort;
+package se751.team13.quicksort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +34,22 @@ public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSort
 	}
 
 	public List<T> getSamples(int processors) {
-		if (getSortedList() == null) {
+		if (sortedList == null) {
 			throw new NotSortedException("Not sorted");
 		}
 
 		List<T> samples = new ArrayList<T>();
 
 		for (int i = 0; i < processors; i++) {
-			samples.add(getSortedList().get(
-					i * getSortedList().size() / (processors)));
+			samples.add(sortedList.get(
+					i * sortedList.size() / (processors)));
 		}
 
 		return samples;
 	}
 
 	public List<List<T>> getSections(List<T> points) {
-		if (getSortedList() == null) {
+		if (sortedList == null) {
 			throw new NotSortedException("Not sorted");
 		}
 
@@ -59,14 +59,14 @@ public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSort
 		int from = 0;
 		T point = points.get(currentPointIndex);
 
-		for (int i = 0; i < getSortedList().size(); i++) {
-			if (getSortedList().get(i).compareTo(point) == 1) {
-				sections.add(getSortedList().subList(from, i));
+		for (int i = 0; i < sortedList.size(); i++) {
+			if (sortedList.get(i).compareTo(point) == 1) {
+				sections.add(sortedList.subList(from, i));
 				from = i;
 				currentPointIndex += 1;
 				if (currentPointIndex >= points.size()) {
-					sections.add(getSortedList().subList(from,
-							getSortedList().size() - 1));
+					sections.add(sortedList.subList(from,
+							sortedList.size() - 1));
 					break;
 				}
 

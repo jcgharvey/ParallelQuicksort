@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuickSorter {
-	public List<Integer> sort(List<Integer> list) {
+	public <T extends Comparable<? super T>> List<T> sort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;
 		}
 
-		int pivot = extractPivot(list);
-		List<Integer> less = new ArrayList<Integer>();
-		List<Integer> greater = new ArrayList<Integer>();
+		T pivot = extractPivot(list);
+		List<T> less = new ArrayList<T>();
+		List<T> greater = new ArrayList<T>();
 
-		for (int i : list) {
-			if (i <= pivot) {
+		for (T i : list) {
+			if (i.compareTo(pivot) == -1) {
 				less.add(i);
 			} else {
 				greater.add(i);
@@ -22,7 +22,7 @@ public class QuickSorter {
 		}
 
 		// concatenate the lists
-		List<Integer> result = new ArrayList<Integer>();
+		List<T> result = new ArrayList<T>();
 		result.addAll(sort(less));
 		result.add(pivot);
 		result.addAll(sort(greater));
@@ -30,7 +30,7 @@ public class QuickSorter {
 		return result;
 	}
 
-	private int extractPivot(List<Integer> list) {
+	public <T extends Comparable<? super T>> T extractPivot(List<T> list) {
 		return list.remove(0);
 	}
 }

@@ -47,9 +47,6 @@ public class Main {
 		barrier.await();
 		barrier.reset();
 
-		System.out.println("Num procs: " + PROCESSORS);
-		System.out.println("Num waiting after: " + barrier.getNumberWaiting());
-
 		List<Integer> samples = new ArrayList<Integer>();
 
 		for (QuickSorterTask s : sorterList) {
@@ -57,7 +54,9 @@ public class Main {
 		}
 
 		QuickSorterTask seqQS = new QuickSorterTask(samples);
-		threads.execute(seqQS);
+		Thread runner = new Thread(seqQS);
+		runner.start();
+		runner.join();
 				
 		List<Integer> points = seqQS.getSamples(PROCESSORS);
 		points.remove(0);

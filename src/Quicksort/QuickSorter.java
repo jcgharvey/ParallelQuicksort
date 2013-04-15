@@ -30,7 +30,7 @@ public class QuickSorter {
 		return result;
 	}
 
-	public <T extends Comparable<? super T>> T extractPivot(List<T> list) {
+	private <T extends Comparable<? super T>> T extractPivot(List<T> list) {
 		return list.remove(0);
 	}
 }

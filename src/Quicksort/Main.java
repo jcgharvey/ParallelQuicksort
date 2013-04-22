@@ -3,15 +3,24 @@ package Quicksort;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import com.sun.istack.internal.Pool;
 
 public class Main {
 	private static final int NUM_NUMBERS = 1000;
 	private static final int MAX_NUMBER = 1000;
 	private static final int PROCESSORS = Runtime.getRuntime()
 			.availableProcessors();
+
+	private static final CyclicBarrier barrier = new CyclicBarrier(
+			PROCESSORS + 1);
+	private static final ExecutorService threads = Executors
+			.newFixedThreadPool(PROCESSORS);
 
 	private static List<Integer> generateRandomNumbers(int amount, int max) {
 		Random rand = new Random(System.currentTimeMillis());
@@ -26,9 +35,11 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws BrokenBarrierException
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) {
-		ExecutorService threads = Executors.newFixedThreadPool(PROCESSORS);
+	public static void main(String[] args) throws InterruptedException,
+			BrokenBarrierException {
 		List<Integer> unsortedNumbers = generateRandomNumbers(NUM_NUMBERS,
 				MAX_NUMBER);
 
@@ -44,7 +55,7 @@ public class Main {
 					index * (i - 1), index * i));
 
 			processorLists.add(l);
-			RunnableQuickSort s = new RunnableQuickSort(l);
+			RunnableQuickSort s = new RunnableQuickSort(l, barrier);
 			sorterList.add(s);
 		}
 
@@ -52,16 +63,11 @@ public class Main {
 			threads.execute(s);
 		}
 
-		threads.shutdown();
+		barrier.await();
+		barrier.reset();
 
-		try {
-			threads.awaitTermination(10000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		threads = Executors.newFixedThreadPool(PROCESSORS);
+		System.out.println("Num procs: " + PROCESSORS);
+		System.out.println("Num waiting after: " + barrier.getNumberWaiting());
 
 		List<Integer> samples = new ArrayList<Integer>();
 
@@ -92,17 +98,15 @@ public class Main {
 				l.addAll(sectionList.get(j).get(i));
 			}
 
-			RunnableQuickSort s = new RunnableQuickSort(l);
+			RunnableQuickSort s = new RunnableQuickSort(l, barrier);
 			threads.execute(s);
+
 			sorterList.add(s);
 		}
 
-		threads.shutdown();
-		try {
-			threads.awaitTermination(10000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		barrier.await();
+		barrier.reset();
+
 		long end = System.currentTimeMillis();
 
 		System.out.println("time (ms): " + (end - start));
@@ -112,6 +116,8 @@ public class Main {
 			System.out
 					.println("\n=====================================================");
 		}
+		
+		threads.shutdown();
 	}
 
 	private static void printList(List<Integer> list) {

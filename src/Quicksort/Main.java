@@ -7,9 +7,6 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import com.sun.istack.internal.Pool;
 
 public class Main {
 	private static final int NUM_NUMBERS = 1000;
@@ -22,22 +19,6 @@ public class Main {
 	private static final ExecutorService threads = Executors
 			.newFixedThreadPool(PROCESSORS);
 
-	private static List<Integer> generateRandomNumbers(int amount, int max) {
-		Random rand = new Random(System.currentTimeMillis());
-		List<Integer> nums = new ArrayList<Integer>();
-
-		for (int i = 0; i < amount; i++) {
-			nums.add(rand.nextInt(max));
-		}
-
-		return nums;
-	}
-
-	/**
-	 * @param args
-	 * @throws BrokenBarrierException
-	 * @throws InterruptedException
-	 */
 	public static void main(String[] args) throws InterruptedException,
 			BrokenBarrierException {
 		List<Integer> unsortedNumbers = generateRandomNumbers(NUM_NUMBERS,
@@ -46,7 +27,7 @@ public class Main {
 		long start = System.currentTimeMillis();
 
 		List<List<Integer>> processorLists = new ArrayList<List<Integer>>();
-		List<RunnableQuickSort> sorterList = new ArrayList<RunnableQuickSort>();
+		List<QuickSorterTask> sorterList = new ArrayList<QuickSorterTask>();
 
 		int index = unsortedNumbers.size() / PROCESSORS;
 
@@ -55,11 +36,11 @@ public class Main {
 					index * (i - 1), index * i));
 
 			processorLists.add(l);
-			RunnableQuickSort s = new RunnableQuickSort(l, barrier);
+			QuickSorterTask s = new QuickSorterTask(l, barrier);
 			sorterList.add(s);
 		}
 
-		for (RunnableQuickSort s : sorterList) {
+		for (QuickSorterTask s : sorterList) {
 			threads.execute(s);
 		}
 
@@ -71,20 +52,20 @@ public class Main {
 
 		List<Integer> samples = new ArrayList<Integer>();
 
-		for (RunnableQuickSort s : sorterList) {
+		for (QuickSorterTask s : sorterList) {
 			samples.addAll(s.getSamples(PROCESSORS));
 		}
 
-		SequentialQuickSort seqQS = new SequentialQuickSort(samples);
-		seqQS.sortList();
-
+		QuickSorterTask seqQS = new QuickSorterTask(samples);
+		threads.execute(seqQS);
+				
 		List<Integer> points = seqQS.getSamples(PROCESSORS);
 		points.remove(0);
 
 		// This is my favourite line
 		List<List<List<Integer>>> sectionList = new ArrayList<List<List<Integer>>>();
 
-		for (RunnableQuickSort s : sorterList) {
+		for (QuickSorterTask s : sorterList) {
 			sectionList.add(s.getSections(points));
 		}
 
@@ -98,7 +79,7 @@ public class Main {
 				l.addAll(sectionList.get(j).get(i));
 			}
 
-			RunnableQuickSort s = new RunnableQuickSort(l, barrier);
+			QuickSorterTask s = new QuickSorterTask(l, barrier);
 			threads.execute(s);
 
 			sorterList.add(s);
@@ -111,13 +92,23 @@ public class Main {
 
 		System.out.println("time (ms): " + (end - start));
 
-		for (RunnableQuickSort s : sorterList) {
-			printList(s.getSorted());
-			System.out
-					.println("\n=====================================================");
+		for (QuickSorterTask s : sorterList) {
+			printList(s.getSortedList());
+			System.out.println("\n=============================");
 		}
-		
+
 		threads.shutdown();
+	}
+
+	private static List<Integer> generateRandomNumbers(int amount, int max) {
+		Random rand = new Random(System.currentTimeMillis());
+		List<Integer> nums = new ArrayList<Integer>();
+
+		for (int i = 0; i < amount; i++) {
+			nums.add(rand.nextInt(max));
+		}
+
+		return nums;
 	}
 
 	private static void printList(List<Integer> list) {

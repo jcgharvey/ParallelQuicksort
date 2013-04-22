@@ -3,7 +3,13 @@ package se751.team13.quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickSorter {
+public class QuickSorter implements Sorter {
+	
+	/**
+	 * Implementation of sequential QuickSort
+	 * @param list to sort
+	 * @return sorted list
+	 */
 	public <T extends Comparable<? super T>> List<T> sort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;

@@ -39,13 +39,7 @@ public class Main {
 		for (int i = 0; i < amount; i++) {
 			nums.add(rand.nextInt(max));
 		}
-
+		
 		return nums;
 	}
-
-	// private static void printList(List<Integer> list) {
-	// for (int i = 0; i < list.size(); i++) {
-	// System.out.print(String.format("%3d", list.get(i)) + ", ");
-	// }
-	// }
 }

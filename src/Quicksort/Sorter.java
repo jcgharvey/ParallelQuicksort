@@ -3,7 +3,7 @@ package Quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sorter implements Runnable {
+public class Sorter extends SequentialQuickSort implements Runnable {
 
 	private List<Integer> unsortedList;
 	private List<Integer> sortedList;
@@ -23,30 +23,8 @@ public class Sorter implements Runnable {
 
 	@Override
 	public void run() {
-		sortedList = SortList(unsortedList);
+		sortedList = super.SortList(unsortedList);
 		sorted = true;
-	}
-
-	public List<Integer> SortList(List<Integer> list) {
-		if (list.size() <= 1) {
-			return list;
-		}
-		int pivot = list.remove(0);
-		List<Integer> less = new ArrayList<Integer>();
-		List<Integer> greater = new ArrayList<Integer>();
-		for (int i : list) {
-			if (i <= pivot) {
-				less.add(i);
-			} else {
-				greater.add(i);
-			}
-		}
-		// concatenate the lists
-		List<Integer> result = new ArrayList<Integer>();
-		result.addAll(SortList(less));
-		result.add(pivot);
-		result.addAll(SortList(greater));
-		return result;
 	}
 
 	public List<Integer> getSamples(int processors) {
@@ -83,15 +61,15 @@ public class Sorter implements Runnable {
 					sections.add(sortedList.subList(from, sortedList.size() - 1));
 					break;
 				}
-				
+
 				point = points.get(currentPointIndex);
 			}
 		}
 
 		// this code is dicks
-//		for (int i = sections.size(); i <= points.size() + 1; i++) {
-//			sections.add(new ArrayList<Integer>());
-//		}
+		// for (int i = sections.size(); i <= points.size() + 1; i++) {
+		// sections.add(new ArrayList<Integer>());
+		// }
 
 		System.out.println("SS:" + sections.size());
 	}

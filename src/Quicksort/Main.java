@@ -66,9 +66,10 @@ public class Main {
 
 		Sorter seqQS = new Sorter(samples);
 		threads.execute(seqQS);
+		
 		threads.shutdown();
 		try {
-			threads.awaitTermination(10000, TimeUnit.MILLISECONDS);
+			threads.awaitTermination(60000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

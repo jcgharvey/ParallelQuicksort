@@ -3,8 +3,8 @@ package Quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SequentialQuickSort implements Sort {
-	@Override
+public class SequentialQuickSort {
+	
 	public List<Integer> SortList(List<Integer> list) {
 		if (list.size() <= 1) {
 			return list;

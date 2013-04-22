@@ -1,4 +1,4 @@
-package Quicksort;
+package se751.team13.quicksort;
 
 import java.util.ArrayList;
 import java.util.List;

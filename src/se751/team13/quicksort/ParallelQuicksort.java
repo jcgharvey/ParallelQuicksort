@@ -24,11 +24,14 @@ public class ParallelQuicksort implements Sorter {
 	}
 
 	/**
-	 * Phase 1 - Each process sorts its share of the initial elements. Each
+	 * Phase 1 - Each process sorts its share of the initial elements. (SEE 1.5) Each
 	 * process gets a regular sample of its locally sorted block.
+	 * @throws BrokenBarrierException 
+	 * @throws InterruptedException 
 	 */
 	private <T extends Comparable<? super T>> void sortSections(
-			List<QuickSorterTask<T>> sorters, List<T> unsorted) {
+			List<QuickSorterTask<T>> sorters, List<T> unsorted) throws InterruptedException, BrokenBarrierException {
+		
 		int numElements = unsorted.size();
 
 		for (int i = 1; i <= processors; i++) {
@@ -39,7 +42,26 @@ public class ParallelQuicksort implements Sorter {
 			sorters.add(s);
 			threads.execute(s);
 		}
+		
+		barrier.await();
+		barrier.reset();		
 	}
+	
+	/**
+	 * Phase 1.5 - Each process gets a regular sample of its locally sorted block.
+	 * @param sorters 
+	 * @return 
+	 */
+	private <T extends Comparable<? super T>> List<T> sampleSections(List<QuickSorterTask<T>> sorters) {
+		List<T> samples = new ArrayList<T>();
+
+		for (QuickSorterTask<T> s : sorters) {
+			samples.addAll(s.getSamples(processors));
+		}
+
+		return samples;
+	}
+
 
 	/**
 	 * Phase 2 - One process gathers and sorts the local regular samples. It
@@ -67,17 +89,14 @@ public class ParallelQuicksort implements Sorter {
 			throws InterruptedException, BrokenBarrierException {
 
 		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();
+		
+		// PHASE ONE
 		sortSections(sorters, unsorted);
+		// PHASE ONE POINT FIVE
+		List<T> samples = sampleSections(sorters);
 
-		barrier.await();
-		barrier.reset();
-
-		List<T> samples = new ArrayList<T>();
-
-		for (QuickSorterTask<T> s : sorters) {
-			samples.addAll(s.getSamples(processors));
-		}
-
+		
+		
 		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
 		Thread runner = new Thread(seqQS);
 		runner.start();

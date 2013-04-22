@@ -1,14 +1,110 @@
 package se751.team13.quicksort;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
 
 import org.junit.Test;
 
-public class QuickSorterTest {
+public class QuickSorterTest<T extends Comparable<? super T>> {
+	private final int SHORT = 100;
+	private final int LARGE = 10000;
+	private final int LOW_MAX = 1000;
+	private final int HIGH_MAX = 100000;
+			
+	Sorter pqs = new ParallelQuicksort();	
+	
+	private static List<Integer> generateRandomNumbers(int amount, int max) {
+		Random rand = new Random(System.currentTimeMillis());
+		List<Integer> nums = new ArrayList<Integer>();
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
+		for (int i = 0; i < amount; i++) {
+			nums.add(rand.nextInt(max));
+		}
+		return nums;
 	}
+	
+	private static List<Integer> generateInOrderNumbers(int amount, int max) {
+		List<Integer> nums = new ArrayList<Integer>();
 
+		for (int i = 0; i < amount; i++) {
+			nums.add(i);
+		}
+		return nums;
+	}
+	
+	@Test
+	public void testRandOrderShortInteger() {
+		List<Integer> unsorted = generateRandomNumbers(SHORT,
+				LOW_MAX);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}
+	}
+	
+	@Test
+	public void testInOrderShortInteger() {
+		List<Integer> unsorted = generateInOrderNumbers(SHORT,
+				LOW_MAX);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}
+	}
+	
+	@Test
+	public void testRandOrderLargeInteger() {
+		List<Integer> unsorted = generateRandomNumbers(LARGE,
+				HIGH_MAX);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}
+	}
+		
+	@Test
+	public void testInOrderLargeInteger() {
+		List<Integer> unsorted = generateInOrderNumbers(LARGE,
+				HIGH_MAX);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}
+	}
 }

@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class QuickSorterTask extends QuickSorter implements Runnable {
-	private final List<Integer> unsorted;
-	private List<Integer> sortedList;
+public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSorter implements Runnable {
+	private final List<T> unsorted;
+	private List<T> sortedList;
 	private CyclicBarrier barrier;
 
-	public QuickSorterTask(List<Integer> unsorted) {
+	public QuickSorterTask(List<T> unsorted) {
 		this.unsorted = unsorted;
 	}
 
-	public QuickSorterTask(List<Integer> unsorted, CyclicBarrier barrier) {
+	public QuickSorterTask(List<T> unsorted, CyclicBarrier barrier) {
 		this.unsorted = unsorted;
 		this.barrier = barrier;
 	}
@@ -33,12 +33,12 @@ public class QuickSorterTask extends QuickSorter implements Runnable {
 		}
 	}
 
-	public List<Integer> getSamples(int processors) {
+	public List<T> getSamples(int processors) {
 		if (getSortedList() == null) {
 			throw new NotSortedException("Not sorted");
 		}
 
-		List<Integer> samples = new ArrayList<Integer>();
+		List<T> samples = new ArrayList<T>();
 
 		for (int i = 0; i < processors; i++) {
 			samples.add(getSortedList().get(
@@ -48,19 +48,19 @@ public class QuickSorterTask extends QuickSorter implements Runnable {
 		return samples;
 	}
 
-	public List<List<Integer>> getSections(List<Integer> points) {
+	public List<List<T>> getSections(List<T> points) {
 		if (getSortedList() == null) {
 			throw new NotSortedException("Not sorted");
 		}
 
-		List<List<Integer>> sections = new ArrayList<List<Integer>>();
+		List<List<T>> sections = new ArrayList<List<T>>();
 
 		int currentPointIndex = 0;
 		int from = 0;
-		int point = points.get(currentPointIndex);
+		T point = points.get(currentPointIndex);
 
 		for (int i = 0; i < getSortedList().size(); i++) {
-			if (getSortedList().get(i) > point) {
+			if (getSortedList().get(i).compareTo(point) == 1) {
 				sections.add(getSortedList().subList(from, i));
 				from = i;
 				currentPointIndex += 1;
@@ -77,7 +77,7 @@ public class QuickSorterTask extends QuickSorter implements Runnable {
 		return sections;
 	}
 
-	public List<Integer> getSortedList() {
+	public List<T> getSortedList() {
 		return sortedList;
 	}
 }

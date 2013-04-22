@@ -27,7 +27,7 @@ public class Main {
 		long start = System.currentTimeMillis();
 
 		List<List<Integer>> processorLists = new ArrayList<List<Integer>>();
-		List<QuickSorterTask> sorterList = new ArrayList<QuickSorterTask>();
+		List<QuickSorterTask<Integer>> sorterList = new ArrayList<QuickSorterTask<Integer>>();
 
 		int index = unsortedNumbers.size() / PROCESSORS;
 
@@ -36,11 +36,12 @@ public class Main {
 					index * (i - 1), index * i));
 
 			processorLists.add(l);
-			QuickSorterTask s = new QuickSorterTask(l, barrier);
+			QuickSorterTask<Integer> s = new QuickSorterTask<Integer>(l,
+					barrier);
 			sorterList.add(s);
 		}
 
-		for (QuickSorterTask s : sorterList) {
+		for (QuickSorterTask<Integer> s : sorterList) {
 			threads.execute(s);
 		}
 
@@ -49,22 +50,22 @@ public class Main {
 
 		List<Integer> samples = new ArrayList<Integer>();
 
-		for (QuickSorterTask s : sorterList) {
+		for (QuickSorterTask<Integer> s : sorterList) {
 			samples.addAll(s.getSamples(PROCESSORS));
 		}
 
-		QuickSorterTask seqQS = new QuickSorterTask(samples);
+		QuickSorterTask<Integer> seqQS = new QuickSorterTask<Integer>(samples);
 		Thread runner = new Thread(seqQS);
 		runner.start();
 		runner.join();
-				
+
 		List<Integer> points = seqQS.getSamples(PROCESSORS);
 		points.remove(0);
 
 		// This is my favourite line
 		List<List<List<Integer>>> sectionList = new ArrayList<List<List<Integer>>>();
 
-		for (QuickSorterTask s : sorterList) {
+		for (QuickSorterTask<Integer> s : sorterList) {
 			sectionList.add(s.getSections(points));
 		}
 
@@ -78,7 +79,8 @@ public class Main {
 				l.addAll(sectionList.get(j).get(i));
 			}
 
-			QuickSorterTask s = new QuickSorterTask(l, barrier);
+			QuickSorterTask<Integer> s = new QuickSorterTask<Integer>(l,
+					barrier);
 			threads.execute(s);
 
 			sorterList.add(s);
@@ -91,7 +93,7 @@ public class Main {
 
 		System.out.println("time (ms): " + (end - start));
 
-		for (QuickSorterTask s : sorterList) {
+		for (QuickSorterTask<Integer> s : sorterList) {
 			printList(s.getSortedList());
 			System.out.println("\n=============================");
 		}

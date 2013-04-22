@@ -68,8 +68,15 @@ public class ParallelQuicksort implements Sorter {
 	 * selects p - 1 pivot values from the sorted list of regular samples. Each
 	 * process partitions its sorted sublist into p disjoint pieces, using the
 	 * pivot values as separators between the pieces.
+	 * @throws InterruptedException 
 	 */
-	private void gatherSortLocalSamples() {
+	private <T extends Comparable<? super T>> List<T> getPivotsFromSamples(List<T> samples) throws InterruptedException {
+		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
+		Thread runner = new Thread(seqQS);
+		runner.start();
+		runner.join();
+
+		return seqQS.getSamples(processors).subList(0, processors - 1);
 	}
 
 	/**
@@ -95,17 +102,11 @@ public class ParallelQuicksort implements Sorter {
 		// PHASE ONE POINT FIVE
 		List<T> samples = sampleSections(sorters);
 
-		
-		
-		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
-		Thread runner = new Thread(seqQS);
-		runner.start();
-		runner.join();
+		// PHASE TWO
+		List<T> points = getPivotsFromSamples(samples);
 
-		List<T> points = seqQS.getSamples(processors);
-		points.remove(0);
-
-		// This is my favourite line
+		// PHASE THREE
+		/** REFACTORING CONTINUES UNDER THIS LINE **/
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 
 		for (QuickSorterTask<T> s : sorters) {

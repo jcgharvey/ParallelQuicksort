@@ -35,11 +35,15 @@ public class ParallelQuicksort implements Sorter {
 			throws InterruptedException, BrokenBarrierException {
 
 		int elementsPerThread = unsorted.size() / processors;
-
+		int from, to;
 		for (int i = 1; i <= processors; i++) {
+			from = elementsPerThread * (i - 1);
+			to = elementsPerThread * i;
+			if (i == processors) {
+				to = unsorted.size();
+			}
 			QuickSorterTask<T> s = new QuickSorterTask<T>(new ArrayList<T>(
-					unsorted.subList(elementsPerThread * (i - 1),
-							elementsPerThread * i)), barrier);
+					unsorted.subList(from, to)), barrier);
 
 			sorters.add(s);
 			// qs start
@@ -83,7 +87,7 @@ public class ParallelQuicksort implements Sorter {
 		runner.start();
 		runner.join();
 		List<T> pivots = seqQS.getSamples(processors);
-		return pivots.subList(pivots.size()-(processors-1),pivots.size());
+		return pivots.subList(pivots.size() - (processors - 1), pivots.size());
 	}
 
 	/**
@@ -116,12 +120,12 @@ public class ParallelQuicksort implements Sorter {
 
 		for (int i = 0; i < processors; i++) {
 			List<T> l = new ArrayList<T>();
-			
+
 			System.out.println(sectionList.size());
 			System.out.println(sectionList);
-			
+
 			for (int j = 0; j < processors; j++) {
-				l.addAll(sectionList.get(j).get(i));	// IndexOutOfBoundsException 
+				l.addAll(sectionList.get(j).get(i)); // IndexOutOfBoundsException
 
 			}
 

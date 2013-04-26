@@ -70,7 +70,7 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 				currentPointIndex += 1;
 				if (currentPointIndex >= points.size()) {
 					sections.add(new ArrayList<T>(sortedList.subList(from,
-							sortedList.size() - 1)));
+							sortedList.size())));
 					break;
 				}
 

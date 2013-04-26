@@ -37,11 +37,13 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	}
 	
 	@Test
-	public void testSmallOrderList(){
-		List<Integer> unsorted = generateInOrderNumbers(5);
+	public void testSmallRandList(){
+		List<Integer> unsorted = generateRandomNumbers(10, 100);
 		List<Integer> sorted = null;
 		try {
+			
 			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -50,7 +52,27 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}		
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);		
+	}
+	
+	@Test
+	public void testSmallOrderList(){
+		List<Integer> unsorted = generateInOrderNumbers(100);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);
 	}
 	
 	@Test
@@ -60,6 +82,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -68,7 +91,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);
 	}
 	
 	@Test
@@ -77,6 +101,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +110,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);
 	}
 	
 	@Test
@@ -95,6 +121,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -103,7 +130,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);
 	}
 		
 	@Test
@@ -112,6 +140,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
+			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -120,6 +149,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size()+1);
 	}
 }

@@ -23,7 +23,7 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 	@Override
 	public void run() {
 		sortedList = super.sort(unsorted);
-
+		System.out.println(sortedList.size() + " " + unsorted.size());
 		if (barrier == null)
 			return;
 
@@ -32,6 +32,10 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 		} catch (InterruptedException | BrokenBarrierException e) {
 			return;
 		}
+	}
+	
+	public int getSize(){
+		return sortedList.size();
 	}
 
 	public List<T> getSamples(int processors) {
@@ -52,13 +56,13 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 		if (sortedList == null) {
 			throw new NotSortedException("Not sorted");
 		}
-
+		System.out.println("in Sections: " + sortedList.size());
 		List<List<T>> sections = new ArrayList<List<T>>();
 
 		int currentPointIndex = 0;
 		int from = 0;
 		T point = points.get(currentPointIndex);
-
+		// In here we have an off by one demon - your quest if you chose to except it ........
 		for (int i = 0; i < sortedList.size(); i++) {
 			if (sortedList.get(i).compareTo(point) == 1) {
 				sections.add(new ArrayList<T>(sortedList.subList(from, i)));
@@ -73,7 +77,14 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 				point = points.get(currentPointIndex);
 			}
 		}
-
+		int sum = 0;
+		for (List<T> a : sections){
+			for (T b : a){
+				sum++;
+			}
+		}
+		System.out.println("Sum: " + sum + " end Sections: " + sections);
+		System.out.println("points: " + points);
 		return sections;
 	}
 

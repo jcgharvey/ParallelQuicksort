@@ -43,7 +43,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		try {
 			
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +61,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +80,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -101,7 +98,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -111,7 +107,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 				assertTrue(previous.compareTo(current) < 0);
 			}
 		}	
-		System.out.println(sorted.size() +" "+ unsorted.size());
 		assertTrue(sorted.size() == unsorted.size());
 	}
 	
@@ -122,7 +117,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}
@@ -141,7 +135,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
-			System.out.println("Test " + sorted.size() + " " + unsorted.size());
 		} catch (InterruptedException | BrokenBarrierException e) {
 			e.printStackTrace();
 		}

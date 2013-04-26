@@ -100,7 +100,7 @@ public class ParallelQuicksort implements Sorter {
 	private <T extends Comparable<? super T>> void distributePartitions(
 			List<QuickSorterTask<T>> sorters, List<T> points)
 			throws InterruptedException, BrokenBarrierException {
-
+		
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 		for (QuickSorterTask<T> s : sorters) {
 			sectionList.add(s.getSections(points));
@@ -113,19 +113,16 @@ public class ParallelQuicksort implements Sorter {
 				}
 			}
 		}
-		System.out.println("SUM2: " + sum);
 
 		// merge the section sections at the same indices.
-		sorters.clear();
-
+		sorters.clear();		
+		
 		for (int i = 0; i < processors; i++) {
 			List<T> l = new ArrayList<T>();
 
 			for (int j = 0; j < processors; j++) {
-				if (sectionList.get(i).size() > j ) {
+				if (sectionList.get(i).size() > j ) { // This check here may not be needed - above is the issue
 					l.addAll(sectionList.get(i).get(j)); // IndexOutOfBoundsException
-					// fixed by adding check but still not returning entirely correct values
-					// arrays are sorted but dropping elements
 				}
 			}
 

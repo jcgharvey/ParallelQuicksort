@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSorter implements Runnable {
+public class QuickSorterTask<T extends Comparable<? super T>> extends
+		QuickSorter implements Runnable {
 	private final List<T> unsorted;
 	private List<T> sortedList;
 	private CyclicBarrier barrier;
@@ -41,8 +42,7 @@ public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSort
 		List<T> samples = new ArrayList<T>();
 
 		for (int i = 0; i < processors; i++) {
-			samples.add(sortedList.get(
-					i * sortedList.size() / (processors)));
+			samples.add(sortedList.get(i * sortedList.size() / (processors)));
 		}
 
 		return samples;
@@ -61,12 +61,12 @@ public class QuickSorterTask <T extends Comparable<? super T>> extends QuickSort
 
 		for (int i = 0; i < sortedList.size(); i++) {
 			if (sortedList.get(i).compareTo(point) == 1) {
-				sections.add(sortedList.subList(from, i));
+				sections.add(new ArrayList<T>(sortedList.subList(from, i)));
 				from = i;
 				currentPointIndex += 1;
 				if (currentPointIndex >= points.size()) {
-					sections.add(sortedList.subList(from,
-							sortedList.size() - 1));
+					sections.add(new ArrayList<T>(sortedList.subList(from,
+							sortedList.size() - 1)));
 					break;
 				}
 

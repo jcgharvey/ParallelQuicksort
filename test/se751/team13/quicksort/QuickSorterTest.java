@@ -38,7 +38,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	
 	@Test
 	public void testSmallRandList(){
-		List<Integer> unsorted = generateRandomNumbers(16, 100);
+		List<Integer> unsorted = generateRandomNumbers(12, 100);
 		List<Integer> sorted = null;
 		try {
 			
@@ -111,6 +111,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 				assertTrue(previous.compareTo(current) < 0);
 			}
 		}	
+		System.out.println(sorted.size() +" "+ unsorted.size());
 		assertTrue(sorted.size() == unsorted.size());
 	}
 	

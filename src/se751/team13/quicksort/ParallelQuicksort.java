@@ -121,12 +121,12 @@ public class ParallelQuicksort implements Sorter {
 		for (int i = 0; i < processors; i++) {
 			List<T> l = new ArrayList<T>();
 
-			System.out.println(sectionList.size());
-			System.out.println(sectionList);
-
 			for (int j = 0; j < processors; j++) {
-				l.addAll(sectionList.get(j).get(i)); // IndexOutOfBoundsException
-
+				if (sectionList.get(i).size() > j ) {
+					l.addAll(sectionList.get(i).get(j)); // IndexOutOfBoundsException
+					// fixed by adding check but still not returning entirely correct values
+					// arrays are sorted but dropping elements
+				}
 			}
 
 			QuickSorterTask<T> s = new QuickSorterTask<T>(l, barrier);

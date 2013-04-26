@@ -24,14 +24,16 @@ public class ParallelQuicksort implements Sorter {
 	}
 
 	/**
-	 * Phase 1 - Each process sorts its share of the initial elements. (SEE 1.5) Each
-	 * process gets a regular sample of its locally sorted block.
-	 * @throws BrokenBarrierException 
-	 * @throws InterruptedException 
+	 * Phase 1 - Each process sorts its share of the initial elements. (SEE 1.5)
+	 * Each process gets a regular sample of its locally sorted block.
+	 * 
+	 * @throws BrokenBarrierException
+	 * @throws InterruptedException
 	 */
 	private <T extends Comparable<? super T>> void sortSections(
-			List<QuickSorterTask<T>> sorters, List<T> unsorted) throws InterruptedException, BrokenBarrierException {
-		
+			List<QuickSorterTask<T>> sorters, List<T> unsorted)
+			throws InterruptedException, BrokenBarrierException {
+
 		int numElements = unsorted.size();
 
 		for (int i = 1; i <= processors; i++) {
@@ -42,17 +44,20 @@ public class ParallelQuicksort implements Sorter {
 			sorters.add(s);
 			threads.execute(s);
 		}
-		
+
 		barrier.await();
-		barrier.reset();		
+		barrier.reset();
 	}
-	
+
 	/**
-	 * Phase 1.5 - Each process gets a regular sample of its locally sorted block.
-	 * @param sorters 
-	 * @return 
+	 * Phase 1.5 - Each process gets a regular sample of its locally sorted
+	 * block.
+	 * 
+	 * @param sorters
+	 * @return
 	 */
-	private <T extends Comparable<? super T>> List<T> sampleSections(List<QuickSorterTask<T>> sorters) {
+	private <T extends Comparable<? super T>> List<T> sampleSections(
+			List<QuickSorterTask<T>> sorters) {
 		List<T> samples = new ArrayList<T>();
 
 		for (QuickSorterTask<T> s : sorters) {
@@ -62,15 +67,16 @@ public class ParallelQuicksort implements Sorter {
 		return samples;
 	}
 
-
 	/**
 	 * Phase 2 - One process gathers and sorts the local regular samples. It
 	 * selects p - 1 pivot values from the sorted list of regular samples. Each
 	 * process partitions its sorted sublist into p disjoint pieces, using the
 	 * pivot values as separators between the pieces.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
-	private <T extends Comparable<? super T>> List<T> getPivotsFromSamples(List<T> samples) throws InterruptedException {
+	private <T extends Comparable<? super T>> List<T> getPivotsFromSamples(
+			List<T> samples) throws InterruptedException {
 		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
 		Thread runner = new Thread(seqQS);
 		runner.start();
@@ -82,31 +88,13 @@ public class ParallelQuicksort implements Sorter {
 	/**
 	 * Phase 3 - Each process i keeps its ith partition and sends the jth
 	 * partition to process j, for all j != i.
+	 * 
+	 * @throws BrokenBarrierException
+	 * @throws InterruptedException
 	 */
-	private void distributePartitions() {
-	}
-
-	/**
-	 * Phase 4 - Each process merges its p partitions into a single list.
-	 */
-	private void mergePartitions() {
-	}
-
-	public <T extends Comparable<? super T>> List<T> sort(List<T> unsorted)
+	private <T extends Comparable<? super T>> void distributePartitions(
+			List<QuickSorterTask<T>> sorters, List<T> points)
 			throws InterruptedException, BrokenBarrierException {
-
-		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();
-		
-		// PHASE ONE
-		sortSections(sorters, unsorted);
-		// PHASE ONE POINT FIVE
-		List<T> samples = sampleSections(sorters);
-
-		// PHASE TWO
-		List<T> points = getPivotsFromSamples(samples);
-
-		// PHASE THREE
-		/** REFACTORING CONTINUES UNDER THIS LINE **/
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 
 		for (QuickSorterTask<T> s : sorters) {
@@ -134,13 +122,43 @@ public class ParallelQuicksort implements Sorter {
 
 		barrier.await();
 		barrier.reset();
+	}
 
-		threads.shutdown();
-
+	/**
+	 * Phase 4 - Each process merges its p partitions into a single list.
+	 * 
+	 * @return
+	 */
+	private <T extends Comparable<? super T>> List<T> mergePartitions(
+			List<QuickSorterTask<T>> sorters) {
 		List<T> sorted = new ArrayList<T>();
 		for (QuickSorterTask<T> s : sorters) {
 			sorted.addAll(s.getSortedList());
 		}
+
+		return sorted;
+	}
+
+	public <T extends Comparable<? super T>> List<T> sort(List<T> unsorted)
+			throws InterruptedException, BrokenBarrierException {
+
+		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();
+
+		// PHASE ONE
+		sortSections(sorters, unsorted);
+		// PHASE ONE POINT FIVE
+		List<T> samples = sampleSections(sorters);
+
+		// PHASE TWO
+		List<T> points = getPivotsFromSamples(samples);
+
+		// PHASE THREE
+		distributePartitions(sorters, points);
+
+		// PHASE FOUR
+		List<T> sorted = mergePartitions(sorters);
+
+		threads.shutdown();
 
 		return sorted;
 	}

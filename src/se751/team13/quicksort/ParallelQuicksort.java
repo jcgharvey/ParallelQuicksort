@@ -34,12 +34,12 @@ public class ParallelQuicksort implements Sorter {
 			List<QuickSorterTask<T>> sorters, List<T> unsorted)
 			throws InterruptedException, BrokenBarrierException {
 
-		int numElements = unsorted.size();
+		int elementsPerThread = unsorted.size() / processors;
 
 		for (int i = 1; i <= processors; i++) {
 			QuickSorterTask<T> s = new QuickSorterTask<T>(new ArrayList<T>(
-					unsorted.subList(numElements * (i - 1), numElements * i)),
-					barrier);
+					unsorted.subList(elementsPerThread * (i - 1),
+							elementsPerThread * i)), barrier);
 
 			sorters.add(s);
 			threads.execute(s);
@@ -95,6 +95,7 @@ public class ParallelQuicksort implements Sorter {
 	private <T extends Comparable<? super T>> void distributePartitions(
 			List<QuickSorterTask<T>> sorters, List<T> points)
 			throws InterruptedException, BrokenBarrierException {
+
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 
 		for (QuickSorterTask<T> s : sorters) {

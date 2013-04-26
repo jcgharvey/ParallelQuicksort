@@ -27,13 +27,50 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		return nums;
 	}
 	
-	private static List<Integer> generateInOrderNumbers(int amount, int max) {
+	private static List<Integer> generateInOrderNumbers(int amount) {
 		List<Integer> nums = new ArrayList<Integer>();
 
 		for (int i = 0; i < amount; i++) {
 			nums.add(i);
 		}
 		return nums;
+	}
+	
+	@Test
+	public void testSmallRandList(){
+		List<Integer> unsorted = generateRandomNumbers(12, 100);
+		List<Integer> sorted = null;
+		try {
+			
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}	
+		assertTrue(sorted.size() == unsorted.size());		
+	}
+	
+	@Test
+	public void testSmallOrderList(){
+		List<Integer> unsorted = generateInOrderNumbers(100);
+		List<Integer> sorted = null;
+		try {
+			sorted = pqs.sort(unsorted);
+		} catch (InterruptedException | BrokenBarrierException e) {
+			e.printStackTrace();
+		}
+		Integer previous = null;
+		for (Integer current : sorted) {
+			if (previous != null) {
+				assertTrue(previous.compareTo(current) < 0);
+			}
+		}	
+		assertTrue(sorted.size() == unsorted.size());
 	}
 	
 	@Test
@@ -52,12 +89,12 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 				assertTrue(previous.compareTo(current) < 0);
 			}
 		}
+		assertTrue(sorted.size() == unsorted.size());
 	}
 	
 	@Test
 	public void testInOrderShortInteger() {
-		List<Integer> unsorted = generateInOrderNumbers(SHORT,
-				LOW_MAX);
+		List<Integer> unsorted = generateInOrderNumbers(SHORT);
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
@@ -69,7 +106,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size());
 	}
 	
 	@Test
@@ -87,13 +125,13 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size());
 	}
 		
 	@Test
 	public void testInOrderLargeInteger() {
-		List<Integer> unsorted = generateInOrderNumbers(LARGE,
-				HIGH_MAX);
+		List<Integer> unsorted = generateInOrderNumbers(LARGE);
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);
@@ -105,6 +143,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 			if (previous != null) {
 				assertTrue(previous.compareTo(current) < 0);
 			}
-		}
+		}	
+		assertTrue(sorted.size() == unsorted.size());
 	}
 }

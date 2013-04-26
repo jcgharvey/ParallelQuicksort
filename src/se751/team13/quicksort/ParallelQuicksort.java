@@ -35,13 +35,18 @@ public class ParallelQuicksort implements Sorter {
 			throws InterruptedException, BrokenBarrierException {
 
 		int elementsPerThread = unsorted.size() / processors;
-
+		int from, to;
 		for (int i = 1; i <= processors; i++) {
+			from = elementsPerThread * (i - 1);
+			to = elementsPerThread * i;
+			if (i == processors) {
+				to = unsorted.size();
+			}
 			QuickSorterTask<T> s = new QuickSorterTask<T>(new ArrayList<T>(
-					unsorted.subList(elementsPerThread * (i - 1),
-							elementsPerThread * i)), barrier);
+					unsorted.subList(from, to)), barrier);
 
 			sorters.add(s);
+			// qs start
 			threads.execute(s);
 		}
 
@@ -81,8 +86,8 @@ public class ParallelQuicksort implements Sorter {
 		Thread runner = new Thread(seqQS);
 		runner.start();
 		runner.join();
-
-		return seqQS.getSamples(processors).subList(0, processors - 1);
+		List<T> pivots = seqQS.getSamples(processors);
+		return pivots.subList(pivots.size() - (processors - 1), pivots.size());
 	}
 
 	/**
@@ -95,24 +100,34 @@ public class ParallelQuicksort implements Sorter {
 	private <T extends Comparable<? super T>> void distributePartitions(
 			List<QuickSorterTask<T>> sorters, List<T> points)
 			throws InterruptedException, BrokenBarrierException {
-
+		
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
-
 		for (QuickSorterTask<T> s : sorters) {
 			sectionList.add(s.getSections(points));
 		}
+		int sum = 0;
+		for (List<List<T>> s : sectionList) {
+			for (List<T> p : s) {
+				for (T a : p) {
+					sum++;
+				}
+			}
+		}
 
 		// merge the section sections at the same indices.
-		sorters.clear();
-
+		sorters.clear();		
+		
 		for (int i = 0; i < processors; i++) {
 			List<T> l = new ArrayList<T>();
 
 			for (int j = 0; j < processors; j++) {
-				l.addAll(sectionList.get(j).get(i)); // IndexOutOfBoundsException
+				if (sectionList.get(i).size() > j ) { // This check here may not be needed - above is the issue
+					l.addAll(sectionList.get(i).get(j)); // IndexOutOfBoundsException
+				}
 			}
 
 			QuickSorterTask<T> s = new QuickSorterTask<T>(l, barrier);
+			// qs called
 			threads.execute(s);
 
 			sorters.add(s);
@@ -133,7 +148,6 @@ public class ParallelQuicksort implements Sorter {
 		for (QuickSorterTask<T> s : sorters) {
 			sorted.addAll(s.getSortedList());
 		}
-
 		return sorted;
 	}
 

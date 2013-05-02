@@ -60,12 +60,8 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 		int currentPointIndex = 0;
 		int from = 0;
 		T point = points.get(currentPointIndex);
-		boolean hasFreeElements = false; 	
 		for (int i = 0; i < sortedList.size(); i++) {
-			if (sortedList.get(i).compareTo(point) == -1) {
-				hasFreeElements = true;
-			}else if(sortedList.get(i).compareTo(point) == 1) {
-				hasFreeElements = false;
+			if(sortedList.get(i).compareTo(point) == 1) {
 				sections.add(new ArrayList<T>(sortedList.subList(from, i)));
 				from = i;
 				currentPointIndex += 1;
@@ -78,9 +74,7 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 				point = points.get(currentPointIndex);
 			}
 		}
-		if(hasFreeElements){
-			sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size()))); // Fix inorder bug
-		}
+		sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size()))); // Fix inorder bug
 		int sum = 0;
 		for (List<T> a : sections) {
 			for (T b : a) {

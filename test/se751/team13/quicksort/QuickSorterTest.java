@@ -38,7 +38,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	
 	@Test
 	public void testSmallRandList(){
-		List<Integer> unsorted = generateRandomNumbers(12, 100);
+		List<Integer> unsorted = generateRandomNumbers(10, 100);
 		List<Integer> sorted = null;
 		try {
 			
@@ -57,7 +57,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	
 	@Test
 	public void testSmallOrderList(){
-		List<Integer> unsorted = generateInOrderNumbers(100);
+		List<Integer> unsorted = generateInOrderNumbers(10);
 		List<Integer> sorted = null;
 		try {
 			sorted = pqs.sort(unsorted);

@@ -7,7 +7,7 @@ import java.util.concurrent.BrokenBarrierException;
 
 public class Main {
 
-	private static final int NUM_NUMBERS = 10000;
+	private static final int NUM_NUMBERS = 100;
 	private static final int MAX_NUMBER = 1000;
 
 	public static void main(String[] args) throws InterruptedException,

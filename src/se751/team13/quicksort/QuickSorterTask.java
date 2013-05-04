@@ -74,13 +74,8 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 				point = points.get(currentPointIndex);
 			}
 		}
-		sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size()))); // Fix inorder bug
-		int sum = 0;
-		for (List<T> a : sections) {
-			for (T b : a) {
-				sum++;
-			}
-		}
+		// add the last section
+		sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size())));
 		return sections;
 	}
 

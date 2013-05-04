@@ -42,14 +42,17 @@ public class ParallelQuicksort implements Sorter {
 			if (i == processors) {
 				to = unsorted.size();
 			}
+			// Create a QuickSorterTask and assign it a portion of the unsorted list
+			// Pass a barrier so we can wait
 			QuickSorterTask<T> s = new QuickSorterTask<T>(new ArrayList<T>(
 					unsorted.subList(from, to)), barrier);
 
+			// Add the QuickSorterTask to a list so we can keep a track of it.
 			sorters.add(s);
-			// qs start
+			// Ask each thread to sort.
 			threads.execute(s);
 		}
-
+		// wait for each process to finish then reset barrier.
 		barrier.await();
 		barrier.reset();
 	}
@@ -64,7 +67,7 @@ public class ParallelQuicksort implements Sorter {
 	private <T extends Comparable<? super T>> List<T> sampleSections(
 			List<QuickSorterTask<T>> sorters) {
 		List<T> samples = new ArrayList<T>();
-
+		// Get the samples from each sorter and add to our samples list
 		for (QuickSorterTask<T> s : sorters) {
 			samples.addAll(s.getSamples(processors));
 		}
@@ -80,14 +83,15 @@ public class ParallelQuicksort implements Sorter {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private <T extends Comparable<? super T>> List<T> getPivotsFromSamples(
+	private <T extends Comparable<? super T>> List<T> getPointsFromSamples(
 			List<T> samples) throws InterruptedException {
 		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
 		Thread runner = new Thread(seqQS);
 		runner.start();
 		runner.join();
-		List<T> pivots = seqQS.getSamples(processors);
-		return pivots.subList(pivots.size() - (processors - 1), pivots.size());
+		List<T> points = seqQS.getSamples(processors);
+		// Get the points from the samples, exclude the first
+		return points.subList(points.size() - (processors - 1), points.size());
 	}
 
 	/**
@@ -104,14 +108,6 @@ public class ParallelQuicksort implements Sorter {
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 		for (QuickSorterTask<T> s : sorters) {
 			sectionList.add(s.getSections(points));
-		}
-		int sum = 0;
-		for (List<List<T>> s : sectionList) {
-			for (List<T> p : s) {
-				for (T a : p) {
-					sum++;
-				}
-			}
 		}
 
 		// merge the section sections at the same indices.
@@ -164,7 +160,7 @@ public class ParallelQuicksort implements Sorter {
 		List<T> samples = sampleSections(sorters);
 
 		// PHASE TWO
-		List<T> points = getPivotsFromSamples(samples);
+		List<T> points = getPointsFromSamples(samples);
 
 		// PHASE THREE
 		distributePartitions(sorters, points);

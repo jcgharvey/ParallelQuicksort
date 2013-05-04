@@ -7,13 +7,13 @@ import java.util.concurrent.BrokenBarrierException;
 
 public class Main {
 
-	private static final int NUM_NUMBERS = 10000;
+	private static final int NUM_NUMBERS = 100000;
 	private static final int MAX_NUMBER = 1000;
 
 	public static void main(String[] args) throws InterruptedException,
 			BrokenBarrierException {
 
-		List<Integer> unsortedNumbers = generateRandomNumbers(NUM_NUMBERS,
+		List<Integer> unsortedNumbers = Util.generateRandomNumbers(NUM_NUMBERS,
 				MAX_NUMBER);
 		long start;
 		long end;
@@ -32,14 +32,4 @@ public class Main {
 		System.out.println("time par (ms): " + (end - start));
 	}
 
-	private static List<Integer> generateRandomNumbers(int amount, int max) {
-		Random rand = new Random(System.currentTimeMillis());
-		List<Integer> nums = new ArrayList<Integer>();
-
-		for (int i = 0; i < amount; i++) {
-			nums.add(rand.nextInt(max));
-		}
-		
-		return nums;
-	}
 }

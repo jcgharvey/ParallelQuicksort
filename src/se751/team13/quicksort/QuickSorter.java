@@ -14,6 +14,8 @@ public class QuickSorter implements Sorter {
 		if (list.size() <= 1) {
 			return list;
 		}
+		
+		list = new ArrayList<T>(list);  // don't mess with the original list
 
 		T pivot = extractPivot(list);
 		List<T> less = new ArrayList<T>();

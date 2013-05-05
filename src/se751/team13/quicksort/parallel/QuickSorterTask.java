@@ -1,9 +1,12 @@
-package se751.team13.quicksort;
+package se751.team13.quicksort.parallel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+
+import se751.team13.quicksort.NotSortedException;
+import se751.team13.quicksort.QuickSorter;
 
 public class QuickSorterTask<T extends Comparable<? super T>> extends
 		QuickSorter<T> implements Runnable {

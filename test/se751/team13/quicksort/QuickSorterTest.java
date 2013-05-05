@@ -7,11 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import se751.team13.quicksort.parallel.ParallelQuicksort;
+import se751.team13.quicksort.sequential.SequentialQuicksort;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {

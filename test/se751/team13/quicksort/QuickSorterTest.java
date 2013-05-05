@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -17,40 +18,61 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	Sorter<Integer> sorter;
 	List<Integer> unsorted;
 	List<Integer> sorted;
+	boolean random;
 
 	@Parameters
-	public static Collection<Object[]> primeNumbers() {
-		return Arrays
-				.asList(new Object[][] {
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateRandomNumbers(100, 50) },
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateRandomNumbers(1000, 500) },
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateRandomNumbers(10000, 50000) },
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateInOrderNumbers(100) },
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateInOrderNumbers(1000) },
-						{ new ParallelQuicksort<Integer>(),
-								Util.generateInOrderNumbers(10000) },
-						{ new QuickSorter<Integer>(),
-								Util.generateRandomNumbers(100, 50) },
-						{ new QuickSorter<Integer>(),
-								Util.generateRandomNumbers(1000, 500) },
-						{ new QuickSorter<Integer>(),
-								Util.generateRandomNumbers(10000, 50000) },
-						{ new QuickSorter<Integer>(),
-								Util.generateInOrderNumbers(100) },
-						{ new QuickSorter<Integer>(),
-								Util.generateInOrderNumbers(1000) },
-						{ new QuickSorter<Integer>(),
-								Util.generateInOrderNumbers(10000) } });
+	public static Collection<Object[]> parameters() {
+		return Arrays.asList(new Object[][] {
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateRandomNumbers(100), true },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateRandomNumbers(1000), true },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateRandomNumbers(10000), true },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateRandomNumbers(100000), true },
+
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateInOrderNumbers(100), false },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateInOrderNumbers(1000), false },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateInOrderNumbers(10000), false },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(100000), false },
+
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateRandomNumbers(100), true },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateRandomNumbers(1000), true },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateRandomNumbers(10000), true },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateRandomNumbers(100000), true },
+
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateInOrderNumbers(100), false },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateInOrderNumbers(1000), false },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateInOrderNumbers(10000), false },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(100000), false } 
+		});
 	}
 
-	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted) {
+	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted,
+			boolean random) {
 		this.sorter = sorter;
 		this.unsorted = unsorted;
+		this.random = random;
+	}
+	
+	@After
+	public void tearDown() {
+		this.sorted = null;
+		this.unsorted = null;
+		this.sorter = null;
 	}
 
 	@Test
@@ -64,8 +86,19 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	public void testLength() throws InterruptedException,
 			BrokenBarrierException {
 		sorted = sorter.sort(unsorted);
-		System.out.println("len(sorted): " + sorted.size() + " len(unsorted): "
-				+ unsorted.size());
 		assertTrue(sorted.size() == unsorted.size());
+	}
+
+	@Test
+	public void testTime() throws InterruptedException, BrokenBarrierException {
+		long begin, end, total;
+		begin = System.currentTimeMillis();
+		sorted = sorter.sort(unsorted);
+		end = System.currentTimeMillis();
+
+		total = end - begin;
+
+		System.out.println(sorter.getClass().getSimpleName() + "\t< time: " + total
+				+ " (ms)  \trandom: " + random + "\tlength: " + unsorted.size() + " >");
 	}
 }

@@ -10,6 +10,10 @@ public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 	}
 
 	public List<T> sort(List<T> list) {
+		return quickSort(new ArrayList<T>(list));
+	}
+	
+	private List<T> quickSort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;
 		}
@@ -17,10 +21,10 @@ public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 		T pivot = extractPivot(list);
 		Parts halves = split(list, pivot);
 
-		List<T> result = new ArrayList<T>();
-		result.addAll(sort(halves.lt));
+		List<T> result = new ArrayList<T>(list.size());
+		result.addAll(quickSort(halves.lt));
 		result.add(pivot);
-		result.addAll(sort(halves.gt));
+		result.addAll(quickSort(halves.gt));
 
 		return result;
 	}
@@ -31,7 +35,7 @@ public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 		for (T x : list) {
 			if (x.compareTo(pivot) < 0) {
 				p.lt.add(x);
-			} else if (x != pivot) {
+			} else {
 				p.gt.add(x);
 			}
 		}
@@ -40,6 +44,6 @@ public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 	}
 
 	private T extractPivot(List<T> list) {
-		return list.get(list.size() / 2);
+		return list.remove(list.size() / 2);
 	}
 }

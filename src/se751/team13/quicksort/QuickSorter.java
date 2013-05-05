@@ -3,26 +3,28 @@ package se751.team13.quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickSorter implements Sorter {
-	
+public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
+
 	/**
 	 * Implementation of sequential QuickSort
-	 * @param list to sort
+	 * 
+	 * @param list
+	 *            to sort
 	 * @return sorted list
 	 */
-	public <T extends Comparable<? super T>> List<T> sort(List<T> list) {
+	public List<T> sort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;
 		}
-		
-		list = new ArrayList<T>(list);  // don't mess with the original list
+
+		list = new ArrayList<T>(list); // don't mess with the original list
 
 		T pivot = extractPivot(list);
 		List<T> less = new ArrayList<T>();
 		List<T> greater = new ArrayList<T>();
 
 		for (T i : list) {
-			if (i.compareTo(pivot) < 0 ) {
+			if (i.compareTo(pivot) < 0) {
 				less.add(i);
 			} else {
 				greater.add(i);
@@ -30,7 +32,7 @@ public class QuickSorter implements Sorter {
 		}
 
 		// concatenate the lists
-		List<T> result = new ArrayList<T>(list.size());
+		List<T> result = new ArrayList<T>();
 		result.addAll(sort(less));
 		result.add(pivot);
 		result.addAll(sort(greater));
@@ -38,7 +40,7 @@ public class QuickSorter implements Sorter {
 		return result;
 	}
 
-	private <T extends Comparable<? super T>> T extractPivot(List<T> list) {
+	private T extractPivot(List<T> list) {
 		return list.remove(0);
 	}
 }

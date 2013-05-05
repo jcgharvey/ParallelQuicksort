@@ -23,41 +23,41 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	@Parameters
 	public static Collection<Object[]> parameters() {
 		return Arrays.asList(new Object[][] {
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateRandomNumbers(100), true },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateRandomNumbers(1000), true },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateRandomNumbers(10000), true },
 //				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
-
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100), false },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateInOrderNumbers(1000), false },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateInOrderNumbers(10000), false },
+//						Util.generateRandomNumbers(100), true },
 //				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100000), false },
+//						Util.generateRandomNumbers(1000), true },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateRandomNumbers(10000), true },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateRandomNumbers(100000), true },
 
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateRandomNumbers(100), true },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateRandomNumbers(1000), true },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateRandomNumbers(10000), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(100), false },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(1000), false },
+//				{ new ParallelQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(10000), false },
+				{ new ParallelQuicksort<Integer>(),
+						Util.generateInOrderNumbers(100000), false },
 
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100), false },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(1000), false },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(10000), false },
 //				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100000), false } 
+//						Util.generateRandomNumbers(100), true },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateRandomNumbers(1000), true },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateRandomNumbers(10000), true },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateRandomNumbers(100000), true },
+
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(100), false },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(1000), false },
+//				{ new SequentialQuicksort<Integer>(),
+//						Util.generateInOrderNumbers(10000), false },
+				{ new SequentialQuicksort<Integer>(),
+						Util.generateInOrderNumbers(100000), false } 
 		});
 	}
 
@@ -68,26 +68,19 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		this.random = random;
 	}
 	
-	@After
-	public void tearDown() {
-		this.sorted = null;
-		this.unsorted = null;
-		this.sorter = null;
-	}
-
-	@Test
-	public void testSorted() throws InterruptedException,
-			BrokenBarrierException {
-		sorted = sorter.sort(unsorted);
-		assertTrue(Util.inOrder(sorted));
-	}
-
-	@Test
-	public void testLength() throws InterruptedException,
-			BrokenBarrierException {
-		sorted = sorter.sort(unsorted);
-		assertTrue(sorted.size() == unsorted.size());
-	}
+//	@Test
+//	public void testSorted() throws InterruptedException,
+//			BrokenBarrierException {
+//		sorted = sorter.sort(unsorted);
+//		assertTrue(Util.inOrder(sorted));
+//	}
+//
+//	@Test
+//	public void testLength() throws InterruptedException,
+//			BrokenBarrierException {
+//		sorted = sorter.sort(unsorted);
+//		assertTrue(sorted.size() == unsorted.size());
+//	}
 
 	@Test
 	public void testTime() throws InterruptedException, BrokenBarrierException {

@@ -4,43 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
+	private class Parts {
+		public final List<T> lt = new ArrayList<T>();
+		public final List<T> gt = new ArrayList<T>();
+	}
 
-	/**
-	 * Implementation of sequential QuickSort
-	 * 
-	 * @param list
-	 *            to sort
-	 * @return sorted list
-	 */
 	public List<T> sort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;
 		}
 
-		list = new ArrayList<T>(list); // don't mess with the original list
-
 		T pivot = extractPivot(list);
-		List<T> less = new ArrayList<T>();
-		List<T> greater = new ArrayList<T>();
+		Parts halves = split(list, pivot);
 
-		for (T i : list) {
-			if (i.compareTo(pivot) < 0) {
-				less.add(i);
-			} else {
-				greater.add(i);
-			}
-		}
-
-		// concatenate the lists
 		List<T> result = new ArrayList<T>();
-		result.addAll(sort(less));
+		result.addAll(sort(halves.lt));
 		result.add(pivot);
-		result.addAll(sort(greater));
+		result.addAll(sort(halves.gt));
 
 		return result;
 	}
 
+	private Parts split(List<T> list, T pivot) {
+		Parts p = new Parts();
+
+		for (T x : list) {
+			if (x.compareTo(pivot) < 0) {
+				p.lt.add(x);
+			} else if (x != pivot) {
+				p.gt.add(x);
+			}
+		}
+
+		return p;
+	}
+
 	private T extractPivot(List<T> list) {
-		return list.remove(0);
+		return list.get(list.size() / 2);
 	}
 }

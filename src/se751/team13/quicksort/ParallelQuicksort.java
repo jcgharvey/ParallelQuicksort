@@ -13,15 +13,12 @@ public class ParallelQuicksort<T extends Comparable<? super T>> implements
 	private int processors;
 	private CyclicBarrier barrier;
 	private ExecutorService threads;
+	List<QuickSorterTask<T>> sorters;
 
 	public ParallelQuicksort() {
 		processors = Runtime.getRuntime().availableProcessors();
 		barrier = new CyclicBarrier(processors + 1);
 		threads = Executors.newFixedThreadPool(processors);
-	}
-
-	public ParallelQuicksort(int processors) {
-		this.processors = processors;
 	}
 
 	/**
@@ -145,8 +142,7 @@ public class ParallelQuicksort<T extends Comparable<? super T>> implements
 			BrokenBarrierException {
 
 		threads = Executors.newFixedThreadPool(processors);
-
-		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();
+		sorters = new ArrayList<QuickSorterTask<T>>();
 
 		// PHASE ONE
 		sortSections(sorters, unsorted);

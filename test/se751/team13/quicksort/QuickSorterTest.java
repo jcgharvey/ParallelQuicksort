@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
-	Sorter sorter;
+	Sorter<Integer> sorter;
 	List<Integer> unsorted;
 	List<Integer> sorted;
 
@@ -22,26 +22,33 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	public static Collection<Object[]> primeNumbers() {
 		return Arrays
 				.asList(new Object[][] {
-						{ new ParallelQuicksort(),
+						{ new ParallelQuicksort<Integer>(),
 								Util.generateRandomNumbers(100, 50) },
-						{ new ParallelQuicksort(),
+						{ new ParallelQuicksort<Integer>(),
 								Util.generateRandomNumbers(1000, 500) },
-						{ new ParallelQuicksort(),
+						{ new ParallelQuicksort<Integer>(),
 								Util.generateRandomNumbers(10000, 50000) },
-						{ new ParallelQuicksort(), Util.generateInOrderNumbers(100) },
-						{ new ParallelQuicksort(), Util.generateInOrderNumbers(1000) },
-						{ new ParallelQuicksort(),
+						{ new ParallelQuicksort<Integer>(),
+								Util.generateInOrderNumbers(100) },
+						{ new ParallelQuicksort<Integer>(),
+								Util.generateInOrderNumbers(1000) },
+						{ new ParallelQuicksort<Integer>(),
 								Util.generateInOrderNumbers(10000) },
-						{ new QuickSorter(), Util.generateRandomNumbers(100, 50) },
-						{ new QuickSorter(), Util.generateRandomNumbers(1000, 500) },
-						{ new QuickSorter(),
+						{ new QuickSorter<Integer>(),
+								Util.generateRandomNumbers(100, 50) },
+						{ new QuickSorter<Integer>(),
+								Util.generateRandomNumbers(1000, 500) },
+						{ new QuickSorter<Integer>(),
 								Util.generateRandomNumbers(10000, 50000) },
-						{ new QuickSorter(), Util.generateInOrderNumbers(100) },
-						{ new QuickSorter(), Util.generateInOrderNumbers(1000) },
-						{ new QuickSorter(), Util.generateInOrderNumbers(10000) } });
+						{ new QuickSorter<Integer>(),
+								Util.generateInOrderNumbers(100) },
+						{ new QuickSorter<Integer>(),
+								Util.generateInOrderNumbers(1000) },
+						{ new QuickSorter<Integer>(),
+								Util.generateInOrderNumbers(10000) } });
 	}
 
-	public QuickSorterTest(Sorter sorter, List<Integer> unsorted) {
+	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted) {
 		this.sorter = sorter;
 		this.unsorted = unsorted;
 	}
@@ -57,6 +64,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	public void testLength() throws InterruptedException,
 			BrokenBarrierException {
 		sorted = sorter.sort(unsorted);
+		System.out.println("len(sorted): " + sorted.size() + " len(unsorted): "
+				+ unsorted.size());
 		assertTrue(sorted.size() == unsorted.size());
 	}
 }

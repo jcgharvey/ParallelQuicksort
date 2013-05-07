@@ -1,6 +1,6 @@
 package se751.team13.quicksort;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +87,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	@Test
 	public void testSorted() throws InterruptedException,
 			BrokenBarrierException {
+		sorted = sorter.sort(unsorted);
+		assertTrue(inOrder(sorted));
 	}
 
 	@Test

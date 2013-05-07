@@ -6,7 +6,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class QuickSorterTask<T extends Comparable<? super T>> extends
-		QuickSorter implements Runnable {
+		QuickSorter<T> implements Runnable {
 	private final List<T> unsorted;
 	private List<T> sortedList;
 	private CyclicBarrier barrier;

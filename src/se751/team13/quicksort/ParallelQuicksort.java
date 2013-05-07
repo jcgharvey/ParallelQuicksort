@@ -7,7 +7,8 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ParallelQuicksort implements Sorter {
+public class ParallelQuicksort<T extends Comparable<? super T>> implements
+		Sorter<T> {
 
 	private int processors;
 	private CyclicBarrier barrier;
@@ -30,8 +31,7 @@ public class ParallelQuicksort implements Sorter {
 	 * @throws BrokenBarrierException
 	 * @throws InterruptedException
 	 */
-	private <T extends Comparable<? super T>> void sortSections(
-			List<QuickSorterTask<T>> sorters, List<T> unsorted)
+	private void sortSections(List<QuickSorterTask<T>> sorters, List<T> unsorted)
 			throws InterruptedException, BrokenBarrierException {
 
 		int elementsPerThread = unsorted.size() / processors;
@@ -61,8 +61,7 @@ public class ParallelQuicksort implements Sorter {
 	 * @param sorters
 	 * @return
 	 */
-	private <T extends Comparable<? super T>> List<T> sampleSections(
-			List<QuickSorterTask<T>> sorters) {
+	private List<T> sampleSections(List<QuickSorterTask<T>> sorters) {
 		List<T> samples = new ArrayList<T>();
 
 		for (QuickSorterTask<T> s : sorters) {
@@ -80,8 +79,8 @@ public class ParallelQuicksort implements Sorter {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private <T extends Comparable<? super T>> List<T> getPivotsFromSamples(
-			List<T> samples) throws InterruptedException {
+	private List<T> getPivotsFromSamples(List<T> samples)
+			throws InterruptedException {
 		QuickSorterTask<T> seqQS = new QuickSorterTask<T>(samples);
 		Thread runner = new Thread(seqQS);
 		runner.start();
@@ -97,23 +96,24 @@ public class ParallelQuicksort implements Sorter {
 	 * @throws BrokenBarrierException
 	 * @throws InterruptedException
 	 */
-	private <T extends Comparable<? super T>> void distributePartitions(
-			List<QuickSorterTask<T>> sorters, List<T> points)
-			throws InterruptedException, BrokenBarrierException {
-		
+	private void distributePartitions(List<QuickSorterTask<T>> sorters,
+			List<T> points) throws InterruptedException, BrokenBarrierException {
+
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 		for (QuickSorterTask<T> s : sorters) {
 			sectionList.add(s.getSections(points));
 		}
 
 		// merge the section sections at the same indices.
-		sorters.clear();		
-		
+		sorters.clear();
+
 		for (int i = 0; i < processors; i++) {
 			List<T> l = new ArrayList<T>();
 
 			for (int j = 0; j < processors; j++) {
-				if (sectionList.get(j).size() > i ) { // This check here may not be needed - above is the issue
+				if (sectionList.get(j).size() > i) { // This check here may not
+														// be needed - above is
+														// the issue
 					l.addAll(sectionList.get(j).get(i)); // IndexOutOfBoundsException
 				}
 			}
@@ -133,8 +133,7 @@ public class ParallelQuicksort implements Sorter {
 	 * 
 	 * @return
 	 */
-	private <T extends Comparable<? super T>> List<T> mergePartitions(
-			List<QuickSorterTask<T>> sorters) {
+	private List<T> mergePartitions(List<QuickSorterTask<T>> sorters) {
 		List<T> sorted = new ArrayList<T>();
 		for (QuickSorterTask<T> s : sorters) {
 			sorted.addAll(s.getSortedList());
@@ -142,9 +141,9 @@ public class ParallelQuicksort implements Sorter {
 		return sorted;
 	}
 
-	public <T extends Comparable<? super T>> List<T> sort(List<T> unsorted)
-			throws InterruptedException, BrokenBarrierException {
-		
+	public List<T> sort(List<T> unsorted) throws InterruptedException,
+			BrokenBarrierException {
+
 		threads = Executors.newFixedThreadPool(processors);
 
 		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();

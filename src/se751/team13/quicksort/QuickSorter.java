@@ -20,7 +20,7 @@ public class QuickSorter implements Sorter {
 		List<T> greater = new ArrayList<T>();
 
 		for (T i : list) {
-			if (i.compareTo(pivot) == -1) {
+			if (i.compareTo(pivot) < 0 ) {
 				less.add(i);
 			} else {
 				greater.add(i);

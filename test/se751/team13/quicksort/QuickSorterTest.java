@@ -3,13 +3,51 @@ package se751.team13.quicksort;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
-public class QuickSorterTest extends TestCase{
+@RunWith(Parameterized.class)
+public class QuickSorterTest<T extends Comparable<? super T>> {
+	Sorter sorter;
+	List<Integer> unsorted;
+	List<Integer> sorted;
+
+	@Parameters
+	public static Collection<Object[]> primeNumbers() {
+		return Arrays
+				.asList(new Object[][] {
+						{ new ParallelQuicksort(),
+								generateRandomNumbers(100, 50) },
+						{ new ParallelQuicksort(),
+								generateRandomNumbers(1000, 500) },
+						{ new ParallelQuicksort(),
+								generateRandomNumbers(10000, 50000) },
+						{ new ParallelQuicksort(), generateInOrderNumbers(100) },
+						{ new ParallelQuicksort(), generateInOrderNumbers(1000) },
+						{ new ParallelQuicksort(),
+								generateInOrderNumbers(10000) },
+						{ new QuickSorter(), generateRandomNumbers(100, 50) },
+						{ new QuickSorter(), generateRandomNumbers(1000, 500) },
+						{ new QuickSorter(),
+								generateRandomNumbers(10000, 50000) },
+						{ new QuickSorter(), generateInOrderNumbers(100) },
+						{ new QuickSorter(), generateInOrderNumbers(1000) },
+						{ new QuickSorter(), generateInOrderNumbers(10000) } });
+	}
+
+	public QuickSorterTest(Sorter sorter, List<Integer> unsorted) {
+		this.sorter = sorter;
+		this.unsorted = unsorted;
+	}
+
 	private static List<Integer> generateRandomNumbers(int amount, int max) {
 		Random rand = new Random(System.currentTimeMillis());
 		List<Integer> nums = new ArrayList<Integer>();
@@ -45,16 +83,16 @@ public class QuickSorterTest extends TestCase{
 
 		return true;
 	}
-	
-	public void testBad() throws InterruptedException, BrokenBarrierException {
-		Sorter sorter = new ParallelQuicksort();
-		List<Integer> unsorted = generateRandomNumbers(100, 50);
-		List<Integer> sorted = sorter.sort(unsorted);
-		for(Integer i : sorted){
-			System.out.println(i);
-		}
-		assertTrue(inOrder(sorted));
-		assertTrue(sorted.size() == unsorted.size());
+
+	@Test
+	public void testSorted() throws InterruptedException,
+			BrokenBarrierException {
 	}
 
+	@Test
+	public void testLength() throws InterruptedException,
+			BrokenBarrierException {
+		sorted = sorter.sort(unsorted);
+		assertTrue(sorted.size() == unsorted.size());
+	}
 }

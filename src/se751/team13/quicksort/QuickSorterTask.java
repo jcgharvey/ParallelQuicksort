@@ -61,23 +61,19 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 		int from = 0;
 		T point = points.get(currentPointIndex);
 		for (int i = 0; i < sortedList.size(); i++) {
-			if(sortedList.get(i).compareTo(point) == 1) {
+			if (sortedList.get(i).compareTo(point) == 1) {
 				sections.add(new ArrayList<T>(sortedList.subList(from, i)));
 				from = i;
 				currentPointIndex += 1;
 				if (currentPointIndex >= points.size()) {
-					//sections.add(new ArrayList<T>(sortedList.subList(from,
-					//		sortedList.size())));
 					break;
 				}
 
 				point = points.get(currentPointIndex);
 			}
 		}
-		sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size()))); // Fix inorder bug
-		
-		System.out.println(sections);
-		System.out.println(points);
+		sections.add(new ArrayList<T>(sortedList.subList(from,
+				sortedList.size())));
 		return sections;
 	}
 

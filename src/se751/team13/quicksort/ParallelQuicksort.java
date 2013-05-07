@@ -105,14 +105,6 @@ public class ParallelQuicksort implements Sorter {
 		for (QuickSorterTask<T> s : sorters) {
 			sectionList.add(s.getSections(points));
 		}
-		int sum = 0;
-		for (List<List<T>> s : sectionList) {
-			for (List<T> p : s) {
-				for (T a : p) {
-					sum++;
-				}
-			}
-		}
 
 		// merge the section sections at the same indices.
 		sorters.clear();		
@@ -121,11 +113,10 @@ public class ParallelQuicksort implements Sorter {
 			List<T> l = new ArrayList<T>();
 
 			for (int j = 0; j < processors; j++) {
-				if (sectionList.get(i).size() > j ) { // This check here may not be needed - above is the issue
-					l.addAll(sectionList.get(i).get(j)); // IndexOutOfBoundsException
+				if (sectionList.get(j).size() > i ) { // This check here may not be needed - above is the issue
+					l.addAll(sectionList.get(j).get(i)); // IndexOutOfBoundsException
 				}
 			}
-
 			QuickSorterTask<T> s = new QuickSorterTask<T>(l, barrier);
 			// qs called
 			threads.execute(s);

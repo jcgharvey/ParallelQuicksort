@@ -17,6 +17,16 @@ public final class Util {
 		return nums;
 	}
 
+	public static final List<Double> generateRandomDoubles(int amount) {
+		List<Double> nums = new ArrayList<Double>(amount);
+
+		for (int i = 0; i < amount; i++) {
+			nums.add(r.nextDouble() * amount);
+		}
+
+		return nums;
+	}
+
 	public static final List<Integer> generateInOrderNumbers(int amount) {
 		List<Integer> nums = new ArrayList<Integer>(amount);
 

@@ -30,7 +30,7 @@ public class QuickSorter implements Sorter {
 		}
 
 		// concatenate the lists
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<T>(list.size());
 		result.addAll(sort(less));
 		result.add(pivot);
 		result.addAll(sort(greater));

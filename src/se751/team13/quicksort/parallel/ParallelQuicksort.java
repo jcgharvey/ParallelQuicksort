@@ -1,4 +1,4 @@
-package se751.team13.quicksort;
+package se751.team13.quicksort.parallel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import se751.team13.quicksort.Sorter;
 
 public class ParallelQuicksort<T extends Comparable<? super T>> implements
 		Sorter<T> {

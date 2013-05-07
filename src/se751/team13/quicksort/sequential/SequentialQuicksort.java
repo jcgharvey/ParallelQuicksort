@@ -1,7 +1,10 @@
-package se751.team13.quicksort;
+package se751.team13.quicksort.sequential;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
+
+import se751.team13.quicksort.QuickSorter;
+import se751.team13.quicksort.Sorter;
 
 public class SequentialQuicksort<T extends Comparable<? super T>> implements
 		Sorter<T> {

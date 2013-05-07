@@ -10,6 +10,8 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.Before;
 import org.junit.Test;
 
+import se751.team13.quicksort.parallel.QuickSorterTask;
+
 public class QuickSorterTaskTest {
 	private QuickSorterTask<Integer> task;
 	private List<Integer> unsorted;

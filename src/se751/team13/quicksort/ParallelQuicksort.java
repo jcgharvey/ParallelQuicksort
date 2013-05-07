@@ -153,6 +153,8 @@ public class ParallelQuicksort implements Sorter {
 
 	public <T extends Comparable<? super T>> List<T> sort(List<T> unsorted)
 			throws InterruptedException, BrokenBarrierException {
+		
+		threads = Executors.newFixedThreadPool(processors);
 
 		List<QuickSorterTask<T>> sorters = new ArrayList<QuickSorterTask<T>>();
 

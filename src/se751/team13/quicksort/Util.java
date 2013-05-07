@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 public final class Util {
-	public static final List<Integer> generateRandomNumbers(int amount, int max) {
+	public static final List<Integer> generateRandomNumbers(int amount) {
 		Random rand = new Random(System.currentTimeMillis());
 		List<Integer> nums = new ArrayList<Integer>();
 
 		for (int i = 0; i < amount; i++) {
-			nums.add(rand.nextInt(max));
+			nums.add(rand.nextInt(amount));
 		}
 
 		return nums;

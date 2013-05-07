@@ -66,8 +66,8 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 				from = i;
 				currentPointIndex += 1;
 				if (currentPointIndex >= points.size()) {
-					sections.add(new ArrayList<T>(sortedList.subList(from,
-							sortedList.size())));
+					//sections.add(new ArrayList<T>(sortedList.subList(from,
+					//		sortedList.size())));
 					break;
 				}
 
@@ -75,12 +75,9 @@ public class QuickSorterTask<T extends Comparable<? super T>> extends
 			}
 		}
 		sections.add(new ArrayList<T>(sortedList.subList(from, sortedList.size()))); // Fix inorder bug
-		int sum = 0;
-		for (List<T> a : sections) {
-			for (T b : a) {
-				sum++;
-			}
-		}
+		
+		System.out.println(sections);
+		System.out.println(points);
 		return sections;
 	}
 

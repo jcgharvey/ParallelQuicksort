@@ -13,6 +13,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import se751.team13.quicksort.parallel.ParallelQuicksort;
+import se751.team13.quicksort.parallel.ParallelQuicksortWithMerge;
 import se751.team13.quicksort.sequential.SequentialQuicksort;
 
 @RunWith(Parameterized.class)
@@ -59,7 +60,19 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 //				{ new SequentialQuicksort<Integer>(),
 //						Util.generateInOrderNumbers(10000), false },
 				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100000), false } 
+						Util.generateInOrderNumbers(100000), false }, 
+						
+				{ new ParallelQuicksortWithMerge<Integer>(),
+							Util.generateRandomNumbers(100000), true },
+
+//					{ new ParallelQuicksort<Integer>(),
+//							Util.generateInOrderNumbers(100), false },
+//					{ new ParallelQuicksort<Integer>(),
+//							Util.generateInOrderNumbers(1000), false },
+//					{ new ParallelQuicksort<Integer>(),
+//							Util.generateInOrderNumbers(10000), false },
+					{ new ParallelQuicksortWithMerge<Integer>(),
+							Util.generateInOrderNumbers(100000), false }
 		});
 	}
 

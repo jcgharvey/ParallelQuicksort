@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import se751.team13.quicksort.parallel.InPlaceQuickSort;
 import se751.team13.quicksort.parallel.ParallelQuicksort;
 import se751.team13.quicksort.parallel.ParallelQuicksortWithMerge;
 import se751.team13.quicksort.sequential.SequentialQuicksort;
@@ -26,53 +27,59 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	@Parameters
 	public static Collection<Object[]> parameters() {
 		return Arrays.asList(new Object[][] {
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100), true },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(1000), true },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(10000), true },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateRandomNumbers(100000), true },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateRandomNumbers(100), true },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateRandomNumbers(1000), true },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateRandomNumbers(10000), true },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateRandomNumbers(100000), true },
 
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(1000), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(10000), false },
-				{ new ParallelQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100000), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(100), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(1000), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(10000), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(100000), false },
 
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(1000), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(10000), true },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateRandomNumbers(100000), true },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateRandomNumbers(100), true },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateRandomNumbers(1000), true },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateRandomNumbers(10000), true },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateRandomNumbers(100000), true },
 
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100), false },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(1000), false },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(10000), false },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100000), false }, 
-						
-				{ new ParallelQuicksortWithMerge<Integer>(),
-							Util.generateRandomNumbers(100000), true },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(100), false },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(1000), false },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(10000), false },
+				// { new SequentialQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(100000), false },
 
-//					{ new ParallelQuicksort<Integer>(),
-//							Util.generateInOrderNumbers(100), false },
-//					{ new ParallelQuicksort<Integer>(),
-//							Util.generateInOrderNumbers(1000), false },
-//					{ new ParallelQuicksort<Integer>(),
-//							Util.generateInOrderNumbers(10000), false },
-					{ new ParallelQuicksortWithMerge<Integer>(),
-							Util.generateInOrderNumbers(100000), false }
+				// { new ParallelQuicksortWithMerge<Integer>(),
+				// Util.generateRandomNumbers(100000), true },
+
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(100), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(1000), false },
+				// { new ParallelQuicksort<Integer>(),
+				// Util.generateInOrderNumbers(10000), false },
+				// { new ParallelQuicksortWithMerge<Integer>(),
+				// Util.generateInOrderNumbers(100000), false }
+
+				{ new InPlaceQuickSort<Integer>(),
+						Util.generateInOrderNumbers(1000), false },
+				{ new InPlaceQuickSort<Integer>(),
+						Util.generateRandomNumbers(1000), true }
+
 		});
 	}
 
@@ -82,20 +89,20 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		this.unsorted = unsorted;
 		this.random = random;
 	}
-	
-//	@Test
-//	public void testSorted() throws InterruptedException,
-//			BrokenBarrierException {
-//		sorted = sorter.sort(unsorted);
-//		assertTrue(Util.inOrder(sorted));
-//	}
-//
-//	@Test
-//	public void testLength() throws InterruptedException,
-//			BrokenBarrierException {
-//		sorted = sorter.sort(unsorted);
-//		assertTrue(sorted.size() == unsorted.size());
-//	}
+
+	@Test
+	public void testSorted() throws InterruptedException,
+			BrokenBarrierException {
+		sorted = sorter.sort(unsorted);
+		assertTrue(Util.inOrder(sorted));
+	}
+
+	@Test
+	public void testLength() throws InterruptedException,
+			BrokenBarrierException {
+		sorted = sorter.sort(unsorted);
+		assertTrue(sorted.size() == unsorted.size());
+	}
 
 	@Test
 	public void testTime() throws InterruptedException, BrokenBarrierException {
@@ -106,7 +113,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 		total = end - begin;
 
-		System.out.println(sorter.getClass().getSimpleName() + "\t< time: " + total
-				+ " (ms)  \trandom: " + random + "\tlength: " + unsorted.size() + " >");
+		System.out.println(sorter.getClass().getSimpleName() + "\t< time: "
+				+ total + " (ms)  \trandom: " + random + "\tlength: "
+				+ unsorted.size() + " >");
 	}
 }

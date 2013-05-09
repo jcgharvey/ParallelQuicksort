@@ -3,6 +3,7 @@ package se751.team13.quicksort;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +16,7 @@ import org.junit.Test;
 
 import se751.team13.quicksort.parallel.InternetDump;
 import se751.team13.quicksort.parallel.InternetDump.Manager;
+import se751.team13.realquicksort.RecursiveTaskSorter;
 
 public class SorterTest {
 
@@ -65,41 +67,32 @@ public class SorterTest {
 
 	@Test
 	public void testInternetDump() {
-		int[] data = new int[100000];
 
 		int RANGE = 10000;
 
 		Random rand = new Random();
-
+		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
-			data[i] = rand.nextInt(RANGE);
+			list.add(rand.nextInt(RANGE));
 		}
-		long start,end;
-		
-		ExecutorService exec = Executors.newFixedThreadPool(Runtime
-				.getRuntime().availableProcessors());
-		Manager mgr = new Manager(exec);
-		InternetDump qs = new InternetDump(data, mgr);
+		long start, end;
+
+		Sorter sorter = new RecursiveTaskSorter<>();
 		start = System.currentTimeMillis();
-		exec.execute(qs);
 		try {
-			mgr.work_wait();
-		} catch (InterruptedException e) {
+			sorter.sort(list);
+		} catch (InterruptedException | BrokenBarrierException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			fail();
 		}
 		end = System.currentTimeMillis();
 		System.out.println("time(ms):" + (end - start));
-		data = qs.getData();
-		int last = 0;
-		for (int i = 0; i < data.length; i++) {
-			if (data[i] < last) {
-				fail("Not in order");
-			}
-			last = data[i];
+
+		if (Util.inOrder(list)) {
+			assertTrue(true);
+		} else {
+			fail();
 		}
-		assertTrue(true);
 	}
 
 }

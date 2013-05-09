@@ -5,25 +5,24 @@ import java.util.concurrent.BrokenBarrierException;
 
 import se751.team13.quicksort.Sorter;
 
-public class RecursiveTaskSorter<T extends Comparable<? super T>> implements Sorter<T> {
+public class RecursiveTaskSorter<T extends Comparable<? super T>> implements
+		Sorter<T> {
 
-	
 	private int processors;
 
-	public RecursiveTaskSorter(){
+	public RecursiveTaskSorter() {
 		processors = Runtime.getRuntime().availableProcessors();
 	}
-	
+
 	@Override
 	public List<T> sort(List<T> unsorted) throws InterruptedException,
 			BrokenBarrierException {
 		// TODO Auto-generated method stub
 		QuickSort qs = new QuickSort(processors);
-		qs.add_task(unsorted, 0, unsorted.size() -1);
+		qs.add_task(unsorted, 0, unsorted.size() - 1);
 		qs.work_wait();
-		
-		
+
 		return unsorted;
 	}
-	
+
 }

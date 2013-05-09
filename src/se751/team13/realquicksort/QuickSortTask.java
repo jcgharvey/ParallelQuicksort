@@ -1,17 +1,18 @@
 package se751.team13.realquicksort;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class QuickSortTask implements Runnable {
+public class QuickSortTask<T extends Comparable<? super T>> implements Runnable {
 
 	QuickSort manager;
-	private double[] array;
+	private List<T> list;
 	private int left;
 	private int right;
 
-	public QuickSortTask(double[] array, int left, int right, QuickSort manager) {
-		this.array = array;
+	public QuickSortTask(List<T> array, int left, int right, QuickSort manager) {
+		this.list = array;
 		this.left = left;
 		this.right = right;
 		this.manager = manager;
@@ -19,24 +20,25 @@ public class QuickSortTask implements Runnable {
 
 	public void run() {
 		if (right - left <= 20) {
-			insertion(array, left,right);
+			insertion(list, left, right);
 		} else if (left < right) {
 			int pivotIndex = left + (right - left) / 2;
-			int pivotNewIndex = partition(array, left, right, pivotIndex);
-			manager.add_task(array, left, pivotNewIndex - 1);
-			manager.add_task(array, pivotNewIndex + 1, right);
+			int pivotNewIndex = partition(list, left, right, pivotIndex);
+			manager.add_task(list, left, pivotNewIndex - 1);
+			manager.add_task(list, pivotNewIndex + 1, right);
 		}
 		manager.task_done();
 	}
 
-	private int partition(double[] array, int leftIndex, int rightIndex,
+	private int partition(List<T> array, int leftIndex, int rightIndex,
 			int pivotIndex) {
 
-		double pivot = array[pivotIndex];
+		T pivot = array.get(pivotIndex);
 		swap(array, pivotIndex, rightIndex);
 		int storeIndex = leftIndex;
 		for (int i = leftIndex; i < rightIndex; i++) {
-			if (array[i] <= pivot) {
+			T t = array.get(i);
+			if (t.compareTo(pivot) <= 0) {
 				swap(array, i, storeIndex);
 				storeIndex++;
 			}
@@ -45,38 +47,26 @@ public class QuickSortTask implements Runnable {
 		return storeIndex;
 	}
 
-	private void swap(double[] array, int leftIndex, int rightIndex) {
-		double t = array[leftIndex];
-		array[leftIndex] = array[rightIndex];
-		array[rightIndex] = t;
+	private void swap(List<T> array, int leftIndex, int rightIndex) {
+		T t = array.get(leftIndex);
+		array.set(leftIndex, array.get(rightIndex));
+		array.set(rightIndex, t);
 	}
 
-	private void insertion(double[] array, int offset, int limit) {
-		for (int i = offset; i < limit+1; i++) {
-			double valueToInsert = array[i];
+	private void insertion(List<T> array, int offset, int limit) {
+		for (int i = offset; i < limit + 1; i++) {
+			T valueToInsert = array.get(i);
 			int hole = i;
-			while (hole > 0 && valueToInsert < array[hole - 1]) {
-				array[hole] = array[hole - 1];
+			while (hole > 0 && valueToInsert.compareTo(array.get(hole - 1)) < 0) {
+				array.set(hole, array.get(hole - 1));
 				hole--;
 			}
-			array[hole] = valueToInsert;
-		}
-	}
-
-	private void print(double[] doubles) {
-		if (doubles.length != 0) {
-			double last = doubles[doubles.length - 1];
-			for (int i = 0; i < doubles.length - 1; i++) {
-				System.out.print((int) doubles[i] + ",");
-			}
-			System.out.println((int) last);
-		} else {
-			System.out.println("empty");
+			array.set(hole, valueToInsert);
 		}
 	}
 }
 
-class QuickSort {
+class QuickSort<T extends Comparable<? super T>> {
 	int task_count;
 	ExecutorService exec;
 
@@ -85,7 +75,7 @@ class QuickSort {
 		exec = Executors.newFixedThreadPool(n_threads);
 	}
 
-	public synchronized void add_task(double[] data, int base, int n) {
+	public synchronized void add_task(List<T> data, int base, int n) {
 		task_count++;
 		Runnable task = new QuickSortTask(data, base, n, this);
 		exec.execute(task);

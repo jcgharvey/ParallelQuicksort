@@ -1,8 +1,6 @@
 package se751.team13.quicksort;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 
 
 public class InsertionSorter<T extends Comparable<? super T>> implements Sorter<T> {

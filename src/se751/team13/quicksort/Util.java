@@ -46,15 +46,31 @@ public final class Util {
 
 		return nums;
 	}
-	
-	public static final boolean inOrder(List<Integer> list) {
-		int previous, current;
+
+	public static final boolean inOrderDouble(List<Double> list) {
+		Double previous, current;
 		previous = list.get(0);
 
 		for (int i = 1; i < list.size(); i++) {
 			current = list.get(i);
 
-			if (previous > current)
+			if (previous.compareTo(current) > 0)
+				return false;
+
+			previous = current;
+		}
+
+		return true;
+	}
+	
+	public static final boolean inOrderInteger(List<Integer> list) {
+		Integer previous, current;
+		previous = list.get(0);
+
+		for (int i = 1; i < list.size(); i++) {
+			current = list.get(i);
+
+			if (previous.compareTo(current) > 0)
 				return false;
 
 			previous = current;

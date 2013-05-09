@@ -1,7 +1,5 @@
 package se751.team13.quicksort;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -14,36 +12,36 @@ import org.junit.runners.Parameterized.Parameters;
 
 import se751.team13.quicksort.inplaceparallel.InplaceListQuickSorter;
 import se751.team13.quicksort.psrs.PSRSMergeQuickSorter;
-import se751.team13.quicksort.psrs.PSRSQuickSorter;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
-	Sorter<Integer> sorter;
-	List<Integer> unsorted;
-	List<Integer> sorted;
+	Sorter<Double> sorter;
+	List<Double> unsorted;
+	List<Double> sorted;
 	boolean random;
 	String message;
 	
-	
-	
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		List<Double> randomMillionDouble = Util.generateRandomDoubles(1000000);
-		List<Double> inOrderMillion = Util.generateInOrderDoubles(1000000);
+		int largeNumber = 10000000;
+		List<Double> randomDouble = Util.generateRandomDoubles(largeNumber);
+		List<Double> inOrderDouble = Util.generateInOrderDoubles(largeNumber);
 		
 		return Arrays.asList(new Object[][] {
-			{ new QuickSorter<Integer>(), randomMillionDouble, false, },
-			{ new PSRSQuickSorter<Double>(), randomMillionDouble, false },
-			{ new PSRSMergeQuickSorter<Double>(), randomMillionDouble, false },
-			{ new InplaceListQuickSorter<Integer>(), randomMillionDouble, false },
-			{ new QuickSorter<Integer>(), inOrderMillion, true },
-			{ new PSRSQuickSorter<Double>(), inOrderMillion, true },
-			{ new PSRSMergeQuickSorter<Double>(), inOrderMillion, true },
-			{ new InplaceListQuickSorter<Integer>(), inOrderMillion, true },
+//			{ new QuickSorter<Double>(), randomMillionDouble, false, },
+//			{ new PSRSQuickSorter<Double>(), randomMillionDouble, false },
+//			{ new PSRSMergeQuickSorter<Double>(), randomMillionDouble, false },
+			{ new InplaceListQuickSorter<Double>(), randomDouble, false },
+			{ new InplaceListQuickSorter<Double>(1), randomDouble, false },
+//			{ new QuickSorter<Double>(), inOrderMillion, true },
+//			{ new PSRSQuickSorter<Double>(), inOrderMillion, true },
+//			{ new PSRSMergeQuickSorter<Double>(), inOrderMillion, true },
+			{ new InplaceListQuickSorter<Double>(), inOrderDouble, true },
+			{ new InplaceListQuickSorter<Double>(1), inOrderDouble, true }
 		});
 	}
 
-	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted,
+	public QuickSorterTest(Sorter<Double> sorter, List<Double> unsorted,
 			boolean random) {
 		this.sorter = sorter;
 		this.unsorted = unsorted;
@@ -52,20 +50,21 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 	@Before
 	public void jitWarmup() {
-		sorter.sort(Util.generateRandomNumbers(10000));
+		sorter.sort(Util.generateRandomDoubles(10000));
 	}
 
-	@Test
-	public void testSorted() {
-		sorted = sorter.sort(unsorted);
-		assertTrue(Util.inOrder(sorted));
-	}
+//	@Test
+//	public void testSortedAndSize() {
+//		sorted = sorter.sort(unsorted);
+//		assertTrue(Util.inOrderDouble(sorted));
+//		assertTrue(sorted.size() == unsorted.size());
+//	}
 
-	@Test
-	public void testLength() {
-		sorted = sorter.sort(unsorted);
-		assertTrue(sorted.size() == unsorted.size());
-	}
+//	@Test
+//	public void testLength() {
+//		sorted = sorter.sort(unsorted);
+//		assertTrue(sorted.size() == unsorted.size());
+//	}
 
 	@Test
 	public void testTime() {

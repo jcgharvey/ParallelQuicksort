@@ -7,14 +7,46 @@ import se751.team13.quicksort.Sorter;
 
 public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
+	
+	private Integer nThreads;
+	private Integer granularity;
+
+	public InplaceListQuickSorter(){
+	
+	}
+	
+	public InplaceListQuickSorter(int nThreads){
+		this.nThreads = nThreads;
+	}
+	
+	public InplaceListQuickSorter(int nThreads,int granularity){
+		this.nThreads = nThreads;
+		this.granularity = granularity;
+	}
+	
 	@Override
 	public List<T> sort(List<T> unsorted) {
 		unsorted = new ArrayList<T>(unsorted); // don't override
+		
+		QuickSortTaskManager<T> qs;
+		InplaceListQuickSorterTask inplace;
+		if(this.nThreads == null){
+			qs = new QuickSortTaskManager<T>();
+			inplace = new InplaceListQuickSorterTask(unsorted, 0, unsorted
+					.size() - 1, qs);
+		} else { 
+			qs = new QuickSortTaskManager<T>(this.nThreads);
 
+			if (this.granularity == null){
+				inplace = new InplaceListQuickSorterTask(unsorted, 0, unsorted
+						.size() - 1, qs);
+			} else {
+				inplace = new InplaceListQuickSorterTask(unsorted, 0, unsorted
+						.size() - 1, qs, granularity);
+			}
+		}
 		try {
-			QuickSortTaskManager<T> qs = new QuickSortTaskManager<T>();
-			qs.add_task(new InplaceListQuickSorterTask(unsorted, 0, unsorted
-					.size() - 1, qs));
+			qs.add_task(inplace);
 			qs.work_wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -28,6 +60,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 		private List<T> list;
 		private int left;
 		private int right;
+		private int granularity;
 
 		public InplaceListQuickSorterTask(List<T> array, int left, int right,
 				QuickSortTaskManager<T> manager) {
@@ -35,18 +68,29 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 			this.left = left;
 			this.right = right;
 			this.manager = manager;
+			this.granularity = 200;
+		}
+
+		public InplaceListQuickSorterTask(List<T> array, int left, int right,
+				QuickSortTaskManager<T> manager, int granularity) {
+			this.list = array;
+			this.left = left;
+			this.right = right;
+			this.manager = manager;
+			this.granularity = granularity;
 		}
 
 		public void run() {
-			if (right - left <= 20) {
+			
+			if (right - left <= 300) {
 				insertion(list, left, right);
 			} else if (left < right) {
 				int pivotIndex = left + (right - left) / 2;
 				int pivotNewIndex = partition(list, left, right, pivotIndex);
 				manager.add_task(new InplaceListQuickSorterTask(list, left,
-						pivotNewIndex - 1, manager));
+						pivotNewIndex - 1, manager, granularity));
 				manager.add_task(new InplaceListQuickSorterTask(list,
-						pivotNewIndex + 1, right, manager));
+						pivotNewIndex + 1, right, manager, granularity));
 			}
 
 			manager.task_done();

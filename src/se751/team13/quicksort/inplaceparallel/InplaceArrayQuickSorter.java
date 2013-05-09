@@ -20,6 +20,7 @@ public class InplaceArrayQuickSorter<T extends Comparable<? super T>> {
 		private T[] list;
 		private int left;
 		private int right;
+		private final int THRESHOLD = 20;
 
 		public InplaceArrayQuickSorterTask(T[] array, int left, int right,
 				QuickSortTaskManager<T> manager) {
@@ -30,7 +31,7 @@ public class InplaceArrayQuickSorter<T extends Comparable<? super T>> {
 		}
 
 		public void run() {
-			if (right - left <= 20) {
+			if (right - left <= THRESHOLD) {
 				insertion(list, left, right);
 			} else if (left < right) {
 				int pivotIndex = left + (right - left) / 2;

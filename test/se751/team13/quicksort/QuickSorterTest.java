@@ -76,8 +76,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 		total = end - begin;
 
-		System.out.println(sorter.getClass().getSimpleName() + "\t\t< time: "
-				+ total + " (ms)  \trandom: " + random + "\tlength: "
-				+ unsorted.size() + " >");
+		System.out.println(sorter.getClass().getSimpleName() + "," 
+				+ total + "," + random + ","
+				+ unsorted.size());
 	}
 }

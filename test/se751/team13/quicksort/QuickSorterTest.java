@@ -5,15 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import se751.team13.quicksort.parallel.ParallelQuicksort;
-import se751.team13.quicksort.parallel.ParallelQuicksortWithMerge;
-import se751.team13.quicksort.sequential.SequentialQuicksort;
-import se751.team13.realquicksort.RecursiveTaskSorter;
+import se751.team13.quicksort.inplace.RecursiveTaskSorter;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
@@ -24,59 +22,9 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		return Arrays.asList(new Object[][] {
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100), true },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(1000), true },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(10000), true },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
-//
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(1000), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(10000), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100000), false },
-//
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(1000), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(10000), true },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
-//
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100), false },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(1000), false },
-//				{ new SequentialQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(10000), false },
-				{ new SequentialQuicksort<Integer>(),
-						Util.generateInOrderNumbers(100000), false },
-
-//				{ new ParallelQuicksortWithMerge<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
-
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(100), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(1000), false },
-//				{ new ParallelQuicksort<Integer>(),
-//						Util.generateInOrderNumbers(10000), false },
-//				{ new ParallelQuicksortWithMerge<Integer>(),
-//						Util.generateInOrderNumbers(100000), false },
-//
-//				{ new RecursiveTaskSorter<Integer>(),
-//						Util.generateRandomNumbers(100000), true },
-				{ new RecursiveTaskSorter<Integer>(),
-						Util.generateRandomNumbers(100000), false } });
+		return Arrays.asList(new Object[][] { {
+				new RecursiveTaskSorter<Integer>(),
+				Util.generateRandomNumbers(100000), false } });
 	}
 
 	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted,
@@ -84,6 +32,11 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		this.sorter = sorter;
 		this.unsorted = unsorted;
 		this.random = random;
+	}
+
+	@Before
+	public void jitWarmup() throws InterruptedException, BrokenBarrierException {
+		sorter.sort(Util.generateRandomNumbers(10000));
 	}
 
 	// @Test

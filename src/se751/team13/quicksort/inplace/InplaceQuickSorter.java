@@ -1,7 +1,9 @@
-package se751.team13.quicksort;
+package se751.team13.quicksort.inplace;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import se751.team13.quicksort.Sorter;
 
 public class InplaceQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {

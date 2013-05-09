@@ -1,4 +1,4 @@
-package se751.team13.quicksort.parallel;
+package se751.team13.quicksort.psrs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,17 +8,17 @@ import java.util.concurrent.CyclicBarrier;
 import se751.team13.quicksort.NotSortedException;
 import se751.team13.quicksort.QuickSorter;
 
-public class QuickSorterTask<T extends Comparable<? super T>> extends
+public class PSRSQuickSorterTask<T extends Comparable<? super T>> extends
 		QuickSorter<T> implements Runnable {
 	private final List<T> unsorted;
 	private List<T> sortedList;
 	private CyclicBarrier barrier;
 
-	public QuickSorterTask(List<T> unsorted) {
+	public PSRSQuickSorterTask(List<T> unsorted) {
 		this.unsorted = unsorted;
 	}
 
-	public QuickSorterTask(List<T> unsorted, CyclicBarrier barrier) {
+	public PSRSQuickSorterTask(List<T> unsorted, CyclicBarrier barrier) {
 		this.unsorted = unsorted;
 		this.barrier = barrier;
 	}

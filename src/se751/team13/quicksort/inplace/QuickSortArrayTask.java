@@ -1,4 +1,4 @@
-package se751.team13.realquicksort;
+package se751.team13.quicksort.inplace;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

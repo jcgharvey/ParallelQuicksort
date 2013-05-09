@@ -1,4 +1,4 @@
-package se751.team13.realquicksort;
+package se751.team13.quicksort.inplace;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -11,7 +11,8 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 	private int left;
 	private int right;
 
-	public QuickSortTask(List<T> array, int left, int right, QuickSort<T> manager) {
+	public QuickSortTask(List<T> array, int left, int right,
+			QuickSort<T> manager) {
 		this.list = array;
 		this.left = left;
 		this.right = right;
@@ -27,6 +28,7 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 			manager.add_task(list, left, pivotNewIndex - 1);
 			manager.add_task(list, pivotNewIndex + 1, right);
 		}
+
 		manager.task_done();
 	}
 
@@ -36,13 +38,16 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 		T pivot = array.get(pivotIndex);
 		swap(array, pivotIndex, rightIndex);
 		int storeIndex = leftIndex;
+
 		for (int i = leftIndex; i < rightIndex; i++) {
 			T t = array.get(i);
+
 			if (t.compareTo(pivot) <= 0) {
 				swap(array, i, storeIndex);
 				storeIndex++;
 			}
 		}
+
 		swap(array, storeIndex, rightIndex);
 		return storeIndex;
 	}
@@ -57,10 +62,12 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 		for (int i = offset; i < limit + 1; i++) {
 			T valueToInsert = array.get(i);
 			int hole = i;
+
 			while (hole > 0 && valueToInsert.compareTo(array.get(hole - 1)) < 0) {
 				array.set(hole, array.get(hole - 1));
 				hole--;
 			}
+
 			array.set(hole, valueToInsert);
 		}
 	}
@@ -69,6 +76,10 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 class QuickSort<T extends Comparable<? super T>> {
 	int task_count;
 	ExecutorService exec;
+
+	public QuickSort() {
+		this(Runtime.getRuntime().availableProcessors());
+	}
 
 	public QuickSort(int n_threads) {
 		task_count = 0;
@@ -92,17 +103,5 @@ class QuickSort<T extends Comparable<? super T>> {
 			wait();
 		}
 		exec.shutdown();
-	}
-
-	synchronized void print(double[] doubles) {
-		if (doubles.length != 0) {
-			double last = doubles[doubles.length - 1];
-			for (int i = 0; i < doubles.length - 1; i++) {
-				System.out.print((int) doubles[i] + ",");
-			}
-			System.out.println((int) last);
-		} else {
-			System.out.println("empty");
-		}
 	}
 }

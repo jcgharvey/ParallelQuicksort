@@ -1,7 +1,6 @@
 package se751.team13.quicksort.inplace;
 
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 
 import se751.team13.quicksort.Sorter;
 
@@ -15,12 +14,14 @@ public class RecursiveTaskSorter<T extends Comparable<? super T>> implements
 	}
 
 	@Override
-	public List<T> sort(List<T> unsorted) throws InterruptedException,
-			BrokenBarrierException {
-		// TODO Auto-generated method stub
-		QuickSort<T> qs = new QuickSort<T>(processors);
-		qs.add_task(unsorted, 0, unsorted.size() - 1);
-		qs.work_wait();
+	public List<T> sort(List<T> unsorted) {
+		try {
+			QuickSort<T> qs = new QuickSort<T>(processors);
+			qs.add_task(unsorted, 0, unsorted.size() - 1);
+			qs.work_wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		return unsorted;
 	}

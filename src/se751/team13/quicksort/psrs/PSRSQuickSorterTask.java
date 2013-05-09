@@ -18,12 +18,12 @@ public class PSRSQuickSorterTask<T extends Comparable<? super T>> implements
 
 	public PSRSQuickSorterTask(List<T> unsorted) {
 		this.unsorted = unsorted;
+		this.sorter = new QuickSorter<T>();
 	}
 
 	public PSRSQuickSorterTask(List<T> unsorted, CyclicBarrier barrier) {
-		this.unsorted = unsorted;
+		this(unsorted);
 		this.barrier = barrier;
-		this.sorter = new QuickSorter<T>();
 	}
 
 	@Override

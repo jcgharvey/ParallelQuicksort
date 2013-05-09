@@ -82,7 +82,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 
 		public void run() {
 			
-			if (right - left <= 300) {
+			if (right - left <= granularity) {
 				insertion(list, left, right);
 			} else if (left < right) {
 				int pivotIndex = left + (right - left) / 2;

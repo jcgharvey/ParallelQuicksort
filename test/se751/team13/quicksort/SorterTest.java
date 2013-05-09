@@ -72,12 +72,12 @@ public class SorterTest {
 
 		Random rand = new Random();
 		List<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 1000000; i++) {
 			list.add(rand.nextInt(RANGE));
 		}
 		long start, end;
 
-		Sorter sorter = new RecursiveTaskSorter<>();
+		Sorter<Integer> sorter = new RecursiveTaskSorter<>();
 		start = System.currentTimeMillis();
 		try {
 			sorter.sort(list);

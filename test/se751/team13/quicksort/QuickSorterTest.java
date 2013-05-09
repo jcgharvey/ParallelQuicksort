@@ -22,17 +22,24 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	List<Integer> unsorted;
 	List<Integer> sorted;
 	boolean random;
-
+	String message;
+	
+	
+	
 	@Parameters
 	public static Collection<Object[]> parameters() {
+		List<Double> randomMillionDouble = Util.generateRandomDoubles(1000000);
+		List<Double> inOrderMillion = Util.generateInOrderDoubles(1000000);
+		
 		return Arrays.asList(new Object[][] {
-			{ new PSRSMergeQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-			{ new PSRSQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-//			{ new InplaceArrayQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-			{ new InplaceListQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-//			{ new InplaceQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-//			{ new InsertionSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-//			{ new QuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
+			{ new QuickSorter<Integer>(), randomMillionDouble, false, },
+			{ new PSRSQuickSorter<Double>(), randomMillionDouble, false },
+			{ new PSRSMergeQuickSorter<Double>(), randomMillionDouble, false },
+			{ new InplaceListQuickSorter<Integer>(), randomMillionDouble, false },
+			{ new QuickSorter<Integer>(), inOrderMillion, true },
+			{ new PSRSQuickSorter<Double>(), inOrderMillion, true },
+			{ new PSRSMergeQuickSorter<Double>(), inOrderMillion, true },
+			{ new InplaceListQuickSorter<Integer>(), inOrderMillion, true },
 		});
 	}
 

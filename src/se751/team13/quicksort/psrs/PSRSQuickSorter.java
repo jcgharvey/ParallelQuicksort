@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 import se751.team13.quicksort.Sorter;
 
-public class PSRSQuickSort<T extends Comparable<? super T>> implements
+public class PSRSQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
 
 	private int processors;
@@ -17,7 +17,7 @@ public class PSRSQuickSort<T extends Comparable<? super T>> implements
 	private ExecutorService threads;
 	List<PSRSQuickSorterTask<T>> sorters;
 
-	public PSRSQuickSort() {
+	public PSRSQuickSorter() {
 		processors = Runtime.getRuntime().availableProcessors();
 		barrier = new CyclicBarrier(processors + 1);
 		threads = Executors.newFixedThreadPool(processors);

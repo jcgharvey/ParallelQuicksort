@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class MergeTask<T extends Comparable<? super T>> implements Runnable {
+public class PSRSMergeTask<T extends Comparable<? super T>> implements Runnable {
 	private final List<List<T>> unsorted;
 	private List<T> sortedList = new ArrayList<T>();
 	private CyclicBarrier barrier;
 
-	public MergeTask(List<List<T>> l, CyclicBarrier barrier) {
+	public PSRSMergeTask(List<List<T>> l, CyclicBarrier barrier) {
 		this.unsorted = l;
 		this.barrier = barrier;
 	}

@@ -9,16 +9,16 @@ import java.util.concurrent.Executors;
 
 import se751.team13.quicksort.Sorter;
 
-public class PSRSMergeQuickSort<T extends Comparable<? super T>> implements
+public class PSRSMergeQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
 
 	private int processors;
 	private CyclicBarrier barrier;
 	private ExecutorService threads;
 	List<PSRSQuickSorterTask<T>> sorters;
-	List<MergeTask<T>> mergers;
+	List<PSRSMergeTask<T>> mergers;
 
-	public PSRSMergeQuickSort() {
+	public PSRSMergeQuickSorter() {
 		processors = Runtime.getRuntime().availableProcessors();
 		barrier = new CyclicBarrier(processors + 1);
 		threads = Executors.newFixedThreadPool(processors);
@@ -97,7 +97,7 @@ public class PSRSMergeQuickSort<T extends Comparable<? super T>> implements
 	 * @throws BrokenBarrierException
 	 * @throws InterruptedException
 	 */
-	private void distributePartitions(List<MergeTask<T>> mergers, List<T> points)
+	private void distributePartitions(List<PSRSMergeTask<T>> mergers, List<T> points)
 			throws InterruptedException, BrokenBarrierException {
 
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
@@ -118,7 +118,7 @@ public class PSRSMergeQuickSort<T extends Comparable<? super T>> implements
 					l.add(sectionList.get(j).get(i)); // IndexOutOfBoundsException
 				}
 			}
-			MergeTask<T> s = new MergeTask<T>(l, barrier);
+			PSRSMergeTask<T> s = new PSRSMergeTask<T>(l, barrier);
 			// qs called
 			threads.execute(s);
 
@@ -134,9 +134,9 @@ public class PSRSMergeQuickSort<T extends Comparable<? super T>> implements
 	 * 
 	 * @return
 	 */
-	private List<T> mergePartitions(List<MergeTask<T>> mergers) {
+	private List<T> mergePartitions(List<PSRSMergeTask<T>> mergers) {
 		List<T> sorted = new ArrayList<T>();
-		for (MergeTask<T> m : mergers) {
+		for (PSRSMergeTask<T> m : mergers) {
 			sorted.addAll(m.getSortedList());
 		}
 		return sorted;
@@ -146,7 +146,7 @@ public class PSRSMergeQuickSort<T extends Comparable<? super T>> implements
 
 		threads = Executors.newFixedThreadPool(processors);
 		sorters = new ArrayList<PSRSQuickSorterTask<T>>();
-		mergers = new ArrayList<MergeTask<T>>();
+		mergers = new ArrayList<PSRSMergeTask<T>>();
 		try {
 			// PHASE ONE
 			sortSections(sorters, unsorted);

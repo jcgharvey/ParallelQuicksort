@@ -1,18 +1,19 @@
-package se751.team13.quicksort.inplace;
+package se751.team13.quicksort.inplaceparallel;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class QuickSortTask<T extends Comparable<? super T>> implements Runnable {
+import se751.team13.quicksort.Sorter;
 
-	QuickSort<T> manager;
+public class InplaceListQuickSorter<T extends Comparable<? super T>> implements Runnable, Sorter<T> {
+
+	QuickSortTaskManager<T> manager;
 	private List<T> list;
 	private int left;
 	private int right;
 
-	public QuickSortTask(List<T> array, int left, int right,
-			QuickSort<T> manager) {
+	public InplaceListQuickSorter(List<T> array, int left, int right,
+			QuickSortTaskManager<T> manager) {
 		this.list = array;
 		this.left = left;
 		this.right = right;
@@ -25,8 +26,8 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 		} else if (left < right) {
 			int pivotIndex = left + (right - left) / 2;
 			int pivotNewIndex = partition(list, left, right, pivotIndex);
-			manager.add_task(list, left, pivotNewIndex - 1);
-			manager.add_task(list, pivotNewIndex + 1, right);
+			manager.add_task(new InplaceListQuickSorter<T>(list, left, pivotNewIndex - 1, manager));
+			manager.add_task(new InplaceListQuickSorter<T>(list, pivotNewIndex + 1, right, manager));
 		}
 
 		manager.task_done();
@@ -71,37 +72,19 @@ public class QuickSortTask<T extends Comparable<? super T>> implements Runnable 
 			array.set(hole, valueToInsert);
 		}
 	}
-}
 
-class QuickSort<T extends Comparable<? super T>> {
-	int task_count;
-	ExecutorService exec;
-
-	public QuickSort() {
-		this(Runtime.getRuntime().availableProcessors());
-	}
-
-	public QuickSort(int n_threads) {
-		task_count = 0;
-		exec = Executors.newFixedThreadPool(n_threads);
-	}
-
-	public synchronized void add_task(List<T> data, int base, int n) {
-		task_count++;
-		Runnable task = new QuickSortTask<T>(data, base, n, this);
-		exec.execute(task);
-	}
-
-	public synchronized void task_done() {
-		task_count--;
-		if (task_count <= 0)
-			notify();
-	}
-
-	public synchronized void work_wait() throws java.lang.InterruptedException {
-		while (task_count > 0) {
-			wait();
+	@Override
+	public List<T> sort(List<T> unsorted) {
+		unsorted = new ArrayList<T>(unsorted);  // don't override
+		
+		try {
+			QuickSortTaskManager<T> qs = new QuickSortTaskManager<T>();
+			qs.add_task(new InplaceListQuickSorter<T>(unsorted, 0, unsorted.size() - 1, qs));
+			qs.work_wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		exec.shutdown();
+
+		return unsorted;
 	}
 }

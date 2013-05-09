@@ -3,7 +3,6 @@ package se751.team13.quicksort;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +10,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import se751.team13.quicksort.inplace.RecursiveTaskSorter;
+import se751.team13.quicksort.psrs.PSRSMergeQuickSorter;
+import se751.team13.quicksort.psrs.PSRSQuickSorter;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
@@ -22,9 +22,10 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		return Arrays.asList(new Object[][] { {
-				new RecursiveTaskSorter<Integer>(),
-				Util.generateRandomNumbers(100000), false } });
+		return Arrays.asList(new Object[][] {
+			{ new PSRSMergeQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
+			{ new PSRSQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false }
+		});
 	}
 
 	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted,
@@ -35,7 +36,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	}
 
 	@Before
-	public void jitWarmup() throws InterruptedException, BrokenBarrierException {
+	public void jitWarmup() {
 		sorter.sort(Util.generateRandomNumbers(10000));
 	}
 
@@ -54,7 +55,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	// }
 
 	@Test
-	public void testTime() throws InterruptedException, BrokenBarrierException {
+	public void testTime() {
 		long begin, end, total;
 		begin = System.currentTimeMillis();
 		sorted = sorter.sort(unsorted);

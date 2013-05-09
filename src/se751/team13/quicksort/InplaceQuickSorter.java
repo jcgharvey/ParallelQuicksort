@@ -1,9 +1,8 @@
-package se751.team13.quicksort.inplace;
+package se751.team13.quicksort;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se751.team13.quicksort.Sorter;
 
 public class InplaceQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
@@ -20,29 +19,32 @@ public class InplaceQuickSorter<T extends Comparable<? super T>> implements
 		int i, j;
 		i = 0;
 		j = n - 1;
+		
 		while (true) {
 			while (data.get(base + i).compareTo(data.get(base + j)) < 0) {
 				j--;
 			}
-			//printData();
+			
 			if (i >= j) {
 				break;
 			}
+			
 			swap(base, i, j);
-			printData();
 			i++;
+			
 			while (data.get(base + i).compareTo(data.get(base + j)) < 0) {
 				i++;
 			}
-			//printData();
+			
 			if (i >= j) {
 				i = j;
 				break;
 			}
+			
 			swap(base, i, j);
-			printData();
 			j--;
 		}
+		
 		// this stuff here needs fixing.
 		quickSort(base, i);
 		quickSort(base + i + 1, n - i - 1);
@@ -53,12 +55,5 @@ public class InplaceQuickSorter<T extends Comparable<? super T>> implements
 		T t = data.get(base + i);
 		data.set(base + i, data.get(base + j));
 		data.set(base + j, t);
-	}
-	
-	private void printData(){
-		for (int i = 0;i<data.size() - 1;i++){
-			System.out.print(data.get(i)+", ");
-		}
-		System.out.print(data.get(data.size()-1)+"\n");
 	}
 }

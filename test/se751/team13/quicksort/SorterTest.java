@@ -8,20 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se751.team13.quicksort.parallel.InternetDump;
-import se751.team13.quicksort.parallel.InternetDump.Manager;
 import se751.team13.realquicksort.RecursiveTaskSorter;
 
 public class SorterTest {
 
 	private List<Integer> unsorted;
-	private Sorter sorter;
+	private Sorter<Integer> sorter;
 
 	@Before
 	public void setUp() throws Exception {
@@ -31,7 +27,7 @@ public class SorterTest {
 
 	@Test
 	public void testInsertionSort() {
-		sorter = new InsertionSorter();
+		sorter = new InsertionSorter<Integer>();
 		List<Integer> list;
 		try {
 			list = sorter.sort(unsorted);
@@ -46,24 +42,6 @@ public class SorterTest {
 			fail("Exception");
 		}
 	}
-
-//	@Test
-//	public void testInplaceQuickSort() {
-//		sorter = new InplaceQuickSorter();
-//		List<Integer> list;
-//		try {
-//			list = sorter.sort(unsorted);
-//			if (!Util.inOrder(list)) {
-//				fail();
-//			} else {
-//				assertTrue(true);
-//			}
-//		} catch (InterruptedException | BrokenBarrierException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			fail("Exception");
-//		}
-//	}
 
 	@Test
 	public void testInternetDump() {

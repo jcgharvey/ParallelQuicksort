@@ -6,12 +6,12 @@ import java.util.concurrent.Executors;
 
 public class QuickSortTask<T extends Comparable<? super T>> implements Runnable {
 
-	QuickSort manager;
+	QuickSort<T> manager;
 	private List<T> list;
 	private int left;
 	private int right;
 
-	public QuickSortTask(List<T> array, int left, int right, QuickSort manager) {
+	public QuickSortTask(List<T> array, int left, int right, QuickSort<T> manager) {
 		this.list = array;
 		this.left = left;
 		this.right = right;
@@ -77,7 +77,7 @@ class QuickSort<T extends Comparable<? super T>> {
 
 	public synchronized void add_task(List<T> data, int base, int n) {
 		task_count++;
-		Runnable task = new QuickSortTask(data, base, n, this);
+		Runnable task = new QuickSortTask<T>(data, base, n, this);
 		exec.execute(task);
 	}
 

@@ -18,7 +18,7 @@ public class RecursiveTaskSorter<T extends Comparable<? super T>> implements
 	public List<T> sort(List<T> unsorted) throws InterruptedException,
 			BrokenBarrierException {
 		// TODO Auto-generated method stub
-		QuickSort qs = new QuickSort(processors);
+		QuickSort<T> qs = new QuickSort<T>(processors);
 		qs.add_task(unsorted, 0, unsorted.size() - 1);
 		qs.work_wait();
 

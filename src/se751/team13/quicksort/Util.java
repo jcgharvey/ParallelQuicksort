@@ -37,6 +37,16 @@ public final class Util {
 		return nums;
 	}
 
+	public static final List<Double> generateInOrderDoubles(int amount) {
+		List<Double> nums = new ArrayList<Double>(amount);
+
+		for (double i = 0; i < amount; i++) {
+			nums.add(i);
+		}
+
+		return nums;
+	}
+	
 	public static final boolean inOrder(List<Integer> list) {
 		int previous, current;
 		previous = list.get(0);

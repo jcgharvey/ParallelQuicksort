@@ -1,5 +1,8 @@
 package se751.team13.quicksort;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +14,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import se751.team13.quicksort.inplaceparallel.InplaceListQuickSorter;
-import se751.team13.quicksort.psrs.PSRSMergeQuickSorter;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
@@ -23,21 +25,36 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 	
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		int largeNumber = 10000000;
-		List<Double> randomDouble = Util.generateRandomDoubles(largeNumber);
-		List<Double> inOrderDouble = Util.generateInOrderDoubles(largeNumber);
+		int largeNumber = 1000000;
+		List<Integer> created = Util.generateRandomNumbers(20);
+
+		
+		List<Double> randomDouble0 = Util.generateRandomDoubles(largeNumber);
+		List<Double> randomDouble1 = Util.generateRandomDoubles(largeNumber);
+		List<Double> randomDouble2 = Util.generateRandomDoubles(largeNumber);
+		List<Double> randomDouble3 = Util.generateRandomDoubles(largeNumber);
+		List<Double> randomDouble4 = Util.generateRandomDoubles(largeNumber);
+		List<Double> inOrderDouble0 = Util.generateInOrderDoubles(largeNumber);
+		List<Double> inOrderDouble1 = Util.generateInOrderDoubles(largeNumber);
+		List<Double> inOrderDouble2 = Util.generateInOrderDoubles(largeNumber);
+		List<Double> inOrderDouble3 = Util.generateInOrderDoubles(largeNumber);
+		List<Double> inOrderDouble4 = Util.generateInOrderDoubles(largeNumber);
 		
 		return Arrays.asList(new Object[][] {
-//			{ new QuickSorter<Double>(), randomMillionDouble, false, },
-//			{ new PSRSQuickSorter<Double>(), randomMillionDouble, false },
-//			{ new PSRSMergeQuickSorter<Double>(), randomMillionDouble, false },
-			{ new InplaceListQuickSorter<Double>(), randomDouble, false },
-			{ new InplaceListQuickSorter<Double>(1), randomDouble, false },
-//			{ new QuickSorter<Double>(), inOrderMillion, true },
-//			{ new PSRSQuickSorter<Double>(), inOrderMillion, true },
-//			{ new PSRSMergeQuickSorter<Double>(), inOrderMillion, true },
-			{ new InplaceListQuickSorter<Double>(), inOrderDouble, true },
-			{ new InplaceListQuickSorter<Double>(1), inOrderDouble, true }
+
+			{ new InplaceListQuickSorter<Double>(), randomDouble0, false },
+			{ new InplaceListQuickSorter<Double>(1), randomDouble0, false },
+			{ new InplaceListQuickSorter<Double>(), randomDouble2, false },
+			{ new InplaceListQuickSorter<Double>(1), randomDouble2, false },
+			{ new InplaceListQuickSorter<Double>(), randomDouble2, false },
+			{ new InplaceListQuickSorter<Double>(1), randomDouble2, false },
+			{ new InplaceListQuickSorter<Double>(), inOrderDouble0, true },
+			{ new InplaceListQuickSorter<Double>(1), inOrderDouble0, true },
+			{ new InplaceListQuickSorter<Double>(), inOrderDouble1, true },
+			{ new InplaceListQuickSorter<Double>(1), inOrderDouble1, true },
+			{ new InplaceListQuickSorter<Double>(), inOrderDouble2, true },
+			{ new InplaceListQuickSorter<Double>(), inOrderDouble2, true }
+
 		});
 	}
 
@@ -56,8 +73,14 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 //	@Test
 //	public void testSortedAndSize() {
 //		sorted = sorter.sort(unsorted);
-//		assertTrue(Util.inOrderDouble(sorted));
+//		Integer last = sorted.remove(sorted.size()-1);
+//		for (Integer d : sorted){
+//			System.out.print(d + ",");
+//		}
+//		System.out.println(last);
+//		assertTrue(Util.inOrderInteger(sorted));
 //		assertTrue(sorted.size() == unsorted.size());
+//
 //	}
 
 //	@Test
@@ -75,8 +98,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 		total = end - begin;
 
-		System.out.println(sorter.getClass().getSimpleName() + "," 
-				+ total + "," + random + ","
+		System.out.println(sorter.getClass().getSimpleName() + ", Time:" 
+				+ total + "(ms), Random:" + random + ", Size:"
 				+ unsorted.size());
 	}
 }

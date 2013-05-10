@@ -3,57 +3,77 @@ package se751.team13.quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InplaceQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
 
-	private ArrayList<T> data;
+	private List<T> data;
+	private int granularity;
+
+	public InplaceQuickSorter() {
+		this(200);
+	}
+
+	public InplaceQuickSorter(int granularity) {
+		this.granularity = granularity;
+	}
 
 	public List<T> sort(List<T> list) {
 		data = new ArrayList<T>(list);
-		quickSort(0, list.size());
+		quickSort(0, list.size()-1);
 		return data;
 	}
 
-	private void quickSort(int base, int n) {
-		int i, j;
-		i = 0;
-		j = n - 1;
-		
-		while (true) {
-			while (data.get(base + i).compareTo(data.get(base + j)) < 0) {
-				j--;
-			}
-			
-			if (i >= j) {
-				break;
-			}
-			
-			swap(base, i, j);
-			i++;
-			
-			while (data.get(base + i).compareTo(data.get(base + j)) < 0) {
-				i++;
-			}
-			
-			if (i >= j) {
-				i = j;
-				break;
-			}
-			
-			swap(base, i, j);
-			j--;
+	private void quickSort(int left, int right) {
+
+		if (right - left <= this.granularity) {
+			insertion(data, left, right);
+			return;
+		} else if (left < right) {
+			int pivotIndex = left + (right - left) / 2;
+			int pivotNewIndex = partition(data, left, right, pivotIndex);
+			quickSort(left, pivotNewIndex - 1);
+			quickSort(pivotNewIndex + 1, right);
 		}
-		
-		// this stuff here needs fixing.
-		quickSort(base, i);
-		quickSort(base + i + 1, n - i - 1);
 		return;
 	}
 
-	private void swap(int base, int i, int j) {
-		T t = data.get(base + i);
-		data.set(base + i, data.get(base + j));
-		data.set(base + j, t);
+	private int partition(List<T> array, int leftIndex, int rightIndex,
+			int pivotIndex) {
+
+		T pivot = array.get(pivotIndex);
+		swap(array, pivotIndex, rightIndex);
+		int storeIndex = leftIndex;
+
+		for (int i = leftIndex; i < rightIndex + 1; i++) {
+			T t = array.get(i);
+
+			if (t.compareTo(pivot) <= 0) {
+				swap(array, i, storeIndex);
+				storeIndex++;
+			}
+		}
+
+		swap(array, storeIndex, rightIndex);
+		return storeIndex;
+	}
+
+	private void swap(List<T> array, int leftIndex, int rightIndex) {
+		T t = array.get(leftIndex);
+		array.set(leftIndex, array.get(rightIndex));
+		array.set(rightIndex, t);
+	}
+
+	private void insertion(List<T> array, int offset, int limit) {
+		for (int i = offset; i < limit + 1; i++) {
+			T valueToInsert = array.get(i);
+			int hole = i;
+
+			while (hole > 0 && valueToInsert.compareTo(array.get(hole - 1)) < 0) {
+				array.set(hole, array.get(hole - 1));
+				hole--;
+			}
+
+			array.set(hole, valueToInsert);
+		}
 	}
 }

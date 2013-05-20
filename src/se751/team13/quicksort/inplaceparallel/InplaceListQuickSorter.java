@@ -28,6 +28,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 		private List<T> list;
 		private int left;
 		private int right;
+		private int granularity;
 
 		public InplaceListQuickSorterTask(List<T> array, int left, int right,
 				QuickSortTaskManager<T> manager) {
@@ -35,21 +36,36 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 			this.left = left;
 			this.right = right;
 			this.manager = manager;
+			this.granularity = 20;
+		}
+		
+		public InplaceListQuickSorterTask(List<T> array, int left, int right,
+				QuickSortTaskManager<T> manager, int granularity) {
+			this.list = array;
+			this.left = left;
+			this.right = right;
+			this.manager = manager;
+			this.granularity = granularity;
 		}
 
+
 		public void run() {
-			if (right - left <= 20) {
-				insertion(list, left, right);
-			} else if (left < right) {
-				int pivotIndex = left + (right - left) / 2;
-				int pivotNewIndex = partition(list, left, right, pivotIndex);
-				manager.add_task(new InplaceListQuickSorterTask(list, left,
+			qssort(left,right);
+			manager.task_done();
+		}
+		
+		public void qssort(int leftIndex, int rightIndex){
+			if (rightIndex - leftIndex <= granularity) {
+				insertion(list, leftIndex, rightIndex);
+			} else if (leftIndex < rightIndex) {
+				int pivotIndex = leftIndex + (rightIndex - leftIndex) / 2;
+				int pivotNewIndex = partition(list, leftIndex, rightIndex, pivotIndex);
+				manager.add_task(new InplaceListQuickSorterTask(list, leftIndex,
 						pivotNewIndex - 1, manager));
-				manager.add_task(new InplaceListQuickSorterTask(list,
-						pivotNewIndex + 1, right, manager));
+				qssort(	pivotNewIndex + 1, rightIndex);
 			}
 
-			manager.task_done();
+			
 		}
 
 		private int partition(List<T> array, int leftIndex, int rightIndex,

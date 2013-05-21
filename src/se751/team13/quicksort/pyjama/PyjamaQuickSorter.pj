@@ -1,12 +1,19 @@
 package se751.team13.quicksort.pyjama;
 
-public class PyjamaQuickSorter{
+import se751.team13.quicksort.Sorter;
+
+public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 	public static void main(String[] args){
 
 		System.out.println("Hello world from sequential code");
 		//#omp parallel for
 		for(int i = 0; i < 10; i++){
 			System.out.println("Hello world from parallel code");
+			System.out.println("Sort");
 		}
+	}
+
+	public List<T> sort(List<T> unsorted) {
+		return unsorted;
 	}
 }

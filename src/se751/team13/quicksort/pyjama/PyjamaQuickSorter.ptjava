@@ -1,0 +1,135 @@
+package se751.team13.quicksort.pyjama;//#GEN#[1]#PJ#
+//#GEN#[1]#PJ#
+import jump.parser.ast.visitor.DummyClassToDetermineVariableType;//#GEN#[1]#PJ#
+import paratask.runtime.*;//#GEN#[1]#PJ#
+import java_omp.Pyjama;//#GEN#[1]#PJ#
+import java_omp.JuMP_PackageOnly;//#GEN#[1]#PJ#
+import java_omp.UniqueThreadIdGeneratorForOpenMP;//#GEN#[1]#PJ#
+import pi.ParIteratorFactory;//#GEN#[1]#PJ#
+import pi.ParIterator;//#GEN#[1]#PJ#
+import pi.reductions.Reducible;//#GEN#[1]#PJ#
+import pi.reductions.Reduction;//#GEN#[1]#PJ#
+import java.util.concurrent.atomic.*;//#GEN#[1]#PJ#
+import java.util.concurrent.*;//#GEN#[1]#PJ#
+import java.awt.EventQueue;//#GEN#[1]#PJ#
+import java.util.concurrent.ExecutorService;//#GEN#[1]#PJ#
+import java.util.concurrent.Executors;//#GEN#[1]#PJ#
+import java.util.concurrent.TimeUnit;//#GEN#[1]#PJ#
+import javax.swing.SwingUtilities;//#GEN#[1]#PJ#
+import jump.parser.ast.visitor.DummyClassToDetermineVariableType;//#GEN#[3]#PJ#
+//#GEN#[3]#PJ#
+import pi.reductions.Reducible;//#GEN#[3]#PJ#
+import java.util.*;//#GEN#[3]#PJ#
+//#GEN#[3]#PJ#
+public class PyjamaQuickSorter {//#GEN#[4]#PJ#
+    public static void main(String[] args) {
+    Pyjama.init();//#GEN#[4]#PJ#
+    {//#GEN#[5]#PJ#
+        System.out.println("Hello world from sequential code");//#GEN#[6]#PJ#
+        /*OpenMP Parallel region (#0) -- START *///#GEN#[7]#PJ#
+        if(Pyjama.insideParallelRegion() ) {//#GEN#[7]#PJ#
+            /* If already inside a parallel region, execute sequentially (nested parallelism currently not supported) *///#GEN#[7]#PJ#
+            {//#GEN#[8]#PJ#
+                for (int i = 0; i < 10; i = i+1) //#GEN#[10]#PJ#
+                {//#GEN#[10]#PJ#
+                    System.out.println("Hello world from parallel code");//#GEN#[11]#PJ#
+                }//#GEN#[12]#PJ#
+            }//#GEN#[13]#PJ#
+        } else {//#GEN#[7]#PJ#
+            /* Else, execute in parallel *///#GEN#[7]#PJ#
+            JuMP_PackageOnly.setThreadCountCurrentParallelRegion(Pyjama.omp_get_num_threads());//#GEN#[7]#PJ#
+//#GEN#[7]#PJ#
+            /* Process data clauses *///#GEN#[7]#PJ#
+            _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 _omp__parallelRegionVarHolderInstance_0 = new _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0();//#GEN#[7]#PJ#
+            _omp__parallelRegionVarHolderInstance_0.args = args; // auto-saving//#GEN#[7]#PJ#
+//#GEN#[7]#PJ#
+            /* Execute using traditional OpenMP (master thread part of the team) *///#GEN#[7]#PJ#
+            JuMP_PackageOnly.setMasterThread(Thread.currentThread());//#GEN#[7]#PJ#
+            TaskID _omp__parallelRegionTaskID_0 = _ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//#GEN#[7]#PJ#
+            __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//#GEN#[7]#PJ#
+            try {_omp__parallelRegionTaskID_0.waitTillFinished();} catch(Exception __pt__ex) { __pt__ex.printStackTrace(); }//#GEN#[7]#PJ#
+            //#GEN#[7]#PJ#
+            JuMP_PackageOnly.setMasterThread(null);//#GEN#[7]#PJ#
+            _holderForPIFirst.set(true);//#GEN#[7]#PJ#
+
+            args=_omp__parallelRegionVarHolderInstance_0.args; // auto-saved
+            JuMP_PackageOnly.setThreadCountCurrentParallelRegion(1);//#GEN#[7]#PJ#
+        }//#GEN#[7]#PJ#
+        /*OpenMP Parallel region (#0) -- END *///#GEN#[7]#PJ#
+//#GEN#[7]#PJ#
+    }
+    }
+    static private ArrayList<ParIterator<?>> _omp_piVarContainer = new ArrayList<ParIterator<?>>();//#GEN#[-1]#PJ#
+static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
+    static private AtomicBoolean _imFirst_2 = new AtomicBoolean(true);//#GEN#[-1]#PJ#
+    static private AtomicInteger _imFinishedCounter_2 = new AtomicInteger(0);//#GEN#[-1]#PJ#
+    static private CountDownLatch _waitBarrier_2 = new CountDownLatch(1);//#GEN#[-1]#PJ#
+    static private CountDownLatch _waitBarrierAfter_2 = new CountDownLatch(1);//#GEN#[-1]#PJ#
+    static private ParIterator<Integer> _pi_2 = null;//#GEN#[-1]#PJ#
+    static private Integer _lastElement_2 = null;//#GEN#[-1]#PJ#
+    static private _ompWorkSharedUserCode_PyjamaQuickSorter2_variables _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = null;//#GEN#[-1]#PJ#
+        static private void _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables __omp_vars) {//#GEN#[-1]#PJ#
+
+        String[] args = __omp_vars.args; // Auto-saved
+        Integer i;//#GEN#[-1]#PJ#
+        while (_pi_2.hasNext()) {//#GEN#[-1]#PJ#
+            i = _pi_2.next();//#GEN#[-1]#PJ#
+            //#GEN#[-1]#PJ#
+            {//#GEN#[10]#PJ#
+                System.out.println("Hello world from parallel code");//#GEN#[11]#PJ#
+            }//#GEN#[-1]#PJ#
+        }//#GEN#[-1]#PJ#
+
+    __omp_vars.args = args; // Re-collected
+    }//#GEN#[-1]#PJ#
+    //#GEN#[-1]#PJ#
+    //#GEN#[-1]#PJ#
+    /* Parallel region, placed in a multi-task *///#GEN#[-1]#PJ#
+    TASK(Pyjama.omp_get_num_threads()-1) private static void _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars) {//#GEN#[-1]#PJ#
+
+        String[] args = __omp_vars.args; // Auto-saved
+        {//#GEN#[8]#PJ#
+            if ( Pyjama.insideParallelRegion() ) {//#GEN#[9]#PJ#
+                /* Share the following work-sharing construct amongst multiple threads only if inside a parallel region (need this check for orphaned work-sharing constructs) *///#GEN#[9]#PJ#
+                boolean _omp_imFirst = _imFirst_2.getAndSet(false);//#GEN#[9]#PJ#
+                _holderForPIFirst = _imFirst_2;//#GEN#[9]#PJ#
+                if (_omp_imFirst) {//#GEN#[9]#PJ#
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = new _ompWorkSharedUserCode_PyjamaQuickSorter2_variables();//#GEN#[9]#PJ#
+                    int __omp_size_ = 0;//#GEN#[9]#PJ#
+                    // TODO -- improve performance by calculating N from the parameters (as an equation) rather than looping//#GEN#[9]#PJ#
+                    for (int i = 0; i < 10; i = i+1) {//#GEN#[9]#PJ#
+                        _lastElement_2 = i;//#GEN#[9]#PJ#
+                        __omp_size_++;//#GEN#[9]#PJ#
+                        }//#GEN#[9]#PJ#
+                    _pi_2 = ParIteratorFactory.createParIterator(0, __omp_size_, 1, Pyjama.omp_get_num_threads(), ParIterator.Schedule.DYNAMIC, ParIterator.DEFAULT_CHUNKSIZE, false);//#GEN#[9]#PJ#
+                    _omp_piVarContainer.add(_pi_2); // for interrupt statement//#GEN#[9]#PJ#
+                    _pi_2.setThreadIdGenerator(new UniqueThreadIdGeneratorForOpenMP());
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.args = args; // auto-saving//#GEN#[9]#PJ#
+                    _waitBarrier_2.countDown();//#GEN#[9]#PJ#
+                } else {//#GEN#[9]#PJ#
+                    try { _waitBarrier_2.await(); } catch (InterruptedException __omp__ie) { __omp__ie.printStackTrace(); }//#GEN#[9]#PJ#
+                }//#GEN#[9]#PJ#
+                _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance);//#GEN#[9]#PJ#
+                if (_imFinishedCounter_2.incrementAndGet() == JuMP_PackageOnly.getThreadCountCurrentParallelRegion()) {//#GEN#[9]#PJ#
+                    _waitBarrierAfter_2.countDown();//#GEN#[9]#PJ#
+                } else {//#GEN#[9]#PJ#
+                    try { //#GEN#[9]#PJ#
+                        _waitBarrierAfter_2.await();//#GEN#[9]#PJ#
+                    } catch (InterruptedException __omp__ie) { //#GEN#[9]#PJ#
+                        __omp__ie.printStackTrace(); //#GEN#[9]#PJ#
+                    }//#GEN#[9]#PJ#
+                }//#GEN#[9]#PJ#
+
+            } else {//#GEN#[9]#PJ#
+                /* Otherwise, this orphaned work-sharing is not within a parallel region.. so execute sequentially *///#GEN#[9]#PJ#
+                for (int i = 0; i < 10; i = i+1) //#GEN#[10]#PJ#
+                {//#GEN#[10]#PJ#
+                    System.out.println("Hello world from parallel code");//#GEN#[11]#PJ#
+                }//#GEN#[12]#PJ#
+            }//#GEN#[12]#PJ#
+//#GEN#[12]#PJ#
+        }//#GEN#[13]#PJ#
+
+        __omp_vars.args = args; // restore auto-saved variable
+    }
+}//#GEN#[14]#PJ#

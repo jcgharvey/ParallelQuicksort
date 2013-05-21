@@ -14,10 +14,13 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
 	private Integer granularity;
 	private List<T> list;
 	
+	public ParataskQuickSorter(){
+		this(200);
+	}
+	
 	public ParataskQuickSorter(int granularity){
 		this.granularity = granularity;
 	}
-	
 	
 	public List<T> sort(List<T> unsorted) {
 		list = new ArrayList<T>(unsorted); // don't override

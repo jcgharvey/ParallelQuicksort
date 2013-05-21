@@ -1,6 +1,6 @@
 package se751.team13.quicksort;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,9 +12,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import se751.team13.quicksort.inplaceparallel.InplaceListQuickSorter;
-import se751.team13.quicksort.psrs.PSRSMergeQuickSorter;
-import se751.team13.quicksort.psrs.PSRSQuickSorter;
+import se751.team13.quicksort.paratask.ParataskQuickSorter;
+import se751.team13.quicksort.pyjama.PyjamaQuickSorter;
 
 @RunWith(Parameterized.class)
 public class QuickSorterTest<T extends Comparable<? super T>> {
@@ -28,12 +27,14 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		return Arrays.asList(new Object[][] {
 //			{ new PSRSMergeQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
 //			{ new PSRSQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-////			{ new InplaceArrayQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
-			{ new InplaceListQuickSorter<Integer>(), Util.generateRandomNumbers(1000000), false },
-			{ new InplaceQuickSorter<Integer>(250), Util.generateRandomNumbers(1000000), false }
+//			{ new InplaceArrayQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
+//			{ new InplaceListQuickSorter<Integer>(), Util.generateRandomNumbers(1000000), false },
+//			{ new InplaceQuickSorter<Integer>(250), Util.generateRandomNumbers(1000000), false }
 //			{ new InplaceQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
 //			{ new InsertionSorter<Integer>(), Util.generateRandomNumbers(100000), false },
 //			{ new QuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
+			{ new ParataskQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false },
+			{ new PyjamaQuickSorter<Integer>(), Util.generateRandomNumbers(100000), false }
 		});
 	}
 

@@ -1,0 +1,114 @@
+package se751.team13.quicksort.paratask;
+
+import se751.team13.quicksort.Sorter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import paratask.runtime.TaskIDGroup;
+
+
+public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
+	
+	private Integer nThreads;
+	private Integer granularity;
+	private List<T> list;
+	
+	public ParataskQuickSorter(){
+		this(200);
+	}
+	
+	public ParataskQuickSorter(int granularity){
+		this.granularity = granularity;
+	}
+	
+	public List<T> sort(List<T> unsorted) {
+		list = new ArrayList<T>(unsorted); // don't override
+		TaskID wholeList = run(0,list.size()-1);
+		TaskIDGroup g = new TaskIDGroup(1);
+		g.add(wholeList);
+		try {
+			g.waitTillFinished();		
+		} catch (InterruptedException e){
+			System.out.println("Interrupted");
+		} catch (ExecutionException e){
+			System.out.println("Execution");
+			//pass
+		}
+		return list;
+	}
+	
+	TASK public void run(int left, int right) {
+		qssort(left, right);
+	}
+	
+	private void qssort(int left, int right){
+		if (right - left <= granularity) {
+			insertion(left, right);
+		} else if (left < right) {
+			int pivotIndex = left + (right - left) / 2;
+			int pivotNewIndex = partition(left, right, pivotIndex);
+			//System.out.println(g.groupSize());
+			TaskIDGroup g = new TaskIDGroup(1);
+
+			TaskID leftSubList = run( left, pivotNewIndex - 1);
+			g.add(leftSubList);
+//			// Stackoverflow from creating to many tasks
+//			TaskID rightSubList = run( pivotNewIndex + 1, right);
+//			g.add(rightSubList);
+
+//			qssort(left, pivotNewIndex - 1);
+			qssort(pivotNewIndex + 1, right);
+			try {
+				g.waitTillFinished();		
+			} catch (InterruptedException e){
+			
+			} catch (ExecutionException e){
+				//pass
+			}
+		}
+	}
+	
+	private int partition(int leftIndex, int rightIndex,
+			int pivotIndex) {
+
+		T pivot = list.get(pivotIndex);
+		swap(pivotIndex, rightIndex);
+		int storeIndex = leftIndex;
+
+		for (int i = leftIndex; i < rightIndex; i++) {
+			T t = list.get(i);
+
+			if (t.compareTo(pivot) <= 0) {
+				swap(i, storeIndex);
+				storeIndex++;
+			}
+		}
+
+		swap(storeIndex, rightIndex);
+		return storeIndex;
+	}
+	
+	private void swap(int leftIndex, int rightIndex) {
+		T t = list.get(leftIndex);
+		list.set(leftIndex, list.get(rightIndex));
+		list.set(rightIndex, t);
+	}
+	
+	
+	private void insertion(int offset, int limit) {
+		for (int i = offset; i < limit + 1; i++) {
+			T valueToInsert = list.get(i);
+			int hole = i;
+
+			while (hole > 0
+					&& valueToInsert.compareTo(list.get(hole - 1)) < 0) {
+				list.set(hole, list.get(hole - 1));
+				hole--;
+			}
+
+			list.set(hole, valueToInsert);
+		}
+	}
+
+}

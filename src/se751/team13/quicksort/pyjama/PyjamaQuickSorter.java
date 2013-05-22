@@ -79,7 +79,7 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorte
                 if (Pyjama.insideParallelRegion()) //####[51]####
                 {//####[51]####
                     {//####[53]####
-                        for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0 + 1) //####[54]####
+                        for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0 + 1) //####[54]####
                         {//####[55]####
                             switch(_omp_i_0) {//####[56]####
                                 case 0://####[56]####
@@ -87,208 +87,222 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorte
                                         qssort(left, pivotNewIndex - 1);//####[59]####
                                     }//####[60]####
                                     break;//####[61]####
-                            }//####[61]####
-                        }//####[63]####
-                    }//####[64]####
-                } else {//####[65]####
-                    JuMP_PackageOnly.setThreadCountCurrentParallelRegion(Pyjama.omp_get_num_threads());//####[67]####
-                    _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 _omp__parallelRegionVarHolderInstance_0 = new _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0();//####[70]####
-                    _omp__parallelRegionVarHolderInstance_0.pivotIndex = pivotIndex;//####[71]####
-                    _omp__parallelRegionVarHolderInstance_0.left = left;//####[72]####
-                    _omp__parallelRegionVarHolderInstance_0.right = right;//####[73]####
-                    _omp__parallelRegionVarHolderInstance_0.pivotNewIndex = pivotNewIndex;//####[74]####
-                    JuMP_PackageOnly.setMasterThread(Thread.currentThread());//####[77]####
-                    TaskID _omp__parallelRegionTaskID_0 = _ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//####[78]####
-                    __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//####[79]####
-                    try {//####[80]####
-                        _omp__parallelRegionTaskID_0.waitTillFinished();//####[80]####
-                    } catch (Exception __pt__ex) {//####[80]####
-                        __pt__ex.printStackTrace();//####[80]####
-                    }//####[80]####
-                    JuMP_PackageOnly.setMasterThread(null);//####[82]####
-                    _holderForPIFirst.set(true);//####[83]####
-                    pivotIndex = _omp__parallelRegionVarHolderInstance_0.pivotIndex;//####[85]####
-                    left = _omp__parallelRegionVarHolderInstance_0.left;//####[86]####
-                    right = _omp__parallelRegionVarHolderInstance_0.right;//####[87]####
-                    pivotNewIndex = _omp__parallelRegionVarHolderInstance_0.pivotNewIndex;//####[88]####
-                    JuMP_PackageOnly.setThreadCountCurrentParallelRegion(1);//####[89]####
-                }//####[90]####
-                qssort(pivotNewIndex + 1, right);//####[93]####
-            }//####[94]####
-        }//####[95]####
-    }//####[96]####
-//####[97]####
-    private AtomicBoolean _imFirst_2 = new AtomicBoolean(true);//####[97]####
-//####[98]####
-    private AtomicInteger _imFinishedCounter_2 = new AtomicInteger(0);//####[98]####
-//####[99]####
-    private CountDownLatch _waitBarrier_2 = new CountDownLatch(1);//####[99]####
-//####[100]####
-    private CountDownLatch _waitBarrierAfter_2 = new CountDownLatch(1);//####[100]####
+                                case 1://####[61]####
+                                    {//####[63]####
+                                        qssort(pivotNewIndex + 1, right);//####[64]####
+                                    }//####[65]####
+                                    break;//####[66]####
+                            }//####[66]####
+                        }//####[68]####
+                    }//####[69]####
+                } else {//####[70]####
+                    JuMP_PackageOnly.setThreadCountCurrentParallelRegion(Pyjama.omp_get_num_threads());//####[72]####
+                    _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 _omp__parallelRegionVarHolderInstance_0 = new _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0();//####[75]####
+                    _omp__parallelRegionVarHolderInstance_0.pivotIndex = pivotIndex;//####[76]####
+                    _omp__parallelRegionVarHolderInstance_0.left = left;//####[77]####
+                    _omp__parallelRegionVarHolderInstance_0.right = right;//####[78]####
+                    _omp__parallelRegionVarHolderInstance_0.pivotNewIndex = pivotNewIndex;//####[79]####
+                    JuMP_PackageOnly.setMasterThread(Thread.currentThread());//####[82]####
+                    TaskID _omp__parallelRegionTaskID_0 = _ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//####[83]####
+                    __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//####[84]####
+                    try {//####[85]####
+                        _omp__parallelRegionTaskID_0.waitTillFinished();//####[85]####
+                    } catch (Exception __pt__ex) {//####[85]####
+                        __pt__ex.printStackTrace();//####[85]####
+                    }//####[85]####
+                    JuMP_PackageOnly.setMasterThread(null);//####[87]####
+                    _holderForPIFirst.set(true);//####[88]####
+                    pivotIndex = _omp__parallelRegionVarHolderInstance_0.pivotIndex;//####[90]####
+                    left = _omp__parallelRegionVarHolderInstance_0.left;//####[91]####
+                    right = _omp__parallelRegionVarHolderInstance_0.right;//####[92]####
+                    pivotNewIndex = _omp__parallelRegionVarHolderInstance_0.pivotNewIndex;//####[93]####
+                    JuMP_PackageOnly.setThreadCountCurrentParallelRegion(1);//####[94]####
+                }//####[95]####
+            }//####[98]####
+        }//####[99]####
+    }//####[100]####
 //####[101]####
-    private ParIterator<Integer> _pi_2 = null;//####[101]####
+    private AtomicBoolean _imFirst_2 = new AtomicBoolean(true);//####[101]####
 //####[102]####
-    private Integer _lastElement_2 = null;//####[102]####
+    private AtomicInteger _imFinishedCounter_2 = new AtomicInteger(0);//####[102]####
 //####[103]####
-    private _ompWorkSharedUserCode_PyjamaQuickSorter2_variables _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = null;//####[103]####
+    private CountDownLatch _waitBarrier_2 = new CountDownLatch(1);//####[103]####
 //####[104]####
-    private void _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables __omp_vars) {//####[104]####
-        int pivotIndex = __omp_vars.pivotIndex;//####[106]####
-        int left = __omp_vars.left;//####[107]####
-        int right = __omp_vars.right;//####[108]####
-        int pivotNewIndex = __omp_vars.pivotNewIndex;//####[109]####
-        Integer _omp_i_0;//####[110]####
-        while (_pi_2.hasNext()) //####[111]####
-        {//####[111]####
-            _omp_i_0 = _pi_2.next();//####[112]####
-            {//####[114]####
-                switch(_omp_i_0) {//####[115]####
-                    case 0://####[115]####
-                        {//####[117]####
-                            qssort(left, pivotNewIndex - 1);//####[118]####
-                        }//####[119]####
-                        break;//####[120]####
-                }//####[120]####
-            }//####[122]####
-        }//####[123]####
-        __omp_vars.pivotIndex = pivotIndex;//####[125]####
-        __omp_vars.left = left;//####[126]####
-        __omp_vars.right = right;//####[127]####
-        __omp_vars.pivotNewIndex = pivotNewIndex;//####[128]####
-    }//####[129]####
-//####[133]####
-    private Method __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method = null;//####[133]####
-    private Lock __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock = new ReentrantLock();//####[133]####
-    private TaskIDGroup<Void> _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars)  {//####[133]####
-//####[133]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[133]####
-        return _ompParallelRegion_0(__omp_vars, new TaskInfo());//####[133]####
-    }//####[133]####
-    private TaskIDGroup<Void> _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars, TaskInfo taskinfo)  {//####[133]####
-        if (__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method == null) {//####[133]####
-            try {//####[133]####
-                __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock.lock();//####[133]####
-                if (__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method == null) //####[133]####
-                    __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method = ParaTaskHelper.getDeclaredMethod(getClass(), "__pt___ompParallelRegion_0", new Class[] {_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0.class});//####[133]####
-            } catch (Exception e) {//####[133]####
-                e.printStackTrace();//####[133]####
-            } finally {//####[133]####
-                __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock.unlock();//####[133]####
-            }//####[133]####
-        }//####[133]####
-//####[133]####
-        Object[] args = new Object[] {__omp_vars};//####[133]####
-        taskinfo.setTaskArguments(args);//####[133]####
-        taskinfo.setMethod(__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method);//####[133]####
-        taskinfo.setInstance(this);//####[133]####
-//####[133]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, Pyjama.omp_get_num_threads() - 1);//####[133]####
-    }//####[133]####
-    public void __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars) {//####[133]####
-        int pivotIndex = __omp_vars.pivotIndex;//####[135]####
-        int left = __omp_vars.left;//####[136]####
-        int right = __omp_vars.right;//####[137]####
-        int pivotNewIndex = __omp_vars.pivotNewIndex;//####[138]####
-        {//####[139]####
-            if (Pyjama.insideParallelRegion()) //####[140]####
-            {//####[140]####
-                boolean _omp_imFirst = _imFirst_2.getAndSet(false);//####[142]####
-                _holderForPIFirst = _imFirst_2;//####[143]####
-                if (_omp_imFirst) //####[144]####
-                {//####[144]####
-                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = new _ompWorkSharedUserCode_PyjamaQuickSorter2_variables();//####[145]####
-                    int __omp_size_ = 0;//####[146]####
-                    for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0 + 1) //####[148]####
-                    {//####[148]####
-                        _lastElement_2 = _omp_i_0;//####[149]####
-                        __omp_size_++;//####[150]####
-                    }//####[151]####
-                    _pi_2 = ParIteratorFactory.createParIterator(0, __omp_size_, 1, Pyjama.omp_get_num_threads(), ParIterator.Schedule.DYNAMIC, 1, false);//####[152]####
-                    _omp_piVarContainer.add(_pi_2);//####[153]####
-                    _pi_2.setThreadIdGenerator(new UniqueThreadIdGeneratorForOpenMP());//####[154]####
-                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotIndex = pivotIndex;//####[155]####
-                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.left = left;//####[156]####
-                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.right = right;//####[157]####
-                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotNewIndex = pivotNewIndex;//####[158]####
-                    _waitBarrier_2.countDown();//####[159]####
-                } else {//####[160]####
-                    try {//####[161]####
-                        _waitBarrier_2.await();//####[161]####
-                    } catch (InterruptedException __omp__ie) {//####[161]####
-                        __omp__ie.printStackTrace();//####[161]####
-                    }//####[161]####
-                }//####[162]####
-                _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance);//####[163]####
-                if (_imFinishedCounter_2.incrementAndGet() == JuMP_PackageOnly.getThreadCountCurrentParallelRegion()) //####[164]####
-                {//####[164]####
-                    _waitBarrierAfter_2.countDown();//####[165]####
-                } else {//####[166]####
-                    try {//####[167]####
-                        _waitBarrierAfter_2.await();//####[168]####
-                    } catch (InterruptedException __omp__ie) {//####[169]####
+    private CountDownLatch _waitBarrierAfter_2 = new CountDownLatch(1);//####[104]####
+//####[105]####
+    private ParIterator<Integer> _pi_2 = null;//####[105]####
+//####[106]####
+    private Integer _lastElement_2 = null;//####[106]####
+//####[107]####
+    private _ompWorkSharedUserCode_PyjamaQuickSorter2_variables _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = null;//####[107]####
+//####[108]####
+    private void _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables __omp_vars) {//####[108]####
+        int pivotIndex = __omp_vars.pivotIndex;//####[110]####
+        int left = __omp_vars.left;//####[111]####
+        int right = __omp_vars.right;//####[112]####
+        int pivotNewIndex = __omp_vars.pivotNewIndex;//####[113]####
+        Integer _omp_i_0;//####[114]####
+        while (_pi_2.hasNext()) //####[115]####
+        {//####[115]####
+            _omp_i_0 = _pi_2.next();//####[116]####
+            {//####[118]####
+                switch(_omp_i_0) {//####[119]####
+                    case 0://####[119]####
+                        {//####[121]####
+                            qssort(left, pivotNewIndex - 1);//####[122]####
+                        }//####[123]####
+                        break;//####[124]####
+                    case 1://####[124]####
+                        {//####[126]####
+                            qssort(pivotNewIndex + 1, right);//####[127]####
+                        }//####[128]####
+                        break;//####[129]####
+                }//####[129]####
+            }//####[131]####
+        }//####[132]####
+        __omp_vars.pivotIndex = pivotIndex;//####[134]####
+        __omp_vars.left = left;//####[135]####
+        __omp_vars.right = right;//####[136]####
+        __omp_vars.pivotNewIndex = pivotNewIndex;//####[137]####
+    }//####[138]####
+//####[142]####
+    private Method __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method = null;//####[142]####
+    private Lock __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock = new ReentrantLock();//####[142]####
+    private TaskIDGroup<Void> _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars)  {//####[142]####
+//####[142]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[142]####
+        return _ompParallelRegion_0(__omp_vars, new TaskInfo());//####[142]####
+    }//####[142]####
+    private TaskIDGroup<Void> _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars, TaskInfo taskinfo)  {//####[142]####
+        if (__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method == null) {//####[142]####
+            try {//####[142]####
+                __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock.lock();//####[142]####
+                if (__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method == null) //####[142]####
+                    __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method = ParaTaskHelper.getDeclaredMethod(getClass(), "__pt___ompParallelRegion_0", new Class[] {_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0.class});//####[142]####
+            } catch (Exception e) {//####[142]####
+                e.printStackTrace();//####[142]####
+            } finally {//####[142]####
+                __pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_lock.unlock();//####[142]####
+            }//####[142]####
+        }//####[142]####
+//####[142]####
+        Object[] args = new Object[] {__omp_vars};//####[142]####
+        taskinfo.setTaskArguments(args);//####[142]####
+        taskinfo.setMethod(__pt___ompParallelRegion_0__omp__parallelRegionVarHolderClass_PyjamaQuickSorter0_method);//####[142]####
+        taskinfo.setInstance(this);//####[142]####
+//####[142]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, Pyjama.omp_get_num_threads() - 1);//####[142]####
+    }//####[142]####
+    public void __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars) {//####[142]####
+        int pivotIndex = __omp_vars.pivotIndex;//####[144]####
+        int left = __omp_vars.left;//####[145]####
+        int right = __omp_vars.right;//####[146]####
+        int pivotNewIndex = __omp_vars.pivotNewIndex;//####[147]####
+        {//####[148]####
+            if (Pyjama.insideParallelRegion()) //####[149]####
+            {//####[149]####
+                boolean _omp_imFirst = _imFirst_2.getAndSet(false);//####[151]####
+                _holderForPIFirst = _imFirst_2;//####[152]####
+                if (_omp_imFirst) //####[153]####
+                {//####[153]####
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = new _ompWorkSharedUserCode_PyjamaQuickSorter2_variables();//####[154]####
+                    int __omp_size_ = 0;//####[155]####
+                    for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0 + 1) //####[157]####
+                    {//####[157]####
+                        _lastElement_2 = _omp_i_0;//####[158]####
+                        __omp_size_++;//####[159]####
+                    }//####[160]####
+                    _pi_2 = ParIteratorFactory.createParIterator(0, __omp_size_, 1, Pyjama.omp_get_num_threads(), ParIterator.Schedule.DYNAMIC, 1, false);//####[161]####
+                    _omp_piVarContainer.add(_pi_2);//####[162]####
+                    _pi_2.setThreadIdGenerator(new UniqueThreadIdGeneratorForOpenMP());//####[163]####
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotIndex = pivotIndex;//####[164]####
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.left = left;//####[165]####
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.right = right;//####[166]####
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotNewIndex = pivotNewIndex;//####[167]####
+                    _waitBarrier_2.countDown();//####[168]####
+                } else {//####[169]####
+                    try {//####[170]####
+                        _waitBarrier_2.await();//####[170]####
+                    } catch (InterruptedException __omp__ie) {//####[170]####
                         __omp__ie.printStackTrace();//####[170]####
-                    }//####[171]####
-                }//####[172]####
-            } else {//####[174]####
-                for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0 + 1) //####[176]####
-                {//####[177]####
-                    switch(_omp_i_0) {//####[178]####
-                        case 0://####[178]####
-                            {//####[180]####
-                                qssort(__omp_vars.left, __omp_vars.pivotNewIndex - 1);//####[181]####
-                            }//####[182]####
-                            break;//####[183]####
-                    }//####[183]####
-                }//####[185]####
-            }//####[186]####
-        }//####[188]####
-        __omp_vars.pivotIndex = pivotIndex;//####[190]####
-        __omp_vars.left = left;//####[191]####
-        __omp_vars.right = right;//####[192]####
-        __omp_vars.pivotNewIndex = pivotNewIndex;//####[193]####
-    }//####[194]####
-//####[194]####
-//####[195]####
-    private int partition(int leftIndex, int rightIndex, int pivotIndex) {//####[195]####
-        {//####[195]####
-            T pivot = list.get(pivotIndex);//####[196]####
-            swap(pivotIndex, rightIndex);//####[197]####
-            int storeIndex = leftIndex;//####[198]####
-            for (int i = leftIndex; i < rightIndex; i++) //####[199]####
-            {//####[200]####
-                T t = list.get(i);//####[201]####
-                if (t.compareTo(pivot) <= 0) //####[202]####
-                {//####[203]####
-                    swap(i, storeIndex);//####[204]####
-                    storeIndex++;//####[205]####
-                }//####[206]####
-            }//####[207]####
-            swap(storeIndex, rightIndex);//####[208]####
-            return storeIndex;//####[209]####
-        }//####[210]####
-    }//####[211]####
-//####[213]####
-    private void swap(int leftIndex, int rightIndex) {//####[213]####
-        {//####[213]####
-            T t = list.get(leftIndex);//####[214]####
-            list.set(leftIndex, list.get(rightIndex));//####[215]####
-            list.set(rightIndex, t);//####[216]####
-        }//####[217]####
-    }//####[218]####
-//####[220]####
-    private void insertion(int offset, int limit) {//####[220]####
-        {//####[220]####
-            for (int i = offset; i < limit + 1; i++) //####[221]####
-            {//####[222]####
-                T valueToInsert = list.get(i);//####[223]####
-                int hole = i;//####[224]####
-                while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //####[225]####
-                {//####[226]####
-                    list.set(hole, list.get(hole - 1));//####[227]####
-                    hole--;//####[228]####
-                }//####[229]####
-                list.set(hole, valueToInsert);//####[230]####
-            }//####[231]####
-        }//####[232]####
-    }//####[233]####
-}//####[233]####
+                    }//####[170]####
+                }//####[171]####
+                _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance);//####[172]####
+                if (_imFinishedCounter_2.incrementAndGet() == JuMP_PackageOnly.getThreadCountCurrentParallelRegion()) //####[173]####
+                {//####[173]####
+                    _waitBarrierAfter_2.countDown();//####[174]####
+                } else {//####[175]####
+                    try {//####[176]####
+                        _waitBarrierAfter_2.await();//####[177]####
+                    } catch (InterruptedException __omp__ie) {//####[178]####
+                        __omp__ie.printStackTrace();//####[179]####
+                    }//####[180]####
+                }//####[181]####
+            } else {//####[183]####
+                for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0 + 1) //####[185]####
+                {//####[186]####
+                    switch(_omp_i_0) {//####[187]####
+                        case 0://####[187]####
+                            {//####[189]####
+                                qssort(__omp_vars.left, __omp_vars.pivotNewIndex - 1);//####[190]####
+                            }//####[191]####
+                            break;//####[192]####
+                        case 1://####[192]####
+                            {//####[194]####
+                                qssort(__omp_vars.pivotNewIndex + 1, __omp_vars.right);//####[195]####
+                            }//####[196]####
+                            break;//####[197]####
+                    }//####[197]####
+                }//####[199]####
+            }//####[200]####
+        }//####[202]####
+        __omp_vars.pivotIndex = pivotIndex;//####[204]####
+        __omp_vars.left = left;//####[205]####
+        __omp_vars.right = right;//####[206]####
+        __omp_vars.pivotNewIndex = pivotNewIndex;//####[207]####
+    }//####[208]####
+//####[208]####
+//####[209]####
+    private int partition(int leftIndex, int rightIndex, int pivotIndex) {//####[209]####
+        {//####[209]####
+            T pivot = list.get(pivotIndex);//####[210]####
+            swap(pivotIndex, rightIndex);//####[211]####
+            int storeIndex = leftIndex;//####[212]####
+            for (int i = leftIndex; i < rightIndex; i++) //####[213]####
+            {//####[214]####
+                T t = list.get(i);//####[215]####
+                if (t.compareTo(pivot) <= 0) //####[216]####
+                {//####[217]####
+                    swap(i, storeIndex);//####[218]####
+                    storeIndex++;//####[219]####
+                }//####[220]####
+            }//####[221]####
+            swap(storeIndex, rightIndex);//####[222]####
+            return storeIndex;//####[223]####
+        }//####[224]####
+    }//####[225]####
+//####[227]####
+    private void swap(int leftIndex, int rightIndex) {//####[227]####
+        {//####[227]####
+            T t = list.get(leftIndex);//####[228]####
+            list.set(leftIndex, list.get(rightIndex));//####[229]####
+            list.set(rightIndex, t);//####[230]####
+        }//####[231]####
+    }//####[232]####
+//####[234]####
+    private void insertion(int offset, int limit) {//####[234]####
+        {//####[234]####
+            for (int i = offset; i < limit + 1; i++) //####[235]####
+            {//####[236]####
+                T valueToInsert = list.get(i);//####[237]####
+                int hole = i;//####[238]####
+                while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //####[239]####
+                {//####[240]####
+                    list.set(hole, list.get(hole - 1));//####[241]####
+                    hole--;//####[242]####
+                }//####[243]####
+                list.set(hole, valueToInsert);//####[244]####
+            }//####[245]####
+        }//####[246]####
+    }//####[247]####
+}//####[247]####

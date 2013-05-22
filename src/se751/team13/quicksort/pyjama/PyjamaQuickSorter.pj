@@ -40,13 +40,15 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorte
 					qssort(left, pivotNewIndex - 1);
 				}
 
-				/*//#omp section
+				//#omp section
 				{
 					qssort(pivotNewIndex + 1, right);
-				}*/
+				}
 			}
 
-			qssort(pivotNewIndex + 1, right);
+			//qssort(pivotNewIndex + 1, right);
+
+			
 		}
 	}
 	

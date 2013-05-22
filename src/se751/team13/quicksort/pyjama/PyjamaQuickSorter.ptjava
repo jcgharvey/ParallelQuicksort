@@ -51,7 +51,7 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
             if(Pyjama.insideParallelRegion() ) {//#GEN#[29]#PJ#
                 /* If already inside a parallel region, execute sequentially (nested parallelism currently not supported) *///#GEN#[29]#PJ#
                 {//#GEN#[30]#PJ#
-                    for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0+1) //#GEN#[32]#PJ#
+                    for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) //#GEN#[32]#PJ#
                     {//#GEN#[32]#PJ#
                         switch(_omp_i_0) {//#GEN#[33]#PJ#
                             case 0://#GEN#[33]#PJ#
@@ -59,9 +59,14 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
                                     qssort(left, pivotNewIndex - 1);//#GEN#[36]#PJ#
                                 }//#GEN#[37]#PJ#
                                 break;//#GEN#[38]#PJ#
-                        }//#GEN#[38]#PJ#
-                    }//#GEN#[40]#PJ#
-                }//#GEN#[41]#PJ#
+                            case 1://#GEN#[38]#PJ#
+                                {//#GEN#[40]#PJ#
+                                    qssort(pivotNewIndex + 1, right);//#GEN#[41]#PJ#
+                                }//#GEN#[42]#PJ#
+                                break;//#GEN#[43]#PJ#
+                        }//#GEN#[43]#PJ#
+                    }//#GEN#[45]#PJ#
+                }//#GEN#[46]#PJ#
             } else {//#GEN#[29]#PJ#
                 /* Else, execute in parallel *///#GEN#[29]#PJ#
                 JuMP_PackageOnly.setThreadCountCurrentParallelRegion(Pyjama.omp_get_num_threads());//#GEN#[29]#PJ#
@@ -90,8 +95,7 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
             }//#GEN#[29]#PJ#
             /*OpenMP Parallel region (#0) -- END *///#GEN#[29]#PJ#
 //#GEN#[29]#PJ#
-            qssort(pivotNewIndex + 1, right);//#GEN#[42]#PJ#
-        }//#GEN#[43]#PJ#
+        }//#GEN#[47]#PJ#
     }
     }
         private AtomicBoolean _imFirst_2 = new AtomicBoolean(true);//#GEN#[-1]#PJ#
@@ -118,7 +122,12 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
                             qssort(left, pivotNewIndex - 1);//#GEN#[36]#PJ#
                         }//#GEN#[37]#PJ#
                         break;//#GEN#[38]#PJ#
-                }//#GEN#[38]#PJ#
+                    case 1://#GEN#[38]#PJ#
+                        {//#GEN#[40]#PJ#
+                            qssort(pivotNewIndex + 1, right);//#GEN#[41]#PJ#
+                        }//#GEN#[42]#PJ#
+                        break;//#GEN#[43]#PJ#
+                }//#GEN#[43]#PJ#
             }//#GEN#[-1]#PJ#
         }//#GEN#[-1]#PJ#
 
@@ -145,7 +154,7 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
                     _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = new _ompWorkSharedUserCode_PyjamaQuickSorter2_variables();//#GEN#[31]#PJ#
                     int __omp_size_ = 0;//#GEN#[31]#PJ#
                     // TODO -- improve performance by calculating N from the parameters (as an equation) rather than looping//#GEN#[31]#PJ#
-                    for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0+1) {//#GEN#[31]#PJ#
+                    for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) {//#GEN#[31]#PJ#
                         _lastElement_2 = _omp_i_0;//#GEN#[31]#PJ#
                         __omp_size_++;//#GEN#[31]#PJ#
                         }//#GEN#[31]#PJ#
@@ -173,7 +182,7 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
 
             } else {//#GEN#[31]#PJ#
                 /* Otherwise, this orphaned work-sharing is not within a parallel region.. so execute sequentially *///#GEN#[31]#PJ#
-                for (int _omp_i_0 = 0; _omp_i_0 < 1; _omp_i_0 = _omp_i_0+1) //#GEN#[32]#PJ#
+                for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) //#GEN#[32]#PJ#
                 {//#GEN#[32]#PJ#
                     switch(_omp_i_0) {//#GEN#[33]#PJ#
                         case 0://#GEN#[33]#PJ#
@@ -181,55 +190,60 @@ static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
                                 qssort(__omp_vars.left, __omp_vars.pivotNewIndex - 1);//#GEN#[36]#PJ#
                             }//#GEN#[37]#PJ#
                             break;//#GEN#[38]#PJ#
-                    }//#GEN#[38]#PJ#
-                }//#GEN#[40]#PJ#
-            }//#GEN#[40]#PJ#
-//#GEN#[40]#PJ#
-        }//#GEN#[41]#PJ#
+                        case 1://#GEN#[38]#PJ#
+                            {//#GEN#[40]#PJ#
+                                qssort(__omp_vars.pivotNewIndex + 1, __omp_vars.right);//#GEN#[41]#PJ#
+                            }//#GEN#[42]#PJ#
+                            break;//#GEN#[43]#PJ#
+                    }//#GEN#[43]#PJ#
+                }//#GEN#[45]#PJ#
+            }//#GEN#[45]#PJ#
+//#GEN#[45]#PJ#
+        }//#GEN#[46]#PJ#
 
         __omp_vars.pivotIndex = pivotIndex; // restore auto-saved variable
         __omp_vars.left = left; // restore auto-saved variable
         __omp_vars.right = right; // restore auto-saved variable
         __omp_vars.pivotNewIndex = pivotNewIndex; // restore auto-saved variable
     }
-    private int partition(int leftIndex, int rightIndex, int pivotIndex) {{//#GEN#[45]#PJ#
-        T pivot = list.get(pivotIndex);//#GEN#[46]#PJ#
-        swap(pivotIndex, rightIndex);//#GEN#[47]#PJ#
-        int storeIndex = leftIndex;//#GEN#[48]#PJ#
-        for (int i = leftIndex; i < rightIndex; i++) //#GEN#[49]#PJ#
-        {//#GEN#[49]#PJ#
-            T t = list.get(i);//#GEN#[50]#PJ#
-            if (t.compareTo(pivot) <= 0) //#GEN#[51]#PJ#
-            {//#GEN#[51]#PJ#
-                swap(i, storeIndex);//#GEN#[52]#PJ#
-                storeIndex++;//#GEN#[53]#PJ#
-            }//#GEN#[54]#PJ#
-        }//#GEN#[55]#PJ#
-        swap(storeIndex, rightIndex);//#GEN#[56]#PJ#
-        return storeIndex;//#GEN#[57]#PJ#
+    private int partition(int leftIndex, int rightIndex, int pivotIndex) {{//#GEN#[49]#PJ#
+        T pivot = list.get(pivotIndex);//#GEN#[50]#PJ#
+        swap(pivotIndex, rightIndex);//#GEN#[51]#PJ#
+        int storeIndex = leftIndex;//#GEN#[52]#PJ#
+        for (int i = leftIndex; i < rightIndex; i++) //#GEN#[53]#PJ#
+        {//#GEN#[53]#PJ#
+            T t = list.get(i);//#GEN#[54]#PJ#
+            if (t.compareTo(pivot) <= 0) //#GEN#[55]#PJ#
+            {//#GEN#[55]#PJ#
+                swap(i, storeIndex);//#GEN#[56]#PJ#
+                storeIndex++;//#GEN#[57]#PJ#
+            }//#GEN#[58]#PJ#
+        }//#GEN#[59]#PJ#
+        swap(storeIndex, rightIndex);//#GEN#[60]#PJ#
+        return storeIndex;//#GEN#[61]#PJ#
     }
     }
     
-    private void swap(int leftIndex, int rightIndex) {{//#GEN#[59]#PJ#
-        T t = list.get(leftIndex);//#GEN#[60]#PJ#
-        list.set(leftIndex, list.get(rightIndex));//#GEN#[61]#PJ#
-        list.set(rightIndex, t);//#GEN#[62]#PJ#
+    private void swap(int leftIndex, int rightIndex) {{//#GEN#[63]#PJ#
+        T t = list.get(leftIndex);//#GEN#[64]#PJ#
+        list.set(leftIndex, list.get(rightIndex));//#GEN#[65]#PJ#
+        list.set(rightIndex, t);//#GEN#[66]#PJ#
     }
     }
     
-    private void insertion(int offset, int limit) {{//#GEN#[64]#PJ#
-        for (int i = offset; i < limit + 1; i++) //#GEN#[65]#PJ#
-        {//#GEN#[65]#PJ#
-            T valueToInsert = list.get(i);//#GEN#[66]#PJ#
-            int hole = i;//#GEN#[67]#PJ#
-            while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //#GEN#[68]#PJ#
-            {//#GEN#[68]#PJ#
-                list.set(hole, list.get(hole - 1));//#GEN#[69]#PJ#
-                hole--;//#GEN#[70]#PJ#
-            }//#GEN#[71]#PJ#
-            list.set(hole, valueToInsert);//#GEN#[72]#PJ#
-        }//#GEN#[73]#PJ#
+    private void insertion(int offset, int limit) {{//#GEN#[68]#PJ#
+        for (int i = offset; i < limit + 1; i++) //#GEN#[69]#PJ#
+        {//#GEN#[69]#PJ#
+            T valueToInsert = list.get(i);//#GEN#[70]#PJ#
+            int hole = i;//#GEN#[71]#PJ#
+            while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //#GEN#[72]#PJ#
+            {//#GEN#[72]#PJ#
+                list.set(hole, list.get(hole - 1));//#GEN#[73]#PJ#
+                hole--;//#GEN#[74]#PJ#
+            }//#GEN#[75]#PJ#
+            list.set(hole, valueToInsert);//#GEN#[76]#PJ#
+        }//#GEN#[77]#PJ#
     }
     }
     
-}//#GEN#[74]#PJ#
+}//#GEN#[78]#PJ#

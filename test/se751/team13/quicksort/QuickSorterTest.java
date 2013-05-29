@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import se751.team13.quicksort.inplaceparallel.InplaceListQuickSorter;
+import se751.team13.quicksort.inplaceparallel.ParallelInplaceQuickSorter;
 import se751.team13.quicksort.paratask.ParataskQuickSorter;
 import se751.team13.quicksort.pyjama.PyjamaQuickSorter;
 
@@ -28,7 +28,14 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		List<Integer> numbers = Util.generateRandomNumbers(1000000);
+		int amount = 10000000;
+//		List<Integer> numbers = Util.generateRandomNumbers(amount);
+//
+//		List<Integer> numbers1 = Util.generateRandomNumbers(amount);
+//		List<Integer> numbers2 = Util.generateRandomNumbers(amount);
+//		List<Integer> numbers3 = Util.generateRandomNumbers(amount);
+//		List<Integer> numbers4 = Util.generateRandomNumbers(amount);
+		List<Integer> numbers5 = Util.generateRandomNumbers(amount);
 
 		return Arrays.asList(new Object[][] {
 				// { new PSRSMergeQuickSorter<Integer>(),
@@ -37,8 +44,6 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 				// Util.generateRandomNumbers(100000), false },
 				// { new InplaceArrayQuickSorter<Integer>(),
 				// Util.generateRandomNumbers(100000), false },
-				{ new InplaceListQuickSorter<Integer>(),
-						new ArrayList<Integer>(numbers), false },
 				// { new InplaceQuickSorter<Integer>(250),
 				// Util.generateRandomNumbers(1000000), false }
 				// { new InplaceQuickSorter<Integer>(),
@@ -47,12 +52,54 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 				// Util.generateRandomNumbers(100000), false },
 				// { new QuickSorter<Integer>(),
 				// Util.generateRandomNumbers(100000), false },
+//				{ new InplaceListQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers), false },
+//				{ new ParataskQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers), false },
+//				{ new InplaceQuickSorter<Integer>(250),
+//						new ArrayList<Integer>(numbers), false },
+//				{ new PyjamaQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers), false },
+//				{ new InplaceListQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers1), false },
+//				{ new ParataskQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers1), false },
+//				{ new InplaceQuickSorter<Integer>(250),
+//						new ArrayList<Integer>(numbers1), false },
+//				{ new PyjamaQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers1), false },
+//				{ new InplaceListQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers2), false },
+//				{ new ParataskQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers2), false },
+//				{ new InplaceQuickSorter<Integer>(250),
+//						new ArrayList<Integer>(numbers2), false },
+//				{ new PyjamaQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers2), false },
+//				{ new InplaceListQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers3), false },
+//				{ new ParataskQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers3), false },
+//				{ new InplaceQuickSorter<Integer>(250),
+//						new ArrayList<Integer>(numbers3), false },
+//				{ new PyjamaQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers3), false },
+//				{ new InplaceListQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers4), false },
+//				{ new ParataskQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers4), false },
+//				{ new InplaceQuickSorter<Integer>(250),
+//						new ArrayList<Integer>(numbers4), false },
+//				{ new PyjamaQuickSorter<Integer>(),
+//						new ArrayList<Integer>(numbers4), false },
+				{ new ParallelInplaceQuickSorter<Integer>(),
+						new ArrayList<Integer>(numbers5), false },
 				{ new ParataskQuickSorter<Integer>(),
-						new ArrayList<Integer>(numbers), false },
+						new ArrayList<Integer>(numbers5), false },
 				{ new InplaceQuickSorter<Integer>(250),
-						new ArrayList<Integer>(numbers), false },
+						new ArrayList<Integer>(numbers5), false },
 				{ new PyjamaQuickSorter<Integer>(),
-						new ArrayList<Integer>(numbers), false } });
+						new ArrayList<Integer>(numbers5), false } });
 	}
 
 	public QuickSorterTest(Sorter<Integer> sorter, List<Integer> unsorted,
@@ -64,7 +111,7 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 
 	@Before
 	public void jitWarmup() {
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 100; i++)
 			sorter.sort(Util.generateRandomNumbers(1000));
 	}
 
@@ -96,7 +143,8 @@ public class QuickSorterTest<T extends Comparable<? super T>> {
 		try {
 			PrintWriter out = new PrintWriter(new BufferedWriter(
 					new FileWriter("results.csv", true)));
-			out.println(String.format("%s,%d,%b,%d", sorter.getClass().getSimpleName(), total, random, unsorted.size()));
+			out.println(String.format("%s,%d,%b,%d", sorter.getClass()
+					.getSimpleName(), total, random, unsorted.size()));
 			out.close();
 		} catch (IOException e) {
 		}

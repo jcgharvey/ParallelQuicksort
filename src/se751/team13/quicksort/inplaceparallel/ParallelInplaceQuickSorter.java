@@ -5,17 +5,17 @@ import java.util.List;
 
 import se751.team13.quicksort.Sorter;
 
-public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
+public class ParallelInplaceQuickSorter<T extends Comparable<? super T>> implements
 		Sorter<T> {
 	@Override
 	public List<T> sort(List<T> unsorted) {
 		unsorted = new ArrayList<T>(unsorted); // don't override
 
 		try {
-			QuickSortTaskManager<T> qs = new QuickSortTaskManager<T>();
-			qs.add_task(new InplaceListQuickSorterTask(unsorted, 0, unsorted
+			TaskManager<T> qs = new TaskManager<T>();
+			qs.addTask(new InplaceListQuickSorterTask(unsorted, 0, unsorted
 					.size() - 1, qs));
-			qs.work_wait();
+			qs.workWait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -24,14 +24,14 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 	}
 
 	private class InplaceListQuickSorterTask implements Runnable {
-		QuickSortTaskManager<T> manager;
+		TaskManager<T> manager;
 		private List<T> list;
 		private int left;
 		private int right;
 		private int granularity;
 
 		public InplaceListQuickSorterTask(List<T> array, int left, int right,
-				QuickSortTaskManager<T> manager) {
+				TaskManager<T> manager) {
 			this.list = array;
 			this.left = left;
 			this.right = right;
@@ -40,7 +40,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 		}
 		
 		public InplaceListQuickSorterTask(List<T> array, int left, int right,
-				QuickSortTaskManager<T> manager, int granularity) {
+				TaskManager<T> manager, int granularity) {
 			this.list = array;
 			this.left = left;
 			this.right = right;
@@ -51,7 +51,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 
 		public void run() {
 			qssort(left,right);
-			manager.task_done();
+			manager.taskDone();
 		}
 		
 		public void qssort(int leftIndex, int rightIndex){
@@ -60,7 +60,7 @@ public class InplaceListQuickSorter<T extends Comparable<? super T>> implements
 			} else if (leftIndex < rightIndex) {
 				int pivotIndex = leftIndex + (rightIndex - leftIndex) / 2;
 				int pivotNewIndex = partition(list, leftIndex, rightIndex, pivotIndex);
-				manager.add_task(new InplaceListQuickSorterTask(list, leftIndex,
+				manager.addTask(new InplaceListQuickSorterTask(list, leftIndex,
 						pivotNewIndex - 1, manager));
 				qssort(	pivotNewIndex + 1, rightIndex);
 			}

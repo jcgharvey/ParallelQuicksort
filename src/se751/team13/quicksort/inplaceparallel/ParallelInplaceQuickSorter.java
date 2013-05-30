@@ -5,14 +5,25 @@ import java.util.List;
 
 import se751.team13.quicksort.Sorter;
 
-public class ParallelInplaceQuickSorter<T extends Comparable<? super T>> implements
-		Sorter<T> {
+public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
+		implements Sorter<T> {
+
+	private int numThreads;
+
+	public ParallelInplaceQuickSorter() {
+		this(Runtime.getRuntime().availableProcessors());
+	}
+
+	public ParallelInplaceQuickSorter(int numThreads) {
+		this.numThreads = numThreads;
+	}
+
 	@Override
 	public List<T> sort(List<T> unsorted) {
 		unsorted = new ArrayList<T>(unsorted); // don't override
 
 		try {
-			TaskManager<T> qs = new TaskManager<T>();
+			TaskManager<T> qs = new TaskManager<T>(numThreads);
 			qs.addTask(new InplaceListQuickSorterTask(unsorted, 0, unsorted
 					.size() - 1, qs));
 			qs.workWait();
@@ -38,7 +49,7 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>> impleme
 			this.manager = manager;
 			this.granularity = 20;
 		}
-		
+
 		public InplaceListQuickSorterTask(List<T> array, int left, int right,
 				TaskManager<T> manager, int granularity) {
 			this.list = array;
@@ -48,24 +59,23 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>> impleme
 			this.granularity = granularity;
 		}
 
-
 		public void run() {
-			qssort(left,right);
+			qssort(left, right);
 			manager.taskDone();
 		}
-		
-		public void qssort(int leftIndex, int rightIndex){
+
+		public void qssort(int leftIndex, int rightIndex) {
 			if (rightIndex - leftIndex <= granularity) {
 				insertion(list, leftIndex, rightIndex);
 			} else if (leftIndex < rightIndex) {
 				int pivotIndex = leftIndex + (rightIndex - leftIndex) / 2;
-				int pivotNewIndex = partition(list, leftIndex, rightIndex, pivotIndex);
+				int pivotNewIndex = partition(list, leftIndex, rightIndex,
+						pivotIndex);
 				manager.addTask(new InplaceListQuickSorterTask(list, leftIndex,
 						pivotNewIndex - 1, manager));
-				qssort(	pivotNewIndex + 1, rightIndex);
+				qssort(pivotNewIndex + 1, rightIndex);
 			}
 
-			
 		}
 
 		private int partition(List<T> array, int leftIndex, int rightIndex,

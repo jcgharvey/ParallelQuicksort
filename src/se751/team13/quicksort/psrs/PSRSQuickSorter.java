@@ -18,7 +18,11 @@ public class PSRSQuickSorter<T extends Comparable<? super T>> implements
 	List<PSRSQuickSorterTask<T>> sorters;
 
 	public PSRSQuickSorter() {
-		processors = Runtime.getRuntime().availableProcessors();
+		this(Runtime.getRuntime().availableProcessors());
+	}
+
+	public PSRSQuickSorter(int numThreads) {
+		processors = numThreads;
 		barrier = new CyclicBarrier(processors + 1);
 		threads = Executors.newFixedThreadPool(processors);
 	}

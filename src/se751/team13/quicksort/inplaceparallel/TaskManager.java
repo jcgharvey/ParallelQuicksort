@@ -11,9 +11,9 @@ class TaskManager<T extends Comparable<? super T>> {
 		this(Runtime.getRuntime().availableProcessors());
 	}
 
-	public TaskManager(int n_threads) {
+	public TaskManager(int numThreads) {
 		task_count = 0;
-		exec = Executors.newFixedThreadPool(n_threads);
+		exec = Executors.newFixedThreadPool(numThreads);
 	}
 
 	public synchronized void addTask(Runnable task) {

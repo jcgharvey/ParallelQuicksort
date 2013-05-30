@@ -19,7 +19,11 @@ public class PSRSMergeQuickSorter<T extends Comparable<? super T>> implements
 	List<PSRSMergeTask<T>> mergers;
 
 	public PSRSMergeQuickSorter() {
-		processors = Runtime.getRuntime().availableProcessors();
+		this(Runtime.getRuntime().availableProcessors());
+	}
+
+	public PSRSMergeQuickSorter(int numThreads) {
+		processors = numThreads;
 		barrier = new CyclicBarrier(processors + 1);
 		threads = Executors.newFixedThreadPool(processors);
 	}
@@ -97,8 +101,8 @@ public class PSRSMergeQuickSorter<T extends Comparable<? super T>> implements
 	 * @throws BrokenBarrierException
 	 * @throws InterruptedException
 	 */
-	private void distributePartitions(List<PSRSMergeTask<T>> mergers, List<T> points)
-			throws InterruptedException, BrokenBarrierException {
+	private void distributePartitions(List<PSRSMergeTask<T>> mergers,
+			List<T> points) throws InterruptedException, BrokenBarrierException {
 
 		List<List<List<T>>> sectionList = new ArrayList<List<List<T>>>();
 		for (PSRSQuickSorterTask<T> s : sorters) {

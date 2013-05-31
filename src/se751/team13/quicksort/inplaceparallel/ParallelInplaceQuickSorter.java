@@ -24,7 +24,7 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 
 		try {
 			TaskManager<T> qs = new TaskManager<T>(numThreads);
-			qs.addTask(new InplaceListQuickSorterTask(unsorted, 0, unsorted
+			qs.addTask(new InplaceQuickSorterTask(unsorted, 0, unsorted
 					.size() - 1, qs));
 			qs.workWait();
 		} catch (InterruptedException e) {
@@ -34,29 +34,20 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		return unsorted;
 	}
 
-	private class InplaceListQuickSorterTask implements Runnable {
+	private class InplaceQuickSorterTask implements Runnable {
 		TaskManager<T> manager;
 		private List<T> list;
 		private int left;
 		private int right;
 		private int granularity;
 
-		public InplaceListQuickSorterTask(List<T> array, int left, int right,
+		public InplaceQuickSorterTask(List<T> array, int left, int right,
 				TaskManager<T> manager) {
 			this.list = array;
 			this.left = left;
 			this.right = right;
 			this.manager = manager;
-			this.granularity = 20;
-		}
-
-		public InplaceListQuickSorterTask(List<T> array, int left, int right,
-				TaskManager<T> manager, int granularity) {
-			this.list = array;
-			this.left = left;
-			this.right = right;
-			this.manager = manager;
-			this.granularity = granularity;
+			this.granularity = 250;
 		}
 
 		public void run() {
@@ -71,7 +62,7 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 				int pivotIndex = leftIndex + (rightIndex - leftIndex) / 2;
 				int pivotNewIndex = partition(list, leftIndex, rightIndex,
 						pivotIndex);
-				manager.addTask(new InplaceListQuickSorterTask(list, leftIndex,
+				manager.addTask(new InplaceQuickSorterTask(list, leftIndex,
 						pivotNewIndex - 1, manager));
 				qssort(pivotNewIndex + 1, rightIndex);
 			}

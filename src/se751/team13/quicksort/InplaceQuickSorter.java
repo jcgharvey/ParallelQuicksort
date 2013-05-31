@@ -3,25 +3,28 @@ package se751.team13.quicksort;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InplaceQuickSorter<T extends Comparable<? super T>> implements
-Sorter<T> {
-	
+		Sorter<T> {
+
 	private Integer granularity;
 	private List<T> list;
-	
-	public InplaceQuickSorter(int granularity){
+
+	public InplaceQuickSorter() {
+		this(250);
+	}
+
+	public InplaceQuickSorter(int granularity) {
 		this.granularity = granularity;
 	}
-	
+
 	@Override
 	public List<T> sort(List<T> unsorted) {
 		list = new ArrayList<T>(unsorted); // don't override
-		qssort(0,list.size()-1);
+		qssort(0, list.size() - 1);
 		return list;
 	}
-	
-	private void qssort(int left, int right){
+
+	private void qssort(int left, int right) {
 		if (right - left <= granularity) {
 			insertion(left, right);
 		} else if (left < right) {
@@ -32,9 +35,8 @@ Sorter<T> {
 			qssort(pivotNewIndex + 1, right);
 		}
 	}
-	
-	private int partition(int leftIndex, int rightIndex,
-			int pivotIndex) {
+
+	private int partition(int leftIndex, int rightIndex, int pivotIndex) {
 
 		T pivot = list.get(pivotIndex);
 		swap(pivotIndex, rightIndex);
@@ -52,21 +54,19 @@ Sorter<T> {
 		swap(storeIndex, rightIndex);
 		return storeIndex;
 	}
-	
+
 	private void swap(int leftIndex, int rightIndex) {
 		T t = list.get(leftIndex);
 		list.set(leftIndex, list.get(rightIndex));
 		list.set(rightIndex, t);
 	}
-	
-	
+
 	private void insertion(int offset, int limit) {
 		for (int i = offset; i < limit + 1; i++) {
 			T valueToInsert = list.get(i);
 			int hole = i;
 
-			while (hole > 0
-					&& valueToInsert.compareTo(list.get(hole - 1)) < 0) {
+			while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) {
 				list.set(hole, list.get(hole - 1));
 				hole--;
 			}

@@ -5,20 +5,25 @@ import se751.team13.quicksort.Sorter;
 import java.util.ArrayList;
 import java.util.List;
 
+import paratask.runtime.ParaTask;
 import paratask.runtime.TaskIDGroup;
 
 
 public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 	
-	private Integer nThreads;
 	private Integer granularity;
 	private List<T> list;
 	
 	public ParataskQuickSorter(){
-		this(200);
+		this(Runtime.getRuntime().availableProcessors(), 250);
 	}
 	
-	public ParataskQuickSorter(int granularity){
+	public ParataskQuickSorter(int numThreads) {
+		this(numThreads, 250);
+	}
+	
+	public ParataskQuickSorter(int numThreads, int granularity){
+		ParaTask.setThreadPoolSize(numThreads);
 		this.granularity = granularity;
 	}
 	

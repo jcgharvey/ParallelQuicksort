@@ -25,9 +25,9 @@ import java.util.*;//#GEN#[5]#PJ#
 //#GEN#[5]#PJ#
 public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorter<T> {//#GEN#[7]#PJ#
     private Integer numThreads;private Integer granularity;private List<T> list;public PyjamaQuickSorter() {//#GEN#[11]#PJ#
-        this(Runtime.getRuntime().availableProcessors(), 200);//#GEN#[12]#PJ#
+        this(Runtime.getRuntime().availableProcessors());//#GEN#[12]#PJ#
     }public PyjamaQuickSorter(int numThreads) {//#GEN#[14]#PJ#
-        this(numThreads, 200);//#GEN#[15]#PJ#
+        this(numThreads, 250);//#GEN#[15]#PJ#
     }public PyjamaQuickSorter(int numThreads, int granularity) {//#GEN#[17]#PJ#
         this.numThreads = numThreads;//#GEN#[18]#PJ#
         this.granularity = granularity;//#GEN#[19]#PJ#

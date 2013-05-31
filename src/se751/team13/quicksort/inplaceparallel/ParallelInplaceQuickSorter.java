@@ -9,13 +9,19 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		implements Sorter<T> {
 
 	private int numThreads;
+	private int granularity;
 
 	public ParallelInplaceQuickSorter() {
 		this(Runtime.getRuntime().availableProcessors());
 	}
 
 	public ParallelInplaceQuickSorter(int numThreads) {
+		this(numThreads, 250);
+	}
+	
+	public ParallelInplaceQuickSorter(int numThreads, int granularity) {
 		this.numThreads = numThreads;
+		this.granularity = granularity;
 	}
 
 	@Override
@@ -39,7 +45,6 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		private List<T> list;
 		private int left;
 		private int right;
-		private int granularity;
 
 		public InplaceQuickSorterTask(List<T> array, int left, int right,
 				TaskManager<T> manager) {
@@ -47,7 +52,6 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 			this.left = left;
 			this.right = right;
 			this.manager = manager;
-			this.granularity = 250;
 		}
 
 		public void run() {

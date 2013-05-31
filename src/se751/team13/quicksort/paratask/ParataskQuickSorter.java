@@ -30,7 +30,7 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
     private List<T> list;//####[15]####
 //####[17]####
     public ParataskQuickSorter() {//####[17]####
-        this(Runtime.getRuntime().availableProcessors(), 250);//####[18]####
+        this(Runtime.getRuntime().availableProcessors());//####[18]####
     }//####[19]####
 //####[21]####
     public ParataskQuickSorter(int numThreads) {//####[21]####

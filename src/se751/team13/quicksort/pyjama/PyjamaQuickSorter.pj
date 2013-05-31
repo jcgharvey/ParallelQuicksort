@@ -12,11 +12,11 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 	private List<T> list;
 
 	public PyjamaQuickSorter() {
-		this(Runtime.getRuntime().availableProcessors(), 200);
+		this(Runtime.getRuntime().availableProcessors());
 	}
 
 	public PyjamaQuickSorter(int numThreads) {
-		this(numThreads, 200);
+		this(numThreads, 250);
 	}
 
 	public PyjamaQuickSorter(int numThreads, int granularity) {

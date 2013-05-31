@@ -48,11 +48,11 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorte
     private List<T> list;//####[27]####
 //####[27]####
     public PyjamaQuickSorter() {//####[27]####
-        this(Runtime.getRuntime().availableProcessors(), 200);//####[28]####
+        this(Runtime.getRuntime().availableProcessors());//####[28]####
     }//####[29]####
 //####[29]####
     public PyjamaQuickSorter(int numThreads) {//####[29]####
-        this(numThreads, 200);//####[30]####
+        this(numThreads, 250);//####[30]####
     }//####[31]####
 //####[31]####
     public PyjamaQuickSorter(int numThreads, int granularity) {//####[31]####

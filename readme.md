@@ -1,9 +1,21 @@
 Parallel Quicksort
 ==================
+For the full history of our project, see the Git repository here:
+https://github.com/jcgharvey/ParallelQuicksort
+
+You can see our individual contributions here:
+https://github.com/jcgharvey/ParallelQuicksort/graphs
+
+Most of the work was undertaken using peer programming, so the number of commits
+per person does not reflect their code contribution.
+
+
 
 Comparing three parallel implementations
 ----------------------------------------
-Implement a Quicksort algorithm (see Cormen et al., Introduction to Algorithms) that sorts a large array of numbers. Of this relatively simple recursive algorithm you have to implement three versions:
+Implement a Quicksort algorithm (see Cormen et al., Introduction to Algorithms)
+that sorts a large array of numbers. Of this relatively simple recursive
+algorithm you have to implement three versions:
 * Using Parallel Task
 * Using OpenMP (Pyjama)
 * Using threads and standard Java classes.

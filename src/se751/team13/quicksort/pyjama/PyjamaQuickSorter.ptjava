@@ -1,0 +1,253 @@
+package se751.team13.quicksort.pyjama;//#GEN#[1]#PJ#
+//#GEN#[1]#PJ#
+import jump.parser.ast.visitor.DummyClassToDetermineVariableType;//#GEN#[1]#PJ#
+import paratask.runtime.*;//#GEN#[1]#PJ#
+import java_omp.Pyjama;//#GEN#[1]#PJ#
+import java_omp.JuMP_PackageOnly;//#GEN#[1]#PJ#
+import java_omp.UniqueThreadIdGeneratorForOpenMP;//#GEN#[1]#PJ#
+import pi.ParIteratorFactory;//#GEN#[1]#PJ#
+import pi.ParIterator;//#GEN#[1]#PJ#
+import pi.reductions.Reducible;//#GEN#[1]#PJ#
+import pi.reductions.Reduction;//#GEN#[1]#PJ#
+import java.util.concurrent.atomic.*;//#GEN#[1]#PJ#
+import java.util.concurrent.*;//#GEN#[1]#PJ#
+import java.awt.EventQueue;//#GEN#[1]#PJ#
+import java.util.concurrent.ExecutorService;//#GEN#[1]#PJ#
+import java.util.concurrent.Executors;//#GEN#[1]#PJ#
+import java.util.concurrent.TimeUnit;//#GEN#[1]#PJ#
+import javax.swing.SwingUtilities;//#GEN#[1]#PJ#
+import jump.parser.ast.visitor.DummyClassToDetermineVariableType;//#GEN#[3]#PJ#
+import se751.team13.quicksort.Sorter;//#GEN#[4]#PJ#
+import java.util.ArrayList;//#GEN#[5]#PJ#
+//#GEN#[5]#PJ#
+import pi.reductions.Reducible;//#GEN#[5]#PJ#
+import java.util.*;//#GEN#[5]#PJ#
+//#GEN#[5]#PJ#
+public class PyjamaQuickSorter<T extends Comparable<? super T>> implements Sorter<T> {//#GEN#[7]#PJ#
+    private Integer numThreads;private Integer granularity;private List<T> list;public PyjamaQuickSorter() {//#GEN#[11]#PJ#
+        this(Runtime.getRuntime().availableProcessors());//#GEN#[12]#PJ#
+    }public PyjamaQuickSorter(int numThreads) {//#GEN#[14]#PJ#
+        this(numThreads, 250);//#GEN#[15]#PJ#
+    }public PyjamaQuickSorter(int numThreads, int granularity) {//#GEN#[17]#PJ#
+        this.numThreads = numThreads;//#GEN#[18]#PJ#
+        this.granularity = granularity;//#GEN#[19]#PJ#
+    }@Override //#GEN#[20]#PJ#
+    public List<T> sort(List<T> unsorted) {{//#GEN#[22]#PJ#
+        list = new ArrayList<T>(unsorted);//#GEN#[23]#PJ#
+        qssort(0, list.size() - 1);//#GEN#[24]#PJ#
+        return list;//#GEN#[25]#PJ#
+    }
+    }
+    static private ArrayList<ParIterator<?>> _omp_piVarContainer = new ArrayList<ParIterator<?>>();//#GEN#[-1]#PJ#
+static private AtomicBoolean _holderForPIFirst;//#GEN#[-1]#PJ#
+
+    private void qssort(int left, int right) {{//#GEN#[27]#PJ#
+        if (right - left <= granularity) //#GEN#[28]#PJ#
+        {//#GEN#[28]#PJ#
+            insertion(left, right);//#GEN#[29]#PJ#
+        } else if (left < right) //#GEN#[30]#PJ#
+        {//#GEN#[30]#PJ#
+            int pivotIndex = left + (right - left) / 2;//#GEN#[31]#PJ#
+            int pivotNewIndex = partition(left, right, pivotIndex);//#GEN#[32]#PJ#
+            /*OpenMP Parallel region (#0) -- START *///#GEN#[33]#PJ#
+            if(Pyjama.insideParallelRegion() ) {//#GEN#[33]#PJ#
+                /* If already inside a parallel region, execute sequentially (nested parallelism currently not supported) *///#GEN#[33]#PJ#
+                {//#GEN#[34]#PJ#
+                    for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) //#GEN#[36]#PJ#
+                    {//#GEN#[36]#PJ#
+                        switch(_omp_i_0) {//#GEN#[37]#PJ#
+                            case 0://#GEN#[37]#PJ#
+                                {//#GEN#[39]#PJ#
+                                    qssort(left, pivotNewIndex - 1);//#GEN#[40]#PJ#
+                                }//#GEN#[41]#PJ#
+                                break;//#GEN#[42]#PJ#
+                            case 1://#GEN#[42]#PJ#
+                                {//#GEN#[44]#PJ#
+                                    qssort(pivotNewIndex + 1, right);//#GEN#[45]#PJ#
+                                }//#GEN#[46]#PJ#
+                                break;//#GEN#[47]#PJ#
+                        }//#GEN#[47]#PJ#
+                    }//#GEN#[49]#PJ#
+                }//#GEN#[50]#PJ#
+            } else {//#GEN#[33]#PJ#
+                /* Else, execute in parallel *///#GEN#[33]#PJ#
+                int _omp_numOfThreads_to_create = numThreads;//#GEN#[33]#PJ#
+//#GEN#[33]#PJ#
+                JuMP_PackageOnly.setThreadCountCurrentParallelRegion(_omp_numOfThreads_to_create);//#GEN#[33]#PJ#
+//#GEN#[33]#PJ#
+                /* Process data clauses *///#GEN#[33]#PJ#
+                _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 _omp__parallelRegionVarHolderInstance_0 = new _omp__parallelRegionVarHolderClass_PyjamaQuickSorter0();//#GEN#[33]#PJ#
+                _omp__parallelRegionVarHolderInstance_0.pivotIndex = pivotIndex; // auto-saving//#GEN#[33]#PJ#
+                _omp__parallelRegionVarHolderInstance_0.left = left; // auto-saving//#GEN#[33]#PJ#
+                _omp__parallelRegionVarHolderInstance_0.right = right; // auto-saving//#GEN#[33]#PJ#
+                _omp__parallelRegionVarHolderInstance_0.pivotNewIndex = pivotNewIndex; // auto-saving//#GEN#[33]#PJ#
+//#GEN#[33]#PJ#
+                /* Execute using traditional OpenMP (master thread part of the team) *///#GEN#[33]#PJ#
+                JuMP_PackageOnly.setMasterThread(Thread.currentThread());//#GEN#[33]#PJ#
+                TaskID _omp__parallelRegionTaskID_0 = _ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//#GEN#[33]#PJ#
+                __pt___ompParallelRegion_0(_omp__parallelRegionVarHolderInstance_0);//#GEN#[33]#PJ#
+                try {_omp__parallelRegionTaskID_0.waitTillFinished();} catch(Exception __pt__ex) { __pt__ex.printStackTrace(); }//#GEN#[33]#PJ#
+                //#GEN#[33]#PJ#
+                JuMP_PackageOnly.setMasterThread(null);//#GEN#[33]#PJ#
+                _holderForPIFirst.set(true);//#GEN#[33]#PJ#
+
+                pivotIndex=_omp__parallelRegionVarHolderInstance_0.pivotIndex; // auto-saved
+                left=_omp__parallelRegionVarHolderInstance_0.left; // auto-saved
+                right=_omp__parallelRegionVarHolderInstance_0.right; // auto-saved
+                pivotNewIndex=_omp__parallelRegionVarHolderInstance_0.pivotNewIndex; // auto-saved
+                JuMP_PackageOnly.setThreadCountCurrentParallelRegion(1);//#GEN#[33]#PJ#
+            }//#GEN#[33]#PJ#
+            /*OpenMP Parallel region (#0) -- END *///#GEN#[33]#PJ#
+//#GEN#[33]#PJ#
+        }//#GEN#[51]#PJ#
+    }
+    }
+        private AtomicBoolean _imFirst_2 = new AtomicBoolean(true);//#GEN#[-1]#PJ#
+    private AtomicInteger _imFinishedCounter_2 = new AtomicInteger(0);//#GEN#[-1]#PJ#
+    private CountDownLatch _waitBarrier_2 = new CountDownLatch(1);//#GEN#[-1]#PJ#
+    private CountDownLatch _waitBarrierAfter_2 = new CountDownLatch(1);//#GEN#[-1]#PJ#
+    private ParIterator<Integer> _pi_2 = null;//#GEN#[-1]#PJ#
+    private Integer _lastElement_2 = null;//#GEN#[-1]#PJ#
+    private _ompWorkSharedUserCode_PyjamaQuickSorter2_variables _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = null;//#GEN#[-1]#PJ#
+        private void _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables __omp_vars) {//#GEN#[-1]#PJ#
+
+        int pivotIndex = __omp_vars.pivotIndex; // Auto-saved
+        int left = __omp_vars.left; // Auto-saved
+        int right = __omp_vars.right; // Auto-saved
+        int pivotNewIndex = __omp_vars.pivotNewIndex; // Auto-saved
+        Integer _omp_i_0;//#GEN#[-1]#PJ#
+        while (_pi_2.hasNext()) {//#GEN#[-1]#PJ#
+            _omp_i_0 = _pi_2.next();//#GEN#[-1]#PJ#
+            //#GEN#[-1]#PJ#
+            {//#GEN#[36]#PJ#
+                switch(_omp_i_0) {//#GEN#[37]#PJ#
+                    case 0://#GEN#[37]#PJ#
+                        {//#GEN#[39]#PJ#
+                            qssort(left, pivotNewIndex - 1);//#GEN#[40]#PJ#
+                        }//#GEN#[41]#PJ#
+                        break;//#GEN#[42]#PJ#
+                    case 1://#GEN#[42]#PJ#
+                        {//#GEN#[44]#PJ#
+                            qssort(pivotNewIndex + 1, right);//#GEN#[45]#PJ#
+                        }//#GEN#[46]#PJ#
+                        break;//#GEN#[47]#PJ#
+                }//#GEN#[47]#PJ#
+            }//#GEN#[-1]#PJ#
+        }//#GEN#[-1]#PJ#
+
+    __omp_vars.pivotIndex = pivotIndex; // Re-collected
+    __omp_vars.left = left; // Re-collected
+    __omp_vars.right = right; // Re-collected
+    __omp_vars.pivotNewIndex = pivotNewIndex; // Re-collected
+    }//#GEN#[-1]#PJ#
+    //#GEN#[-1]#PJ#
+    //#GEN#[-1]#PJ#
+    /* Parallel region, placed in a multi-task *///#GEN#[-1]#PJ#
+    TASK(Pyjama.omp_get_num_threads()-1) private void _ompParallelRegion_0(_omp__parallelRegionVarHolderClass_PyjamaQuickSorter0 __omp_vars) {//#GEN#[-1]#PJ#
+
+        int pivotIndex = __omp_vars.pivotIndex; // Auto-saved
+        int left = __omp_vars.left; // Auto-saved
+        int right = __omp_vars.right; // Auto-saved
+        int pivotNewIndex = __omp_vars.pivotNewIndex; // Auto-saved
+        {//#GEN#[34]#PJ#
+            if ( Pyjama.insideParallelRegion() ) {//#GEN#[35]#PJ#
+                /* Share the following work-sharing construct amongst multiple threads only if inside a parallel region (need this check for orphaned work-sharing constructs) *///#GEN#[35]#PJ#
+                boolean _omp_imFirst = _imFirst_2.getAndSet(false);//#GEN#[35]#PJ#
+                _holderForPIFirst = _imFirst_2;//#GEN#[35]#PJ#
+                if (_omp_imFirst) {//#GEN#[35]#PJ#
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance = new _ompWorkSharedUserCode_PyjamaQuickSorter2_variables();//#GEN#[35]#PJ#
+                    int __omp_size_ = 0;//#GEN#[35]#PJ#
+                    // TODO -- improve performance by calculating N from the parameters (as an equation) rather than looping//#GEN#[35]#PJ#
+                    for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) {//#GEN#[35]#PJ#
+                        _lastElement_2 = _omp_i_0;//#GEN#[35]#PJ#
+                        __omp_size_++;//#GEN#[35]#PJ#
+                        }//#GEN#[35]#PJ#
+                    _pi_2 = ParIteratorFactory.createParIterator(0, __omp_size_, 1, Pyjama.omp_get_num_threads(), ParIterator.Schedule.DYNAMIC, 1, false);//#GEN#[35]#PJ#
+                    _omp_piVarContainer.add(_pi_2); // for interrupt statement//#GEN#[35]#PJ#
+                    _pi_2.setThreadIdGenerator(new UniqueThreadIdGeneratorForOpenMP());
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotIndex = pivotIndex; // auto-saving//#GEN#[35]#PJ#
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.left = left; // auto-saving//#GEN#[35]#PJ#
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.right = right; // auto-saving//#GEN#[35]#PJ#
+                    _ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance.pivotNewIndex = pivotNewIndex; // auto-saving//#GEN#[35]#PJ#
+                    _waitBarrier_2.countDown();//#GEN#[35]#PJ#
+                } else {//#GEN#[35]#PJ#
+                    try { _waitBarrier_2.await(); } catch (InterruptedException __omp__ie) { __omp__ie.printStackTrace(); }//#GEN#[35]#PJ#
+                }//#GEN#[35]#PJ#
+                _ompWorkSharedUserCode_PyjamaQuickSorter2(_ompWorkSharedUserCode_PyjamaQuickSorter2_variables_instance);//#GEN#[35]#PJ#
+                if (_imFinishedCounter_2.incrementAndGet() == JuMP_PackageOnly.getThreadCountCurrentParallelRegion()) {//#GEN#[35]#PJ#
+                    _waitBarrierAfter_2.countDown();//#GEN#[35]#PJ#
+                } else {//#GEN#[35]#PJ#
+                    try { //#GEN#[35]#PJ#
+                        _waitBarrierAfter_2.await();//#GEN#[35]#PJ#
+                    } catch (InterruptedException __omp__ie) { //#GEN#[35]#PJ#
+                        __omp__ie.printStackTrace(); //#GEN#[35]#PJ#
+                    }//#GEN#[35]#PJ#
+                }//#GEN#[35]#PJ#
+
+            } else {//#GEN#[35]#PJ#
+                /* Otherwise, this orphaned work-sharing is not within a parallel region.. so execute sequentially *///#GEN#[35]#PJ#
+                for (int _omp_i_0 = 0; _omp_i_0 < 2; _omp_i_0 = _omp_i_0+1) //#GEN#[36]#PJ#
+                {//#GEN#[36]#PJ#
+                    switch(_omp_i_0) {//#GEN#[37]#PJ#
+                        case 0://#GEN#[37]#PJ#
+                            {//#GEN#[39]#PJ#
+                                qssort(__omp_vars.left, __omp_vars.pivotNewIndex - 1);//#GEN#[40]#PJ#
+                            }//#GEN#[41]#PJ#
+                            break;//#GEN#[42]#PJ#
+                        case 1://#GEN#[42]#PJ#
+                            {//#GEN#[44]#PJ#
+                                qssort(__omp_vars.pivotNewIndex + 1, __omp_vars.right);//#GEN#[45]#PJ#
+                            }//#GEN#[46]#PJ#
+                            break;//#GEN#[47]#PJ#
+                    }//#GEN#[47]#PJ#
+                }//#GEN#[49]#PJ#
+            }//#GEN#[49]#PJ#
+//#GEN#[49]#PJ#
+        }//#GEN#[50]#PJ#
+
+        __omp_vars.pivotIndex = pivotIndex; // restore auto-saved variable
+        __omp_vars.left = left; // restore auto-saved variable
+        __omp_vars.right = right; // restore auto-saved variable
+        __omp_vars.pivotNewIndex = pivotNewIndex; // restore auto-saved variable
+    }
+    private int partition(int leftIndex, int rightIndex, int pivotIndex) {{//#GEN#[53]#PJ#
+        T pivot = list.get(pivotIndex);//#GEN#[54]#PJ#
+        swap(pivotIndex, rightIndex);//#GEN#[55]#PJ#
+        int storeIndex = leftIndex;//#GEN#[56]#PJ#
+        for (int i = leftIndex; i < rightIndex; i++) //#GEN#[57]#PJ#
+        {//#GEN#[57]#PJ#
+            T t = list.get(i);//#GEN#[58]#PJ#
+            if (t.compareTo(pivot) <= 0) //#GEN#[59]#PJ#
+            {//#GEN#[59]#PJ#
+                swap(i, storeIndex);//#GEN#[60]#PJ#
+                storeIndex++;//#GEN#[61]#PJ#
+            }//#GEN#[62]#PJ#
+        }//#GEN#[63]#PJ#
+        swap(storeIndex, rightIndex);//#GEN#[64]#PJ#
+        return storeIndex;//#GEN#[65]#PJ#
+    }
+    }
+    
+    private void swap(int leftIndex, int rightIndex) {{//#GEN#[67]#PJ#
+        T t = list.get(leftIndex);//#GEN#[68]#PJ#
+        list.set(leftIndex, list.get(rightIndex));//#GEN#[69]#PJ#
+        list.set(rightIndex, t);//#GEN#[70]#PJ#
+    }
+    }
+    
+    private void insertion(int offset, int limit) {{//#GEN#[72]#PJ#
+        for (int i = offset; i < limit + 1; i++) //#GEN#[73]#PJ#
+        {//#GEN#[73]#PJ#
+            T valueToInsert = list.get(i);//#GEN#[74]#PJ#
+            int hole = i;//#GEN#[75]#PJ#
+            while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //#GEN#[76]#PJ#
+            {//#GEN#[76]#PJ#
+                list.set(hole, list.get(hole - 1));//#GEN#[77]#PJ#
+                hole--;//#GEN#[78]#PJ#
+            }//#GEN#[79]#PJ#
+            list.set(hole, valueToInsert);//#GEN#[80]#PJ#
+        }//#GEN#[81]#PJ#
+    }
+    }
+    
+}//#GEN#[82]#PJ#

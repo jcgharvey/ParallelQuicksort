@@ -1,4 +1,4 @@
-package se751.team13.quicksort.parallel;
+package se751.team13.quicksort.psrs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,27 +6,26 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class MergeTask<T extends Comparable<? super T>> implements Runnable {
+public class PSRSMergeTask<T extends Comparable<? super T>> implements Runnable {
 	private final List<List<T>> unsorted;
 	private List<T> sortedList = new ArrayList<T>();
 	private CyclicBarrier barrier;
 
-	public MergeTask(List<List<T>> l, CyclicBarrier barrier) {
+	public PSRSMergeTask(List<List<T>> l, CyclicBarrier barrier) {
 		this.unsorted = l;
 		this.barrier = barrier;
 	}
 
-	public Collection<? extends T> getSortedList() {
-		// TODO Auto-generated method stub
+	public Collection<T> getSortedList() {
 		return sortedList;
 	}
 
 	@Override
 	public void run() {
 		List<List<T>> unsortedClean = new ArrayList<List<T>>();
-		for(List<T> s : unsorted){
-			if(!s.isEmpty()){
-			unsortedClean.add(s);
+		for (List<T> s : unsorted) {
+			if (!s.isEmpty()) {
+				unsortedClean.add(s);
 			}
 		}
 		while (unsortedClean.size() > 1) {
@@ -59,8 +58,5 @@ public class MergeTask<T extends Comparable<? super T>> implements Runnable {
 		} catch (InterruptedException | BrokenBarrierException e) {
 			return;
 		}
-		// TODO Auto-generated method stub
-
 	}
-
 }

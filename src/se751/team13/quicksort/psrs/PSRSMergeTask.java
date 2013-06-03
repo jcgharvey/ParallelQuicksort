@@ -20,6 +20,9 @@ public class PSRSMergeTask<T extends Comparable<? super T>> implements Runnable 
 		return sortedList;
 	}
 
+	/**
+	 * Merges a list of ordered lists into a single ordered list
+	 */
 	@Override
 	public void run() {
 		List<List<T>> unsortedClean = new ArrayList<List<T>>();

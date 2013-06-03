@@ -4,15 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
+
 	private class Parts {
+		// less than
 		public final List<T> lt = new ArrayList<T>();
+		// greater than
 		public final List<T> gt = new ArrayList<T>();
 	}
 
+	/**
+	 * Initial sort method to pass a list to the quicksort function
+	 * 
+	 */
 	public List<T> sort(List<T> list) {
 		return quickSort(new ArrayList<T>(list));
 	}
-	
+
+	/**
+	 * Generic quicksort implementation
+	 * 
+	 * @param list
+	 * @return
+	 */
 	private List<T> quickSort(List<T> list) {
 		if (list.size() <= 1) {
 			return list;
@@ -29,6 +42,12 @@ public class QuickSorter<T extends Comparable<? super T>> implements Sorter<T> {
 		return result;
 	}
 
+	/**
+	 * Partitions/splits the list around the pivot
+	 * @param list
+	 * @param pivot
+	 * @return
+	 */
 	private Parts split(List<T> list, T pivot) {
 		Parts p = new Parts();
 

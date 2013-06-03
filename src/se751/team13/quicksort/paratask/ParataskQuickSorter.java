@@ -28,121 +28,205 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
     private Integer granularity;//####[14]####
 //####[15]####
     private List<T> list;//####[15]####
-//####[17]####
-    public ParataskQuickSorter() {//####[17]####
-        this(Runtime.getRuntime().availableProcessors());//####[18]####
-    }//####[19]####
 //####[21]####
-    public ParataskQuickSorter(int numThreads) {//####[21]####
-        this(numThreads, 250);//####[22]####
+    /**
+	 * Default constructor, sets the number of threads used to the number of
+	 * cores available.
+	 *///####[21]####
+    public ParataskQuickSorter() {//####[21]####
+        this(Runtime.getRuntime().availableProcessors());//####[22]####
     }//####[23]####
-//####[25]####
-    public ParataskQuickSorter(int numThreads, int granularity) {//####[25]####
-        ParaTask.setThreadPoolSize(numThreads);//####[26]####
-        this.granularity = granularity;//####[27]####
-    }//####[28]####
-//####[30]####
-    public List<T> sort(List<T> unsorted) {//####[30]####
-        list = new ArrayList<T>(unsorted);//####[31]####
-        TaskID wholeList = run(0, list.size() - 1);//####[32]####
-        TaskIDGroup g = new TaskIDGroup(1);//####[33]####
-        g.add(wholeList);//####[34]####
-        try {//####[35]####
-            g.waitTillFinished();//####[36]####
-        } catch (InterruptedException e) {//####[37]####
-            System.out.println("Interrupted");//####[38]####
-        } catch (ExecutionException e) {//####[39]####
-            System.out.println("Execution");//####[40]####
-        }//####[42]####
-        return list;//####[43]####
-    }//####[44]####
-//####[46]####
-    private Method __pt__run_int_int_method = null;//####[46]####
-    private Lock __pt__run_int_int_lock = new ReentrantLock();//####[46]####
-    public TaskID<Void> run(int left, int right)  {//####[46]####
-//####[46]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[46]####
-        return run(left, right, new TaskInfo());//####[46]####
+//####[31]####
+    /**
+	 * Constructor that takes the number of threads to use. Sets the granularity
+	 * to default 250
+	 * 
+	 * @param numThreads
+	 *///####[31]####
+    public ParataskQuickSorter(int numThreads) {//####[31]####
+        this(numThreads, 250);//####[32]####
+    }//####[33]####
+//####[43]####
+    /**
+	 * Full Constructor that sets both the number of threads to use and the
+	 * granularity level to go down to before performing sequential insertion
+	 * sort.
+	 * 
+	 * @param numThreads
+	 * @param granularity
+	 *///####[43]####
+    public ParataskQuickSorter(int numThreads, int granularity) {//####[43]####
+        ParaTask.setThreadPoolSize(numThreads);//####[44]####
+        this.granularity = granularity;//####[45]####
     }//####[46]####
-    public TaskID<Void> run(int left, int right, TaskInfo taskinfo)  {//####[46]####
-        if (__pt__run_int_int_method == null) {//####[46]####
-            try {//####[46]####
-                __pt__run_int_int_lock.lock();//####[46]####
-                if (__pt__run_int_int_method == null) //####[46]####
-                    __pt__run_int_int_method = ParaTaskHelper.getDeclaredMethod(getClass(), "__pt__run", new Class[] {int.class, int.class});//####[46]####
-            } catch (Exception e) {//####[46]####
-                e.printStackTrace();//####[46]####
-            } finally {//####[46]####
-                __pt__run_int_int_lock.unlock();//####[46]####
-            }//####[46]####
-        }//####[46]####
-//####[46]####
-        Object[] args = new Object[] {left, right};//####[46]####
-        taskinfo.setTaskArguments(args);//####[46]####
-        taskinfo.setMethod(__pt__run_int_int_method);//####[46]####
-        taskinfo.setInstance(this);//####[46]####
-//####[46]####
-        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[46]####
-    }//####[46]####
-    public void __pt__run(int left, int right) {//####[46]####
-        qssort(left, right);//####[47]####
-    }//####[48]####
-//####[48]####
-//####[50]####
-    private void qssort(int left, int right) {//####[50]####
-        if (right - left <= granularity) //####[51]####
-        {//####[51]####
-            insertion(left, right);//####[52]####
-        } else if (left < right) //####[53]####
-        {//####[53]####
-            int pivotIndex = left + (right - left) / 2;//####[54]####
-            int pivotNewIndex = partition(left, right, pivotIndex);//####[55]####
-            TaskIDGroup g = new TaskIDGroup(1);//####[57]####
-            TaskID leftSubList = run(left, pivotNewIndex - 1);//####[59]####
-            g.add(leftSubList);//####[60]####
-            qssort(pivotNewIndex + 1, right);//####[66]####
-            try {//####[67]####
-                g.waitTillFinished();//####[68]####
-            } catch (InterruptedException e) {//####[69]####
-            } catch (ExecutionException e) {//####[71]####
-            }//####[73]####
-        }//####[74]####
-    }//####[75]####
-//####[77]####
-    private int partition(int leftIndex, int rightIndex, int pivotIndex) {//####[78]####
-        T pivot = list.get(pivotIndex);//####[80]####
-        swap(pivotIndex, rightIndex);//####[81]####
-        int storeIndex = leftIndex;//####[82]####
-        for (int i = leftIndex; i < rightIndex; i++) //####[84]####
-        {//####[84]####
-            T t = list.get(i);//####[85]####
-            if (t.compareTo(pivot) <= 0) //####[87]####
-            {//####[87]####
-                swap(i, storeIndex);//####[88]####
-                storeIndex++;//####[89]####
-            }//####[90]####
-        }//####[91]####
-        swap(storeIndex, rightIndex);//####[93]####
-        return storeIndex;//####[94]####
-    }//####[95]####
-//####[97]####
-    private void swap(int leftIndex, int rightIndex) {//####[97]####
-        T t = list.get(leftIndex);//####[98]####
-        list.set(leftIndex, list.get(rightIndex));//####[99]####
-        list.set(rightIndex, t);//####[100]####
-    }//####[101]####
-//####[104]####
-    private void insertion(int offset, int limit) {//####[104]####
-        for (int i = offset; i < limit + 1; i++) //####[105]####
-        {//####[105]####
-            T valueToInsert = list.get(i);//####[106]####
-            int hole = i;//####[107]####
-            while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //####[109]####
-            {//####[110]####
-                list.set(hole, list.get(hole - 1));//####[111]####
-                hole--;//####[112]####
-            }//####[113]####
-            list.set(hole, valueToInsert);//####[115]####
-        }//####[116]####
-    }//####[117]####
-}//####[117]####
+//####[55]####
+    /**
+	 * Method to sort an unsorted list using inplace quicksort Starts off the
+	 * initial task to start parallel sections by creating an initial ParaTask
+	 * Task and TaskGroup
+	 * 
+	 * @param unsorted
+	 *///####[55]####
+    public List<T> sort(List<T> unsorted) {//####[55]####
+        list = new ArrayList<T>(unsorted);//####[56]####
+        TaskID wholeList = run(0, list.size() - 1);//####[57]####
+        TaskIDGroup g = new TaskIDGroup(1);//####[58]####
+        g.add(wholeList);//####[59]####
+        try {//####[60]####
+            g.waitTillFinished();//####[61]####
+        } catch (InterruptedException e) {//####[62]####
+            System.out.println("Interrupted");//####[63]####
+        } catch (ExecutionException e) {//####[64]####
+            System.out.println("Execution");//####[65]####
+        }//####[67]####
+        return list;//####[68]####
+    }//####[69]####
+//####[79]####
+    private Method __pt__run_int_int_method = null;//####[79]####
+    private Lock __pt__run_int_int_lock = new ReentrantLock();//####[79]####
+    /**
+	 * The Paratask Task simply calls the qssort method
+	 * this is done to allow the qssort method to be called
+	 * as both a task and as a method on an existing task. 
+	 * 
+	 * @param left
+	 * @param right
+	 *///####[79]####
+    public TaskID<Void> run(int left, int right)  {//####[79]####
+//####[79]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[79]####
+        return run(left, right, new TaskInfo());//####[79]####
+    }//####[79]####
+    /**
+	 * The Paratask Task simply calls the qssort method
+	 * this is done to allow the qssort method to be called
+	 * as both a task and as a method on an existing task. 
+	 * 
+	 * @param left
+	 * @param right
+	 *///####[79]####
+    public TaskID<Void> run(int left, int right, TaskInfo taskinfo)  {//####[79]####
+        if (__pt__run_int_int_method == null) {//####[79]####
+            try {//####[79]####
+                __pt__run_int_int_lock.lock();//####[79]####
+                if (__pt__run_int_int_method == null) //####[79]####
+                    __pt__run_int_int_method = ParaTaskHelper.getDeclaredMethod(getClass(), "__pt__run", new Class[] {int.class, int.class});//####[79]####
+            } catch (Exception e) {//####[79]####
+                e.printStackTrace();//####[79]####
+            } finally {//####[79]####
+                __pt__run_int_int_lock.unlock();//####[79]####
+            }//####[79]####
+        }//####[79]####
+//####[79]####
+        Object[] args = new Object[] {left, right};//####[79]####
+        taskinfo.setTaskArguments(args);//####[79]####
+        taskinfo.setMethod(__pt__run_int_int_method);//####[79]####
+        taskinfo.setInstance(this);//####[79]####
+//####[79]####
+        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[79]####
+    }//####[79]####
+    /**
+	 * The Paratask Task simply calls the qssort method
+	 * this is done to allow the qssort method to be called
+	 * as both a task and as a method on an existing task. 
+	 * 
+	 * @param left
+	 * @param right
+	 *///####[79]####
+    public void __pt__run(int left, int right) {//####[79]####
+        qssort(left, right);//####[80]####
+    }//####[81]####
+//####[81]####
+//####[92]####
+    /**
+	 * Runs inplace quicksort implementation of the section of
+	 * the list between the given left and right indices. 
+	 * When calling the recursive part of the quicksort algorithm, 
+	 * it keeps the right section of the list as its own, and creates
+	 * a task for the left part of the list
+	 * @param left
+	 * @param right
+	 *///####[92]####
+    private void qssort(int left, int right) {//####[92]####
+        if (right - left <= granularity) //####[93]####
+        {//####[93]####
+            insertion(left, right);//####[94]####
+        } else if (left < right) //####[95]####
+        {//####[95]####
+            int pivotIndex = left + (right - left) / 2;//####[96]####
+            int pivotNewIndex = partition(left, right, pivotIndex);//####[97]####
+            TaskIDGroup g = new TaskIDGroup(1);//####[99]####
+            TaskID leftSubList = run(left, pivotNewIndex - 1);//####[101]####
+            g.add(leftSubList);//####[102]####
+            qssort(pivotNewIndex + 1, right);//####[104]####
+            try {//####[105]####
+                g.waitTillFinished();//####[106]####
+            } catch (InterruptedException e) {//####[107]####
+            } catch (ExecutionException e) {//####[109]####
+            }//####[111]####
+        }//####[112]####
+    }//####[113]####
+//####[127]####
+    /**
+	 * Partition the array around a specified elements Swapping until all
+	 * elements greater than the pivot are one side of the pivot and all
+	 * elements smaller than the pivot are on the other side. Takes in a
+	 * left and right index to indicate what section of the array it is
+	 * working on.
+	 * 
+	 * @param leftIndex
+	 * @param rightIndex
+	 * @param pivotIndex
+	 * @return
+	 *///####[127]####
+    private int partition(int leftIndex, int rightIndex, int pivotIndex) {//####[128]####
+        T pivot = list.get(pivotIndex);//####[130]####
+        swap(pivotIndex, rightIndex);//####[131]####
+        int storeIndex = leftIndex;//####[132]####
+        for (int i = leftIndex; i < rightIndex; i++) //####[134]####
+        {//####[134]####
+            T t = list.get(i);//####[135]####
+            if (t.compareTo(pivot) <= 0) //####[137]####
+            {//####[137]####
+                swap(i, storeIndex);//####[138]####
+                storeIndex++;//####[139]####
+            }//####[140]####
+        }//####[141]####
+        swap(storeIndex, rightIndex);//####[143]####
+        return storeIndex;//####[144]####
+    }//####[145]####
+//####[154]####
+    /**
+	 * Swaps the elements at two positions
+	 * 
+	 * @param array
+	 * @param leftIndex
+	 * @param rightIndex
+	 *///####[154]####
+    private void swap(int leftIndex, int rightIndex) {//####[154]####
+        T t = list.get(leftIndex);//####[155]####
+        list.set(leftIndex, list.get(rightIndex));//####[156]####
+        list.set(rightIndex, t);//####[157]####
+    }//####[158]####
+//####[167]####
+    /**
+	 * Insertion sort a section
+	 * 
+	 * @param array
+	 * @param offset
+	 * @param limit
+	 *///####[167]####
+    private void insertion(int offset, int limit) {//####[167]####
+        for (int i = offset; i < limit + 1; i++) //####[168]####
+        {//####[168]####
+            T valueToInsert = list.get(i);//####[169]####
+            int hole = i;//####[170]####
+            while (hole > 0 && valueToInsert.compareTo(list.get(hole - 1)) < 0) //####[172]####
+            {//####[173]####
+                list.set(hole, list.get(hole - 1));//####[174]####
+                hole--;//####[175]####
+            }//####[176]####
+            list.set(hole, valueToInsert);//####[178]####
+        }//####[179]####
+    }//####[180]####
+}//####[180]####

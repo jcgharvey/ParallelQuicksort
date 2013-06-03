@@ -14,19 +14,44 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
 	private Integer granularity;
 	private List<T> list;
 	
+	/**
+	 * Default constructor, sets the number of threads used to the number of
+	 * cores available.
+	 */
 	public ParataskQuickSorter(){
 		this(Runtime.getRuntime().availableProcessors());
 	}
 	
+	/**
+	 * Constructor that takes the number of threads to use. Sets the granularity
+	 * to default 250
+	 * 
+	 * @param numThreads
+	 */
 	public ParataskQuickSorter(int numThreads) {
 		this(numThreads, 250);
 	}
 	
+	/**
+	 * Full Constructor that sets both the number of threads to use and the
+	 * granularity level to go down to before performing sequential insertion
+	 * sort.
+	 * 
+	 * @param numThreads
+	 * @param granularity
+	 */
 	public ParataskQuickSorter(int numThreads, int granularity){
 		ParaTask.setThreadPoolSize(numThreads);
 		this.granularity = granularity;
-	}
+	}	
 	
+	/**
+	 * Method to sort an unsorted list using inplace quicksort Starts off the
+	 * initial task to start parallel sections by creating an initial ParaTask
+	 * Task and TaskGroup
+	 * 
+	 * @param unsorted
+	 */
 	public List<T> sort(List<T> unsorted) {
 		list = new ArrayList<T>(unsorted); // don't override
 		TaskID wholeList = run(0,list.size()-1);
@@ -43,26 +68,39 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
 		return list;
 	}
 	
+	/**
+	 * The Paratask Task simply calls the qssort method
+	 * this is done to allow the qssort method to be called
+	 * as both a task and as a method on an existing task. 
+	 * 
+	 * @param left
+	 * @param right
+	 */
 	TASK public void run(int left, int right) {
 		qssort(left, right);
 	}
 	
+	/**
+	 * Runs inplace quicksort implementation of the section of
+	 * the list between the given left and right indices. 
+	 * When calling the recursive part of the quicksort algorithm, 
+	 * it keeps the right section of the list as its own, and creates
+	 * a task for the left part of the list
+	 * @param left
+	 * @param right
+	 */
 	private void qssort(int left, int right){
 		if (right - left <= granularity) {
 			insertion(left, right);
 		} else if (left < right) {
 			int pivotIndex = left + (right - left) / 2;
 			int pivotNewIndex = partition(left, right, pivotIndex);
-			//System.out.println(g.groupSize());
+			
 			TaskIDGroup g = new TaskIDGroup(1);
 
 			TaskID leftSubList = run( left, pivotNewIndex - 1);
 			g.add(leftSubList);
-//			// Stackoverflow from creating to many tasks
-//			TaskID rightSubList = run( pivotNewIndex + 1, right);
-//			g.add(rightSubList);
 
-//			qssort(left, pivotNewIndex - 1);
 			qssort(pivotNewIndex + 1, right);
 			try {
 				g.waitTillFinished();		
@@ -74,6 +112,18 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
 		}
 	}
 	
+	/**
+	 * Partition the array around a specified elements Swapping until all
+	 * elements greater than the pivot are one side of the pivot and all
+	 * elements smaller than the pivot are on the other side. Takes in a
+	 * left and right index to indicate what section of the array it is
+	 * working on.
+	 * 
+	 * @param leftIndex
+	 * @param rightIndex
+	 * @param pivotIndex
+	 * @return
+	 */
 	private int partition(int leftIndex, int rightIndex,
 			int pivotIndex) {
 
@@ -94,13 +144,26 @@ public class ParataskQuickSorter<T extends Comparable<? super T>> implements Sor
 		return storeIndex;
 	}
 	
+	/**
+	 * Swaps the elements at two positions
+	 * 
+	 * @param array
+	 * @param leftIndex
+	 * @param rightIndex
+	 */
 	private void swap(int leftIndex, int rightIndex) {
 		T t = list.get(leftIndex);
 		list.set(leftIndex, list.get(rightIndex));
 		list.set(rightIndex, t);
 	}
 	
-	
+	/**
+	 * Insertion sort a section
+	 * 
+	 * @param array
+	 * @param offset
+	 * @param limit
+	 */
 	private void insertion(int offset, int limit) {
 		for (int i = offset; i < limit + 1; i++) {
 			T valueToInsert = list.get(i);

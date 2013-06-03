@@ -11,14 +11,25 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 	private Integer granularity;
 	private List<T> list;
 
+	/**
+	* Default constructor
+	* Set number of threads to the number of available processors
+	*/
 	public PyjamaQuickSorter() {
 		this(Runtime.getRuntime().availableProcessors());
 	}
-
+	
+	/**
+	* Constructor which allows the number of threads to be specified
+	*/
 	public PyjamaQuickSorter(int numThreads) {
 		this(numThreads, 250);
 	}
-
+	
+	/**
+	* Constructor allowing number of threads and granularity to be specified
+	* If this constructor is not used then granularity is set to 250
+	*/
 	public PyjamaQuickSorter(int numThreads, int granularity) {
 		this.numThreads = numThreads;
 		this.granularity = granularity;
@@ -30,14 +41,21 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 		qssort(0, list.size() - 1);
 		return list;
 	}
-
+	
+	/**
+	* Quicksort
+	*/
 	private void qssort(int left, int right) {
+		// if the size that we are working on is less than the specified granularity
+		// then run insertion sort on this section
 		if (right - left <= granularity) {
 			insertion(left, right);
 		} else if (left < right) {
+			// find the index of the pivot we would like to use. 
+			// we pick the median index
 			int pivotIndex = left + (right - left) / 2;
 			int pivotNewIndex = partition(left, right, pivotIndex);
-
+			// declare sections for our parallelism
 			//#omp parallel sections num_threads(numThreads)
 			{
 				//#omp section
@@ -55,32 +73,51 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 
 		}
 	}
-
+	
+	/**
+	* Partition a section between the two indexes on the pivot at the pivotIndex
+	* @param leftIndex left side of the section
+	* @param rightIndex right side of the section
+	* @param pivotIndex index of pivot to partition on
+	*/
 	private int partition(int leftIndex, int rightIndex, int pivotIndex) {
-
+		// get the pivot
 		T pivot = list.get(pivotIndex);
+		// move pivot to the end of the section
 		swap(pivotIndex, rightIndex);
+		// store the left index
 		int storeIndex = leftIndex;
-
+		
+		// iterate over the section
 		for (int i = leftIndex; i < rightIndex; i++) {
 			T t = list.get(i);
-
+			
+			// compare this item with the pivot and swap if necessary
 			if (t.compareTo(pivot) <= 0) {
 				swap(i, storeIndex);
 				storeIndex++;
 			}
 		}
-
-		swap(storeIndex, rightIndex);
+		// swap the pivot back to where the leftIndex aka store index got up to
+		swap(storeIndex, rightIndex);	
 		return storeIndex;
 	}
 
+	/**
+	* Swap two elements given their indexes
+	*/
 	private void swap(int leftIndex, int rightIndex) {
+		// temp
 		T t = list.get(leftIndex);
+		// set right to where left was
 		list.set(leftIndex, list.get(rightIndex));
+		// set the temp (left) to where right was
 		list.set(rightIndex, t);
 	}
-
+	
+	/**
+	* Insertion sort a section
+	*/
 	private void insertion(int offset, int limit) {
 		for (int i = offset; i < limit + 1; i++) {
 			T valueToInsert = list.get(i);

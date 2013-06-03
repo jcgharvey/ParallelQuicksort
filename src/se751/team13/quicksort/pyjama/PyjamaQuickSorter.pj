@@ -12,58 +12,78 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 	private List<T> list;
 
 	/**
-	* Default constructor
-	* Set number of threads to the number of available processors
-	*/
+	 * Default constructor, sets the number of threads used to the number of
+	 * cores available.
+	 */
 	public PyjamaQuickSorter() {
 		this(Runtime.getRuntime().availableProcessors());
 	}
-	
+
 	/**
-	* Constructor which allows the number of threads to be specified
-	*/
+	 * Constructor that takes the number of threads to use. Sets the granularity
+	 * to default 250
+	 * 
+	 * @param numThreads
+	 */
 	public PyjamaQuickSorter(int numThreads) {
 		this(numThreads, 250);
 	}
-	
+
 	/**
-	* Constructor allowing number of threads and granularity to be specified
-	* If this constructor is not used then granularity is set to 250
-	*/
+	 * Full Constructor that sets both the number of threads to use and the
+	 * granularity level to go down to before performing sequential insertion
+	 * sort.
+	 * 
+	 * @param numThreads
+	 * @param granularity
+	 */
 	public PyjamaQuickSorter(int numThreads, int granularity) {
 		this.numThreads = numThreads;
 		this.granularity = granularity;
 	}
 
+	/**
+	 * Method to sort an unsorted list using inplace quicksort Starts off the
+	 * initial task to start parallel sections.
+	 * 
+	 * @param unsorted
+	 */
 	@Override
 	public List<T> sort(List<T> unsorted) {
 		list = new ArrayList<T>(unsorted); // don't override
 		qssort(0, list.size() - 1);
 		return list;
 	}
-	
+
 	/**
-	* Quicksort
-	*/
+	 * Quicksort implementation, takes in the indices of the section of the
+	 * array it is allowed to act on when the two sections are partitioned, the
+	 * left section is passed to a new task while the right section is
+	 * continued.
+	 * 
+	 * @param leftIndex
+	 * @param rightIndex
+	 */
 	private void qssort(int left, int right) {
-		// if the size that we are working on is less than the specified granularity
+		// if the size that we are working on is less than the specified
+		// granularity
 		// then run insertion sort on this section
 		if (right - left <= granularity) {
 			insertion(left, right);
 		} else if (left < right) {
-			// find the index of the pivot we would like to use. 
+			// find the index of the pivot we would like to use.
 			// we pick the median index
 			int pivotIndex = left + (right - left) / 2;
 			int pivotNewIndex = partition(left, right, pivotIndex);
 			// declare sections for our parallelism
-			//#omp parallel sections num_threads(numThreads)
+			// #omp parallel sections num_threads(numThreads)
 			{
-				//#omp section
+				// #omp section
 				{
 					qssort(left, pivotNewIndex - 1);
 				}
 
-				//#omp section
+				// #omp section
 				{
 					qssort(pivotNewIndex + 1, right);
 				}
@@ -73,13 +93,20 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 
 		}
 	}
-	
+
 	/**
-	* Partition a section between the two indexes on the pivot at the pivotIndex
-	* @param leftIndex left side of the section
-	* @param rightIndex right side of the section
-	* @param pivotIndex index of pivot to partition on
-	*/
+	 * Partition the array around a specified elements Swapping until all
+	 * elements greater than the pivot are one side of the pivot and all
+	 * elements smaller than the pivot are on the other side. Takes in a left
+	 * and right index to indicate what section of the array it is working on.
+	 * 
+	 * @param leftIndex
+	 *            left side of the section
+	 * @param rightIndex
+	 *            right side of the section
+	 * @param pivotIndex
+	 *            index of pivot to partition on
+	 */
 	private int partition(int leftIndex, int rightIndex, int pivotIndex) {
 		// get the pivot
 		T pivot = list.get(pivotIndex);
@@ -87,11 +114,11 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 		swap(pivotIndex, rightIndex);
 		// store the left index
 		int storeIndex = leftIndex;
-		
+
 		// iterate over the section
 		for (int i = leftIndex; i < rightIndex; i++) {
 			T t = list.get(i);
-			
+
 			// compare this item with the pivot and swap if necessary
 			if (t.compareTo(pivot) <= 0) {
 				swap(i, storeIndex);
@@ -99,13 +126,16 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 			}
 		}
 		// swap the pivot back to where the leftIndex aka store index got up to
-		swap(storeIndex, rightIndex);	
+		swap(storeIndex, rightIndex);
 		return storeIndex;
 	}
 
 	/**
-	* Swap two elements given their indexes
-	*/
+	 * Swaps the elements at two positions
+	 * 
+	 * @param leftIndex
+	 * @param rightIndex
+	 */
 	private void swap(int leftIndex, int rightIndex) {
 		// temp
 		T t = list.get(leftIndex);
@@ -114,10 +144,13 @@ public class PyjamaQuickSorter<T extends Comparable<? super T>> implements
 		// set the temp (left) to where right was
 		list.set(rightIndex, t);
 	}
-	
+
 	/**
-	* Insertion sort a section
-	*/
+	 * Insertion sort a section
+	 * 
+	 * @param offset
+	 * @param limit
+	 */
 	private void insertion(int offset, int limit) {
 		for (int i = offset; i < limit + 1; i++) {
 			T valueToInsert = list.get(i);

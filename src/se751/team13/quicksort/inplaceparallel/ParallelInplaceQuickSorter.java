@@ -11,29 +11,29 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 	private int numThreads;
 	private int granularity;
 
-	
 	/**
-	 * Default constructor, sets the number of threads used to 
-	 * the number of cores available.
+	 * Default constructor, sets the number of threads used to the number of
+	 * cores available.
 	 */
 	public ParallelInplaceQuickSorter() {
 		this(Runtime.getRuntime().availableProcessors());
 	}
 
-	
 	/**
-	 * Constructor that takes the number of threads to use.
-	 * Sets the granularity to default 250
+	 * Constructor that takes the number of threads to use. Sets the granularity
+	 * to default 250
+	 * 
 	 * @param numThreads
 	 */
 	public ParallelInplaceQuickSorter(int numThreads) {
 		this(numThreads, 250);
 	}
-	
+
 	/**
-	 * Full Constructor that sets both the number of threads
-	 * to use and the granularity level to go down to before 
-	 * performing sequential insertion sort.
+	 * Full Constructor that sets both the number of threads to use and the
+	 * granularity level to go down to before performing sequential insertion
+	 * sort.
+	 * 
 	 * @param numThreads
 	 * @param granularity
 	 */
@@ -42,10 +42,10 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		this.granularity = granularity;
 	}
 
-	
 	/**
-	 * Method to sort an unsorted list using inplace quicksort
-	 * Starts off the initial task to start parallel sections. 
+	 * Method to sort an unsorted list using inplace quicksort Starts off the
+	 * initial task to start parallel sections.
+	 * 
 	 * @param unsorted
 	 */
 	@Override
@@ -54,8 +54,8 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		try {
 			TaskManager<T> qs = new TaskManager<T>(numThreads);
 			// add a task for the entire list
-			qs.addTask(new InplaceQuickSorterTask(unsorted, 0, unsorted
-					.size() - 1, qs));
+			qs.addTask(new InplaceQuickSorterTask(unsorted, 0,
+					unsorted.size() - 1, qs));
 			qs.workWait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -63,7 +63,6 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		return unsorted;
 	}
 
-	
 	/**
 	 * Private class that acts as runnable for quicksort task
 	 * 
@@ -74,7 +73,6 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		private int left;
 		private int right;
 
-		
 		public InplaceQuickSorterTask(List<T> array, int left, int right,
 				TaskManager<T> manager) {
 			this.list = array;
@@ -82,22 +80,22 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 			this.right = right;
 			this.manager = manager;
 		}
-		
+
 		/**
-		 * Each task is run by completing quicksort 
-		 * therefore making a single new task.
+		 * Each task is run by completing quicksort therefore making a single
+		 * new task.
 		 */
 		public void run() {
 			qssort(left, right);
 			manager.taskDone();
 		}
 
-		
 		/**
-		 * Quicksort implementation, takes in the indices of the 
-		 * section of the array it is allowed to act on
-		 * when the two sections are partitioned, the left section
-		 * is passed to a new task while the right section is continued.
+		 * Quicksort implementation, takes in the indices of the section of the
+		 * array it is allowed to act on when the two sections are partitioned,
+		 * the left section is passed to a new task while the right section is
+		 * continued.
+		 * 
 		 * @param leftIndex
 		 * @param rightIndex
 		 */
@@ -117,12 +115,11 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		}
 
 		/**
-		 * Partition the array around a specified elements
-		 * Swapping until all elements greater than the pivot
-		 * are one side of the pivot and all elements smaller
-		 * than the pivot are on the other side. 
-		 * Takes in a left and right index to indicate what 
-		 * section of the array it is working on.
+		 * Partition the array around a specified elements Swapping until all
+		 * elements greater than the pivot are one side of the pivot and all
+		 * elements smaller than the pivot are on the other side. Takes in a
+		 * left and right index to indicate what section of the array it is
+		 * working on.
 		 * 
 		 * @param array
 		 * @param leftIndex
@@ -152,6 +149,7 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 
 		/**
 		 * Swaps the elements at two positions
+		 * 
 		 * @param array
 		 * @param leftIndex
 		 * @param rightIndex
@@ -163,7 +161,8 @@ public class ParallelInplaceQuickSorter<T extends Comparable<? super T>>
 		}
 
 		/**
-		 * Runs insertion sort
+		 * Insertion sort a section
+		 * 
 		 * @param array
 		 * @param offset
 		 * @param limit

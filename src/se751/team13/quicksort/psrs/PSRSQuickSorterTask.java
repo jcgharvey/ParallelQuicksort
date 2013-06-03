@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+import se751.team13.quicksort.InplaceQuickSorter;
 import se751.team13.quicksort.NotSortedException;
 import se751.team13.quicksort.QuickSorter;
 import se751.team13.quicksort.Sorter;
@@ -18,7 +19,7 @@ public class PSRSQuickSorterTask<T extends Comparable<? super T>> implements
 
 	public PSRSQuickSorterTask(List<T> unsorted) {
 		this.unsorted = unsorted;
-		this.sorter = new QuickSorter<T>();
+		this.sorter = new InplaceQuickSorter<T>();
 	}
 
 	public PSRSQuickSorterTask(List<T> unsorted, CyclicBarrier barrier) {
